@@ -18,7 +18,6 @@
 	<%@ include file="/menu.jsp" %>
 	<%@ include file="/banner/banner.jsp" %>
 
-=======
 
 	<h2 style="text-align:center;">기러기 역삼역 별똥별 // 선택 해주세요! </h2>
 
