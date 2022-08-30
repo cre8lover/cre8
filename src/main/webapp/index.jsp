@@ -18,6 +18,7 @@
 	<%@ include file="/menu.jsp" %>
 	<%@ include file="/banner/banner.jsp" %>
 	<h2 style="text-align:center;">작가 특별기획전//ㄷㅇ 깃</h2>
+	//수정추가
 	<main>
 		<div class="responsive-container">
 			<div class="grid">
