@@ -19,8 +19,8 @@ public class OracleConn {
 	}
 	
 	public void oracleConn() {
-//		final String url="jdbc:oracle:thin:@192.168.10.135:1521:cre8";
-		final String url="jdbc:oracle:thin:@192.168.219.109:1521:xe";
+		final String url="jdbc:oracle:thin:@192.168.10.135:1521:cre8";
+//		final String url="jdbc:oracle:thin:@192.168.219.109:1521:xe";
 //		final String url="jdbc:oracle:thin:@localhost:1521:xe";
 		
 		try {
