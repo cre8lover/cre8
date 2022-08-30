@@ -7,7 +7,7 @@
    if(bestid.value === ids){
 		alert('이미 최고 입찰자입니다.');
 		return false;
-   }else if(ids != null){
+   }else if(ids != ''){
 		return true;
 	} else {
       alert('로그인후 이용하세요');
