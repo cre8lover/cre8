@@ -115,7 +115,7 @@
 				<input type="hidden" name="seqno"  value="${detail.aucSeqno}">
 				<div id="timeover">
 				<!-- <a href = "<%= request.getContextPath() %>/buy/auctionDetail.jsp"><input type="button" class="bton" value="입찰하기"></a> -->
-				<input type='button' onclick='timeover()' class='bton' value='지금은 꺼져'>
+				<input type='button' onclick='timeover()' class='bton' value='지금은 입찰 할 수 없습니다.'>
 				
 				</div>
 			</form>

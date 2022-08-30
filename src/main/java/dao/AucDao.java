@@ -161,7 +161,7 @@ public class AucDao {
             auc.setItem(item);
          }
          
-         sql = " select m.mem_name as mem_name, an.aucnow_date as aucnow_date, an.aucnow_lastprice as aucnow_lastprice "
+         sql = " select m.mem_name as mem_name, an.aucnow_date as aucnow_date, an.aucnow_lastprice as aucnow_lastprice, m.mem_id as mem_id "
                + " from auc_nowing an ,  mem m"
                + " where m.mem_id = an.mem_id"
                + " and an.auc_seqno = ?"
@@ -176,6 +176,7 @@ public class AucDao {
             name = new Mem();
             
             name.setMemName(rs.getString("mem_name"));
+            name.setMemId(rs.getString("mem_id"));
             an.setAucnowLastprice(rs.getInt("aucnow_lastprice"));
             an.setAucnowDate(rs.getDate("aucnow_date"));
             an.setMem(name);
