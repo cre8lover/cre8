@@ -116,7 +116,7 @@ public class MemberDao {
 		Mem member = new Mem();
 //		Address add = new Address();
 		
-		String sql = "select m.mem_id, m.mem_email, m.mem_tel, m.mem_name, ";
+		String sql = "select m.mem_id, m.mem_img ,m.mem_email, m.mem_tel, m.mem_name, ";
 				sql += " nvl(a.add_address, '주소를 입력하세요') as add_address"; 
 				sql += " from mem m, address a";
 				sql += " where m.mem_id = a.mem_id(+)"; 
@@ -136,7 +136,7 @@ public class MemberDao {
 				member.setMemEmail(rs.getString("mem_email"));
 				member.setMemTel(rs.getString("mem_tel"));
 				member.setMemName(rs.getString("mem_name"));
-
+				member.setMemImg(rs.getString("mem_img"));
 				
 				addr = new Address();
 				addr.setAddAddress(rs.getString("add_address"));
@@ -661,6 +661,32 @@ public class MemberDao {
 		
 		
 		return map;
+	}
+
+	public int checkid(String id) {
+		int rs = 0;
+		String sql ="select mem_id from mem where mem_id = ?";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			
+			stmt.setString(1, id);
+			
+			ResultSet res = stmt.executeQuery();
+			if(res.next()) {
+				rs = 1;
+			} else {
+				rs = 0;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return rs;
+		
 	}
 	
 	

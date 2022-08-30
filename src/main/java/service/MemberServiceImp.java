@@ -138,4 +138,10 @@ public class MemberServiceImp implements MemberService {
 		return dao.findPw(id, email);
 	}
 
+	@Override
+	public int idcheck(String id) {
+
+		return dao.checkid(id);
+	}
+
 }
