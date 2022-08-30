@@ -269,7 +269,9 @@ public class Membercontroller extends HttpServlet {
 			
 			}
 			
-		} 
+		} else if(cmd.equals("idCheck")) {
+			
+		}
 		
 	}
 	
