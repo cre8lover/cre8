@@ -17,7 +17,7 @@
 	<%@ include file="/header.jsp" %>
 	<%@ include file="/menu.jsp" %>
 	<%@ include file="/banner/banner.jsp" %>
-	<h2 style="text-align:center;">작가 특별기획전</h2>
+	<h2 style="text-align:center;">작가 특별기획전 / 창목수정함</h2>
 	<main>
 		<div class="responsive-container">
 			<div class="grid">
