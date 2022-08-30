@@ -56,7 +56,7 @@
 							</td>
 						 -->	
 							<td class="bno">
-								<input type="text" name="keysearch" id="search" value="" />
+								<input type="text" name="keysearch" id="search" value="${key.keyword }" />
 							</td>
 							<td class="bno">
 								<input type="submit" value="검색" >

@@ -17,3 +17,18 @@
   <a href="<%= request.getContextPath() %>/master/adCheck">광고주문 내역확인</a>
   <a href="<%= request.getContextPath() %>/master/logout" style="float:right">로그아웃</a>
 </div>
+
+<script>
+	var current;
+	var khm_topnav = document.querySelector('.khm_topnav');
+	
+	function clickHandler(e){
+		if(current){
+			current.classList.remove('khm_topnav-active');
+		}
+		e.target.classList.add('khm_topnav-active');
+		current = e.target;
+	}
+	
+	khm_topnav.addEventListener('click',clickHandler);
+</script>

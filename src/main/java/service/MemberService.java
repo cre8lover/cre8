@@ -35,4 +35,6 @@ public interface MemberService {
 	Map<String, String> findId(String idemail);
 
 	Map<String, String> findPw(String id, String email);
+
+	int idcheck(String id);
 }

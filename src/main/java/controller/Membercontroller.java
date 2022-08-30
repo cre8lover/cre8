@@ -270,7 +270,11 @@ public class Membercontroller extends HttpServlet {
 			}
 			
 		} else if(cmd.equals("idCheck")) {
+			String id = req.getParameter("id");
 			
+			int rs = member.idcheck(id);
+			PrintWriter out = resp.getWriter();
+			out.print(rs);
 		}
 		
 	}
