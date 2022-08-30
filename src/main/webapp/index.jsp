@@ -20,7 +20,7 @@
 
 =======
 
-	<h2 style="text-align:center;">기러기 역삼역 별똥별 // 선택 </h2>
+	<h2 style="text-align:center;">기러기 역삼역 별똥별 // 선택 해주세요! </h2>
 
 
 	<main>
