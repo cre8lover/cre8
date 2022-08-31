@@ -1,4 +1,4 @@
-function idcheck() {
+function idcheck(path) {
 		
 		var id = document.forms["cre8reg"]["id"].value;
 		
@@ -24,7 +24,7 @@ function idcheck() {
 			}
 		};
 		
-		x.open("get", "/mem/idCheck?id=" + id, true);
+		x.open("get", path+"/mem/idCheck?id="+id, true);
 		x.send();
 		
 	}
