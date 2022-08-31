@@ -7,6 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/cre8.css">
+<script src="<%= request.getContextPath() %>/js/memreg.js"></script>
 <title>회원가입</title>
 </head>
 <body>
@@ -28,7 +29,7 @@
                 <!-- 아이디 -->
                 <div>
                     <h3>아이디</h3>
-                    <input type="text" id="id" name="id" class="khm_text" maxlength="20" placeholder="아이디" onchange="idcheck()">
+                    <input type="text" id="id" name="id" class="khm_text" maxlength="20" placeholder="아이디" onchange="idcheck('<%= request.getContextPath() %>')">
                     <input type="hidden" id="isidcheck">
                     <p id="idcheckmsg" style="color:red;"></p>
                 </div>
