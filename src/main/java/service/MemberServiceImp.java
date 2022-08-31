@@ -37,13 +37,16 @@ public class MemberServiceImp implements MemberService {
 		String email = req.getParameter("email");
 		String mobile = req.getParameter("mobile");
 		String agree = req.getParameter("check");
-		
+		String phone = mobile;
+		if(mobile.length() == 11) {
+		  phone = mobile.replaceFirst("(^[0-9]{3})([0-9]{4})([0-9]{4})$","$1-$2-$3");
+		} 
 		mem.setMemId(id);
 		mem.setMemPw(pw);
 		mem.setMemName(name);
 		mem.setMemBirth(birth);
 		mem.setMemEmail(email);
-		mem.setMemTel(mobile);
+		mem.setMemTel(phone);
 		mem.setCheck(agree);
 		return dao.reginsert(mem);
 	}
