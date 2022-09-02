@@ -1,5 +1,6 @@
 package dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,27 +21,34 @@ import dto.Marketing;
 import dto.Mem;
 import dto.MemAuth;
 import dto.Pro;
+import oracle.jdbc.OracleType;
 
 public class AdminDao {
 	private final Connection conn = OracleConn.getInstance().getConn();
+	
 	PreparedStatement stmt;
-
+	
 	public Map<String, String> longinProc(String id, String pw) {
+		CallableStatement stmt;
 		
 		Map<String, String> map = new HashMap<String, String>();
 		
-		String sql = "select m.mem_id, m.mem_pw from mem m, mem_auth a "
-				+ " where m.mem_id = a.mem_id and (a.auth_name = 'A' or a.auth_name = 'M') and m.mem_id = ?";
+		String sql = "call p_adminLogin(?,?,?,?)";
 		
 		try {
-			stmt = conn.prepareStatement(sql);
+			stmt = conn.prepareCall(sql);
 			stmt.setString(1, id);
-
-			ResultSet rs = stmt.executeQuery();
+			stmt.setString(2, pw);
+			stmt.registerOutParameter(3, OracleType.VARCHAR2);
+			stmt.registerOutParameter(4, OracleType.VARCHAR2);
+			stmt.executeQuery();
 			
-			if(rs.next()) {
+			String id2 = stmt.getString(3);
+			String pw2 = stmt.getString(4);
+			
+			if(id2 != null) {
 				
-				if(rs.getString("mem_pw").equals(pw)) {
+				if(pw2.equals(pw)) {
 					//로그인 성공
 					map.put("login", "ok");
 //					map.put("name",rs.getString("mem_name"));
