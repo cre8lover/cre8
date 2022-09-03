@@ -1,3 +1,40 @@
+function addrequals(){
+					var checkbuyinfo = document.getElementById("checkbuyinfo");
+					
+					if(checkbuyinfo.checked == true){
+					var addr_front = document.getElementById("address_kakao");
+					var addr_back = document.getElementById("address_kakao_back");
+					var bottom_addr_front = document.getElementById("address_kakao2");
+					var bottom_addr_back = document.getElementById("address_kakao_back2");
+					
+					var front_phone = document.getElementsByName("ssecession");
+					
+					var phone1 = document.getElementById("phon_front");
+					var phone2 = document.getElementById("phon_back");
+					
+					var bottom_phone1 = document.getElementById("phon_front2");
+					var bottom_phone2 = document.getElementById("phon_back2");
+					
+					var name = document.getElementById("name");
+					var name2 = document.getElementById("name2");
+					
+					var choice = document.getElementsByName("choice");
+
+					
+					
+					bottom_addr_front.value = addr_front.value; 
+					bottom_addr_back.value = addr_back.value;
+					front_phone[1].value = front_phone[0].value;
+					bottom_phone1.value = phone1.value;
+					bottom_phone2.value = phone2.value;
+					name2.value = name.value;
+					choice[1].value = choice[0].value;
+				}
+				}
+
+
+
+
 window.onload = function(){
     document.getElementById("address_kakao").addEventListener("click", function(){ //주소입력칸을 클릭하면
         //카카오 지도 발생
@@ -8,6 +45,18 @@ window.onload = function(){
             }
         }).open();
     });
+    
+    document.getElementById("address_kakao2").addEventListener("click", function(){ //주소입력칸을 클릭하면
+        //카카오 지도 발생
+        new daum.Postcode({
+            oncomplete: function(data) { //선택시 입력값 세팅
+                document.getElementById("address_kakao2").value = data.address; // 주소 넣기
+                document.querySelector("input[name=bottom_address_detail]").focus(); //상세입력 포커싱
+            }
+        }).open();
+    });
+
+
 }
 
     function requestPay(total) {

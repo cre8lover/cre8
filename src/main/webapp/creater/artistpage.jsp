@@ -32,6 +32,7 @@
                     <div class="pro-img">
                         <img class="" ${list.item.itemImg } style="height:225px;">
                     </div>
+         </a>
                     <h3 class="product-name">
                         <p><b>${list.item.itemDetail }</b></p>
                     </h3>
@@ -42,10 +43,9 @@
                         <p>총 판매금액 : ${list.proSaleprice }
                     </p>
                     <div style="text-align: center;">
-                      <button class="custom-btn btn-1" onclick = "newwindow('<%= request.getContextPath() %>/listimg/product_registration2.jsp','modify');">수정</button>
+                      <button class="custom-btn btn-1" onclick = "newwindow('<%= request.getContextPath() %>/cre/product_registration?seqno=${list.proSeqno}','modify');">수정</button>
                   <button class="custom-btn btn-1" href = "#">삭제</button>
                   </div>
-         </a>
                 </div>
             </c:forEach>
          </div>
@@ -84,6 +84,7 @@
                     <div class="pro-img">
                         <img class="" ${list.aucImg } style="height:225px;">
                     </div>
+                </a>
                     <h3 class="product-name">
                         <p><b>${list.aucDetail }</b></p>
                     </h3>
@@ -97,11 +98,11 @@
                     
                     <div style="text-align: center;">
                        <c:if test="${list.aucStat eq 'WAIT'}">
-                         <button class="custom-btn btn-1" onclick = "newwindow('<%= request.getContextPath() %>/listimg/product_registration2.jsp','modify');">수정</button>
+                         <button class="custom-btn btn-1" onclick = "newwindow('<%= request.getContextPath() %>/cre/auction_reg?seqno=${list.aucSeqno}','modify');">수정</button>
                      <button class="custom-btn btn-1" href = "#">삭제</button>
                      </c:if>
                   </div>
-                  </a>
+                  
                 </div>
             </c:forEach>
    

@@ -113,6 +113,7 @@ public class Creatercontroller extends HttpServlet {
 			
 			goView(req, resp, "/creater/jmh_salesHistory.jsp");
 			
+			
 		} else if(cmd.equals("auction_reg")) {
 		
 			String seqno = req.getParameter("seqno");
@@ -156,6 +157,9 @@ public class Creatercontroller extends HttpServlet {
 		  }
 		  goView(req,resp,"/cre/product_registration?seqno="+seqno);
 		   } 
+		
+		
+		
 		   else if(cmd.equals("cremodifyreg")) { 
 		          //크리에이터 정보수정
 		            Map<String, String> cremo = cs.cremodifyreg(req);
