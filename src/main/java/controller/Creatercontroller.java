@@ -50,7 +50,7 @@ public class Creatercontroller extends HttpServlet {
 		if(cmd.equals("creReg")) {
 			String add = (String)req.getSession().getAttribute("auth");
 			String id = (String)req.getSession().getAttribute("sess_id");
-			System.out.println(id);
+//			System.out.println(id);
 			
 			if(id == null || add == null) {
 				goView(req, resp, "/member/memreg.jsp");
