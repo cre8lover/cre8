@@ -36,21 +36,14 @@ public class Homecontroller extends HttpServlet {
 		resp.setContentType("text/html; charset=utf8");
 		req.setCharacterEncoding("utf-8");
 		
-		String uri = req.getRequestURI();
-		String cmd = uri.substring(uri.lastIndexOf("/")+1);
-		String path = req.getContextPath();
+//		String uri = req.getRequestURI();
+//		String cmd = uri.substring(uri.lastIndexOf("/")+1);
+//		String path = req.getContextPath();
 		
 		ServletContext ctx = getServletContext();
-		if(cmd.equals("/")) {
 			List<Pro> prolist1 = pro.proList_clothes();
-			req.setAttribute("proList", prolist1);
+			ctx.setAttribute("proList", prolist1);
 			goView(req, resp, "/index.jsp");
-			
-		}  else if(cmd.equals("mainpage")) {
-			List<Pro> prolist1 = pro.proList_clothes();
-			req.setAttribute("proList", prolist1);
-			goView(req,resp, "/index.jsp");
-		} 
 	}
 
 	private void goView(HttpServletRequest req, HttpServletResponse resp, String viewPage) throws ServletException, IOException {
