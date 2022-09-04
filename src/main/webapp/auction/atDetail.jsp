@@ -19,7 +19,7 @@
 		<tr>
 			<td rowspan='11' class="jmh_saleimg">
 			<%-- <img class="jmh_imgsize" src="<%= request.getContextPath() %>/img/우투리.png" alt="My Image"> --%>
-			<div> ${item.itemImg }</div>
+			<div> <img  style="width:100%;" class="" src="/upload/${item.itemImg}"></div>
 			</td>
 			<td class="jmh_star" colspan = 2>
 			<h4> &nbsp;&nbsp; <i class="fa-solid fa-house-user"> &nbsp; </i>${detail.aucDetail }</h4>

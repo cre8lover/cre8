@@ -472,7 +472,7 @@ public class CreatorDao {
 	            cre.setMem(mem);
 	            
 	         }
-	         
+	         stmt.close();
 	      } catch (SQLException e) {
 	         e.printStackTrace();
 	      }
@@ -584,6 +584,7 @@ public class CreatorDao {
 		            sql = "select * from att_thumb at where ";
 		            
 		         }
+		         stmt.close();
 		} catch (SQLException e) {
 		         e.printStackTrace();
 		      

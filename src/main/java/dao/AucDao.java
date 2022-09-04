@@ -160,7 +160,7 @@ public class AucDao {
       List<AucNowing> anlist = new ArrayList<AucNowing>();
       AucNowing an = null;
       Mem name = null;
-      String sql = "select i.item_name as item_name, i.item_img as item_img, "
+      String sql = "select i.item_seqno as item_seqno, i.item_name as item_name, i.item_img as item_img, "
             + " y.auc_seqno as auc_seqno, y.auc_img as auc_img, y.auc_shortdetail as auc_shortdetail, "
             + " y.auc_price as auc_price, to_char(y.auc_finish, 'YYYY-MM-DD,HH24:MI:SS') as auc_finish, y.aucCloseprice as aucCloseprice, "
             + " y.auc_count as auc_count, i.mem_id as mem_id, i.item_detail as item_detail"
@@ -183,7 +183,7 @@ public class AucDao {
             item = new Item();
             
             item.setItemName(rs.getString("item_name"));
-            item.setItemImg(rs.getString("item_img"));
+            
             item.setItemDetail(rs.getString("item_detail"));
             auc.setAucSeqno(rs.getInt("auc_seqno"));
             auc.setAucImg(rs.getString("auc_img"));
@@ -193,6 +193,17 @@ public class AucDao {
             auc.setAucCloseprice(rs.getInt("aucCloseprice"));
             auc.setAucHits(rs.getInt("auc_count"));
             auc.setAucDetail(rs.getString("mem_id"));
+            
+            sql = "select att_savename from att where item_seqno = ?";
+            
+            stmt = conn.prepareStatement(sql);
+            stmt.setString(1, rs.getString("item_seqno"));
+            ResultSet rs2 = stmt.executeQuery();
+            
+            if(rs2.next()) {
+            	item.setItemImg(rs2.getString("att_savename"));
+            }
+            
             
             auc.setItem(item);
          }

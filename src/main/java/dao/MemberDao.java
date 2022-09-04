@@ -1,24 +1,14 @@
 package dao;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import javax.servlet.ServletContainerInitializer;
-import javax.servlet.ServletRequest;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.fileupload.RequestContext;
 
 import common.OracleConn;
 import dto.Address;
@@ -250,7 +240,7 @@ public class MemberDao {
 				+ " order by order_date desc) a";
 		
 		try {
-			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt = conn.prepareStatement(sql);
 			
 			stmt.setString(1, id);
 			ResultSet rs = stmt.executeQuery();
@@ -302,7 +292,6 @@ public class MemberDao {
 				+ " where p.auc_seqno = o.auc_seqno and o.mem_id = ?"
 				+ " order by order_date desc) a";
 		
-		PreparedStatement stmt;
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, id);
@@ -464,7 +453,6 @@ public class MemberDao {
 				+ "                 where s.add_seqno=a.add_seqno) s"
 				+ "    where w.ship_seqno=s.ship_seqno) s"
 				+ " where a.order_seqno = s.order_seqno";
-		PreparedStatement stmt;
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, id);
@@ -534,7 +522,7 @@ public class MemberDao {
 				sql += " mem_snsinfo = ? where mem_id = ?";
 		
 		try {
-			PreparedStatement stmt = conn.prepareStatement(sql);
+			conn.prepareStatement(sql);
 		
 			stmt.setString(1, mem.getMemEmail());
 			stmt.setString(2, mem.getMemTel());
@@ -580,7 +568,6 @@ public class MemberDao {
 		
 		String sql = "select mem_id, mem_pw from mem where mem_id = ? ";
 		
-			PreparedStatement stmt;
 			try {
 				stmt = conn.prepareStatement(sql);
 				stmt.setString(1, id);
@@ -627,7 +614,7 @@ public class MemberDao {
 		String sql = "select mem_id,mem_email from mem where mem_email = ? ";
 		
 		try {
-			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt = conn.prepareStatement(sql);
 			
 			stmt.setString(1, idemail);
 			ResultSet rs = stmt.executeQuery();
@@ -661,7 +648,6 @@ public class MemberDao {
 		Map<String, String> map = new HashMap<String, String>();
 		
 		String sql = "select mem_id,mem_email,mem_pw from mem where mem_email = ? and mem_id = ?";
-		PreparedStatement stmt;
 		try {
 			stmt = conn.prepareStatement(sql);
 			
@@ -711,7 +697,7 @@ public class MemberDao {
 		String sql ="select mem_id from mem where mem_id = ?";
 		
 		try {
-			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt = conn.prepareStatement(sql);
 			
 			stmt.setString(1, id);
 			
@@ -722,11 +708,11 @@ public class MemberDao {
 				rs = 0;
 			}
 			
+			stmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		
 		return rs;
 		

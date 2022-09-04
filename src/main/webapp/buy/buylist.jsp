@@ -151,8 +151,8 @@
 					</c:when>
 				</c:choose>	
 					<tr>
-						<th colspan="3" style="text-align:end;"> 총 주문금액 : </th>
-						<th colspan="2" style="font-size: 30px;">${total }원 </th>
+						<th colspan="2" style="text-align:end;"> 총 주문금액 : </th>
+						<th colspan="3" style="font-size: 30px;">${total }원 </th>
 					</tr>	
 				</table>
 				
@@ -166,6 +166,8 @@
 		</div>
 		<div class="rightSideBar" style="z-index:-1"></div>
 </div>
+</div>
+<div style="height:100%">
 </div>
 <div style="height:100%">
 </div>
