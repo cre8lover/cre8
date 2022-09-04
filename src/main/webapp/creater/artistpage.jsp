@@ -30,7 +30,7 @@
                 <div class="product span3">
          <a href="<%= request.getContextPath() %>/product/productDetail?seqno=${list.proSeqno}">
                     <div class="pro-img">
-                        <img class="" ${list.item.itemImg } style="height:225px;">
+                        <img class="" src="/upload/thumbnail/${list.item.itemImg}" style="height:225px;">
                     </div>
          </a>
                     <h3 class="product-name">

@@ -8,17 +8,16 @@ public class Att implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Integer attSeqno;
-	private String savefilename;
+	private String attSaveName;
 	private String attType;
 	private String attName;
 	private String attPath;
 	private String attSize;
-	private String attThumb;
+	private Thumbnail attThumb;
 	private Date attSavedate;
-	private Item item;
-	private Marketing marketing;
-	private Artdetail artdetail;
-	private Mem mem;
+	private String itemSeqno;
+	private String marSeqno;
+	private String artSeqno;
 
 	public Att() {
 	}
@@ -37,13 +36,13 @@ public class Att implements Serializable {
 
 
 
-	public String getAttThumb() {
+	public Thumbnail getAttThumb() {
 		return attThumb;
 	}
 
 
 
-	public void setAttThumb(String attThumb) {
+	public void setAttThumb(Thumbnail attThumb) {
 		this.attThumb = attThumb;
 	}
 
@@ -57,12 +56,12 @@ public class Att implements Serializable {
 		return this.attSeqno;
 	}
 
-	public void savefilename(String savefilename) {
-		this.savefilename = savefilename;
+	public void savefilename(String attSaveName) {
+		this.attSaveName = attSaveName;
 	}
 
 	public String savefilename() {
-		return this.savefilename;
+		return this.attSaveName;
 	}
 
 	public void setAttType(String attType) {
@@ -97,36 +96,53 @@ public class Att implements Serializable {
 		return this.attSavedate;
 	}
 
-	public void setItem(Item item) {
-		this.item = item;
+
+
+	public String getSavefilename() {
+		return attSaveName;
 	}
 
-	public Item getItem() {
-		return this.item;
+
+
+	public void setSavefilename(String attSaveName) {
+		this.attSaveName = attSaveName;
 	}
 
-	public void setMarketing(Marketing marketing) {
-		this.marketing = marketing;
+
+
+	public String getItemSeqno() {
+		return itemSeqno;
 	}
 
-	public Marketing getMarketing() {
-		return this.marketing;
+
+
+	public void setItemSeqno(String itemSeqno) {
+		this.itemSeqno = itemSeqno;
 	}
 
-	public void setArtdetail(Artdetail artdetail) {
-		this.artdetail = artdetail;
+
+
+	public String getMarSeqno() {
+		return marSeqno;
 	}
 
-	public Artdetail getArtdetail() {
-		return this.artdetail;
+
+
+	public void setMarSeqno(String marSeqno) {
+		this.marSeqno = marSeqno;
 	}
 
-	public void setMem(Mem mem) {
-		this.mem = mem;
+
+
+	public String getArtSeqno() {
+		return artSeqno;
 	}
 
-	public Mem getMem() {
-		return this.mem;
+
+
+	public void setArtSeqno(String artSeqno) {
+		this.artSeqno = artSeqno;
 	}
 
+	
 }
