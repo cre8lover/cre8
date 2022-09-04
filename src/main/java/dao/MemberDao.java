@@ -731,6 +731,88 @@ public class MemberDao {
 		return rs;
 		
 	}
+}
+checkid(String id) {
+		int rs = 0;
+		String sql ="select mem_id from mem where mem_id = ?";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			
+			stmt.setString(1, id);
+			
+			ResultSet res = stmt.executeQuery();
+			if(res.next()) {
+				rs = 1;
+			} else {
+				rs = 0;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return rs;
+		
+	}
+	
+	
+
+}
+		int rs = 0;
+		String sql ="select mem_id from mem where mem_id = ?";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			
+			stmt.setString(1, id);
+			
+			ResultSet res = stmt.executeQuery();
+			if(res.next()) {
+				rs = 1;
+			} else {
+				rs = 0;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return rs;
+		
+	}
+	
+	
+
+}
+		int rs = 0;
+		String sql ="select mem_id from mem where mem_id = ?";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			
+			stmt.setString(1, id);
+			
+			ResultSet res = stmt.executeQuery();
+			if(res.next()) {
+				rs = 1;
+			} else {
+				rs = 0;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return rs;
+		
+	}
 	
 	
 

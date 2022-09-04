@@ -37,7 +37,7 @@
             <li class="_grid shopping-cart--list-item" onclick="location.href='<%= request.getContextPath() %>/auc/auctionDetail?seqno=${list.aucSeqno}'">
                <div class="_column product-image">
                   <%-- <img class="product-image--img" src="<%= request.getContextPath() %>/img/dd.jpg" alt="Item image" /> --%>
-                  <div>${list.aucImg }</div>
+                  <div><img class="" src="/upload/thumbnail/${item.itemImg}"></div>
                </div>
                <div class="_column product-info">
                   <h4 class="product-name"><b>${item.itemName}</b> <span class="khm_startprice">시작가 ₩${list.aucPrice}~</span> </h4>
@@ -52,11 +52,6 @@
           </ol>
      </div>
      </div>
-     
-            
-   
-            
-        
         </div>
         
         
@@ -70,7 +65,7 @@
             <li class="_grid shopping-cart--list-item" onclick="location.href='<%= request.getContextPath() %>/auc/auctionDetail?seqno=${list.aucSeqno}'">
                <div class="_column product-image">
                   <%-- <img class="product-image--img" src="<%= request.getContextPath() %>/img/dd.jpg" alt="Item image" /> --%>
-                  <div>${list.aucImg }</div>
+                  <div><img class="" src="/upload/thumbnail/${item.itemImg}"></div>
                </div>
                <div class="_column product-info">
                   <h4 class="product-name"><b>${item.itemName}</b> <span class="khm_startprice">시작가 ₩${list.aucPrice}~</span> </h4>
@@ -86,11 +81,9 @@
      </div>
      </div>
      </div>
+        
         <div class="tab_content" id="design_content">
                   <div class="main">
-   
-      
-        
       <div class="shopping-cart">
          <ol class="ui-list shopping-cart--list" id="shopping-cart--list">
          <c:set value="${auclist}" var="auclist"/>
@@ -99,7 +92,7 @@
             <li class="_grid shopping-cart--list-item" onclick="location.href='<%= request.getContextPath() %>/auc/auctionDetail?seqno=${list.aucSeqno}'">
                <div class="_column product-image">
                   <%-- <img class="product-image--img" src="<%= request.getContextPath() %>/img/dd.jpg" alt="Item image" /> --%>
-                  <div>${list.aucImg }</div>
+                  <div><img class="" src="/upload/thumbnail/${item.itemImg}"></div>
                </div>
                <div class="_column product-info">
                   <h4 class="product-name"><b>${item.itemName}</b> <span class="khm_startprice">시작가 ₩${list.aucPrice}~</span> </h4>
