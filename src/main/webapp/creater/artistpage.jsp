@@ -84,6 +84,7 @@
                     <div class="pro-img">
                         <img class="" ${list.aucImg } style="height:225px;">
                     </div>
+                </a>
                     <h3 class="product-name">
                         <p><b>${list.aucDetail }</b></p>
                     </h3>
@@ -101,7 +102,7 @@
                      <button class="custom-btn btn-1" href = "#">삭제</button>
                      </c:if>
                   </div>
-                  </a>
+                  
                 </div>
             </c:forEach>
    

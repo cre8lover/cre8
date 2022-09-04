@@ -112,6 +112,7 @@ public class Creatercontroller extends HttpServlet {
 			
 			goView(req, resp, "/creater/jmh_salesHistory.jsp");
 			
+			
 		} else if(cmd.equals("auction_reg")) {
 		
 			String seqno = req.getParameter("seqno");
