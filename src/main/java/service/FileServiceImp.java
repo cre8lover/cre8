@@ -1,0 +1,134 @@
+package service;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.UUID;
+
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.io.FilenameUtils;
+
+import dao.FileDao;
+import dto.Att;
+import dto.Item;
+import dto.Pro;
+import dto.Thumbnail;
+import net.coobird.thumbnailator.Thumbnails;
+
+public class FileServiceImp implements FileService {
+
+	FileDao filedao = new FileDao();
+	
+	@Override
+	public Att fileUpload(FileItem item) throws Exception {
+		//첨부파일 : 바이너리파일
+		long fileSize = item.getSize();
+		Att attachfile = null;
+		//System.out.println("업로드 파일 사이즈:" + fileSize);	
+		if(fileSize > 0) {
+			
+			String fileUploadPath = "D:/jmh/upload/";
+			String fileName = item.getName();
+			// 라이브러리이용
+//			System.out.println(FilenameUtils.getExtension(fileName)); 
+//			System.out.println(FilenameUtils.getBaseName(fileName));
+			
+			//서브스티링 이용
+			String split_fileName = fileName.substring(0,fileName.lastIndexOf("."));
+			String split_extension = fileName.substring(fileName.lastIndexOf(".")+1);
+			
+			
+//			System.out.println(split_fileName);
+//			System.out.println(split_extension);
+			
+			//중복된 파일을 업로드 하지 않기 위해 UID값 생성
+			UUID uid = UUID.randomUUID();
+			
+			String saveFileName = split_fileName + "_"+ uid + "."+ split_extension;
+			
+//			System.out.println(fileUploadPath);
+//			System.out.println("업로드 파일 이름 : "+ fileName); //운영체제에 따른 파일 경로뽑기 File.separator
+//			System.out.println(saveFileName); //저장할 파일 이름
+			//업로드 파일 저장
+			File file = new File(fileUploadPath + saveFileName);
+			item.write(file);
+			
+			attachfile = new Att();
+			
+			attachfile.setAttName(fileName);
+			attachfile.setAttPath(fileUploadPath);
+			attachfile.savefilename(saveFileName);
+			attachfile.setAttSize(String.valueOf(fileSize));
+			attachfile.setAttType(item.getContentType());
+			
+			String fileType = item.getContentType();
+			String type = fileType.substring(0,fileType.indexOf("/"));
+		
+			if(type.equals("image")) {
+							
+				attachfile.setAttThumb(setThumbnail(saveFileName,file));
+			}
+		}
+		return attachfile;
+	}
+
+	@Override
+	public Thumbnail setThumbnail(String saveFileName, File file) throws IOException {
+		
+	//섬네일 파일 저장
+		String thumbFileName = "thumb_200x200_" + saveFileName;
+		String thumbFilePath = "D:/jmh/upload/thumbnail/";
+		File thumbFile = new File(thumbFilePath+thumbFileName);
+		
+		Thumbnails.of(file).size(200, 200).toFile(thumbFile);
+		
+		Thumbnail thumbnail = new Thumbnail();
+		thumbnail.setFileName(thumbFileName);
+		thumbnail.setFilePath(thumbFilePath);
+		//파일 사이즈 구하기
+		thumbnail.setFileSize(String.valueOf(thumbFile.length()));
+		
+		return thumbnail;
+				
+	}
+	
+	@Override
+	public Pro getFormParameter(FileItem item,Pro pro,Item proitem) throws ParseException {
+		DateFormat sdFormat = new SimpleDateFormat("yyyy-MM-dd");
+		//<input> : 태그값
+		//System.out.printf("필드이름 : %s, 필드값: %s\n", item.getFieldName(), item.getString());
+		String get = item.getString();
+		if (item.getFieldName().equals("proStat")) {
+			pro.setProStat(get);
+			
+		}else if (item.getFieldName().equals("proPrice")) {
+			pro.setProPrice(Integer.parseInt(get));
+			
+		}else if (item.getFieldName().equals("proHits")) {
+			pro.setProHits(Integer.parseInt(get));
+			
+		}else if (item.getFieldName().equals("proSaleprice")) {
+			pro.setProSaleprice(Integer.parseInt(get));
+		}else if (item.getFieldName().equals("proOpendate")) {
+			pro.setProOpendate(sdFormat.parse(get));
+			
+		}else if (item.getFieldName().equals("proClosedate")) {
+			pro.setProClosedate(sdFormat.parse(get));
+		}else if (item.getFieldName().equals("proDetail")) {
+			pro.setProDetail(get);
+		}else if (item.getFieldName().equals("amount")) {
+			pro.setProAmount(Integer.parseInt(get));
+		}else if (item.getFieldName().equals("itemDetail")) {
+			proitem.setItemDetail(get);
+		}else if (item.getFieldName().equals("itemName")) {
+			proitem.setItemName(get);
+			
+		}
+		pro.setItem(proitem);
+		return pro;
+		
+	}
+	
+}

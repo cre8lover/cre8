@@ -58,28 +58,29 @@
 							<a>요청사항</a>
 							<select name="choice"  onchange="" style="width: 35%; height: 31px;">
 								<option value="">배송시 요청사항</option>	
-								<option value="">문 앞에 놓아주세요</option>
-								<option value="">경비실에 맡겨주세요</option>
-								<option value="">배송 전 휴대폰으로 연락주세요</option>							
-								<option value="">파손위험이 있는 상품이니 조심히 다뤄주세</option>							
+								<option value="문 앞에 놓아주세요">문 앞에 놓아주세요</option>
+								<option value="경비실에 맡겨주세요">경비실에 맡겨주세요</option>
+								<option value="배송 전 휴대폰으로 연락주세요">배송 전 휴대폰으로 연락주세요</option>							
+								<option value="파손위험이 있는 상품이니 조심히 다뤄주세">파손위험이 있는 상품이니 조심히 다뤄주세</option>							
 								<option value="">직접입력</option>							
 							</select>
 						</div>
 					</form>
 				</div>
+	
 				
 				<div class="buyer">
 					<form style="width:76%"> 
 						<h2>배송지정보</h2>
 						<div class="buy">
-							<input type="checkbox"> 구매자정보와 동일 <br>
+							<input type="checkbox" id="checkbuyinfo"onchange="addrequals()"> 구매자정보와 동일 <br>
 							<a style="padding-right: 16px;"> 구매자 </a>
-							<input type="text" readonly value="강홍묵"> 
+							<input type="text" id="name2" value="강홍묵"> 
 						</div>
 						<div class = "address">
 							<a style="padding-right: 32px;"> 주소 </a>
-							<input type="text" class="address" id="address_kakao" name="address" readonly placeholder="기본 주소" />
-						    <input type="text" class="address" name="address_detail" placeholder="상세 주소 및 상세 건물명"/>
+							<input type="text" class="address" id="address_kakao2" name="address" readonly placeholder="기본 주소" />
+						    <input type="text" class="address" id="address_kakao_back2" name="bottom_address_detail" placeholder="상세 주소 및 상세 건물명"/>
 						</div>
 						<div>
 							<a> 전화번호 </a>
@@ -89,23 +90,23 @@
 									<option value="011">011</option>
 									<option value="016">016</option>
 								</select>
-							<input type="text" placeholder="휴대폰 앞자리">
-							<input type="text" placeholder="휴대폰 뒷자리">
+							<input type="text" id="phon_front2" placeholder="휴대폰 앞자리">
+							<input type="text" id="phon_back2" placeholder="휴대폰 뒷자리">
 						</div>
 						<div>
 							<a>요청사항</a>
 							<select name="choice"  onchange="" style="width: 35%; height: 31px;">
 								<option value="">배송시 요청사항</option>	
-								<option value="">문 앞에 놓아주세요</option>
-								<option value="">경비실에 맡겨주세요</option>
-								<option value="">배송 전 휴대폰으로 연락주세요</option>							
-								<option value="">파손위험이 있는 상품이니 조심히 다뤄주세</option>							
+								<option value="문 앞에 놓아주세요">문 앞에 놓아주세요</option>
+								<option value="경비실에 맡겨주세요">경비실에 맡겨주세요</option>
+								<option value="배송 전 휴대폰으로 연락주세요">배송 전 휴대폰으로 연락주세요</option>							
+								<option value="파손위험이 있는 상품이니 조심히 다뤄주세">파손위험이 있는 상품이니 조심히 다뤄주세</option>							
 								<option value="">직접입력</option>							
 							</select>
 						</div>
 					</form>
 				</div>
-				
+
 				
 				
 				
@@ -127,7 +128,7 @@
 						 <c:set value="${pro.item}" var="itemp"/>
 						<tr>
 <%-- 							<th rowspan='2' style="overflow:hidden;padding: 15px;width:20%;"><img class="jmh_imgsize" src="<%= request.getContextPath() %>/img/짜릿.png" alt="My Image"></th> --%>
-							<th style="overflow:hidden;padding: 15px;width:20%;" >${itemp.itemImg }</th>
+							<th style="overflow:hidden;padding: 15px;width:20%;" ><img class="" src="/upload/thumbnail/${itemp.itemImg }" style="height:225px;"></th>
 							<th style="width:60%"><a style="font-size:20px; line-height:0%;">${itemp.itemName }
 								<input type="hidden" class="itemname" value="${itemp.itemName }"></a></th>
 							<th style="width:10%">${cartp.cartAmount}</th>
@@ -159,7 +160,7 @@
 				<%-- <div style="float:right">${total }원</div> --%>
 				<form>
 					<input type="hidden" class="ordercount" value="${fn:length(listp)}">
-					<input type="button" onclick="requestPay(${total})" class="bton" value="주 문"> 
+					<input type="button" onclick="requestPay(${total})" class="bton" value="구매하기"> 
 				</form>
 			</div>
 		</div>
