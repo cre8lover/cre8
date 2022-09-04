@@ -11,7 +11,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.FilenameUtils;
 
 import dao.FileDao;
-import dto.AttachFile;
+import dto.Att;
 import dto.Item;
 import dto.Pro;
 import dto.Thumbnail;
@@ -22,10 +22,10 @@ public class FileServiceImp implements FileService {
 	FileDao filedao = new FileDao();
 	
 	@Override
-	public AttachFile fileUpload(FileItem item) throws Exception {
+	public Att fileUpload(FileItem item) throws Exception {
 		//첨부파일 : 바이너리파일
 		long fileSize = item.getSize();
-		AttachFile attachfile = null;
+		Att attachfile = null;
 		//System.out.println("업로드 파일 사이즈:" + fileSize);	
 		if(fileSize > 0) {
 			
@@ -55,20 +55,20 @@ public class FileServiceImp implements FileService {
 			File file = new File(fileUploadPath + saveFileName);
 			item.write(file);
 			
-			attachfile = new AttachFile();
+			attachfile = new Att();
 			
-			attachfile.setFileName(fileName);
-			attachfile.setFilePath(fileUploadPath);
-			attachfile.setSaveFileName(saveFileName);
-			attachfile.setFileSize(String.valueOf(fileSize));
-			attachfile.setType(item.getContentType());
+			attachfile.setAttName(fileName);
+			attachfile.setAttPath(fileUploadPath);
+			attachfile.savefilename(saveFileName);
+			attachfile.setAttSize(String.valueOf(fileSize));
+			attachfile.setAttType(item.getContentType());
 			
 			String fileType = item.getContentType();
 			String type = fileType.substring(0,fileType.indexOf("/"));
 		
 			if(type.equals("image")) {
 							
-				attachfile.setThumbnail(setThumbnail(saveFileName,file));
+				attachfile.setAttThumb(setThumbnail(saveFileName,file));
 			}
 		}
 		return attachfile;
