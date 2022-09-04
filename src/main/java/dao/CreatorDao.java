@@ -579,9 +579,35 @@ public class CreatorDao {
 		            pro.setProHits(rs.getInt("cat_seqno"));
 		            pro.setProAmount(rs.getInt("pro_amount"));
 		            pro.setProSeqno(Integer.parseInt(seqno));
+		            
+		            
+		            sql = " select att_name,att_savename,thumb_filename, att_path, thumb_filepath"
+		            		+ " from att a, att_thumb at"
+		            		+ " where a.att_seqno = at.att_seqno"
+		            		+ " and item_seqno = ? ";
+		            
+		            stmt =conn.prepareStatement(sql);
+			         stmt.setInt(1, rs.getInt("item_seqno"));
+			         ResultSet rs2 = stmt.executeQuery();
+		            
+			         if (rs2.next()) {
+			        	 Att att = new Att ();
+			        	 Thumbnail thum = new Thumbnail();
+			        	 
+			        	 att.setAttName(rs2.getString("att_name"));
+			        	 att.setSavefilename(rs2.getString("att_savename"));
+			        	 att.setAttPath(rs2.getString("att_path"));
+			        	 thum.setFileName(rs2.getString("thumb_filename"));
+			        	 thum.setFilePath(rs2.getString("thumb_filepath"));
+			        	 pro.setAtt_file(att);
+			        	 pro.setThumb(thum);
+			         }
+		            
+		            
+		            
+		            
 		            pro.setItem(item);
 		            
-		            sql = "select * from att_thumb at where ";
 		            
 		         }
 		         stmt.close();
