@@ -25,7 +25,7 @@
         <h4>상품등록/수정(일반)</h4>
       </div>
       <div class='panel-body'>
-        <form class='form-horizontal' role='form' id="reg" action="<%= request.getContextPath() %>/cre/promodify">
+        <form class='form-horizontal' enctype="multipart/form-data" method="post" name="proform" role='form' id="reg" action="<%= request.getContextPath() %>/cre/promodify">
           <div class='form-group'>
             <label class='control-label col-md-2 col-md-offset-2' for='id_pets'>판매상태</label>
             <div class='col-md-8'>
@@ -77,7 +77,7 @@
             <div class='col-md-8'>
               <div class='col-md-2'>
                 <div class='form-group internal'>
-                  <input class='form-control col-md-8' id='' placeholder='정가' type='number' step="10000" name="proPrice" value="${pro.proPrice}">
+                  <input class='form-control col-md-8' id='' placeholder='정가' type='number'  name="proPrice" value="${pro.proPrice}">
                 </div>
               </div>
               <div class='col-md-6 indent-small'>
@@ -171,7 +171,7 @@
               	<div class="filebox">
 				    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
 				    <label for="file">파일찾기</label> 
-				    <input type="file" id="file">
+				    <input type="file" id="file" name="filename">
 				</div>
             </div>
             </div>

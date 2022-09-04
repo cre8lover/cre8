@@ -31,7 +31,7 @@ public class BuyDao {
 		Pro pro = new Pro();
 		Item item = new Item();
 		try {
-		String sql ="select i.item_name as item_name, i.item_img as item_img, pro_price, cart_amount,(pro_price * cart_amount) as totalprice"
+		String sql ="select i.item_seqno as item_seqno i.item_name as item_name, i.item_img as item_img, pro_price, cart_amount,(pro_price * cart_amount) as totalprice"
 				+ "                from item i,"
 				+ "                (select p.item_seqno, p.pro_price, c.cart_amount"
 				+ "                from cart c, pro p"
@@ -45,16 +45,29 @@ public class BuyDao {
 		
 		while(rs.next()) {
 			item.setItemName(rs.getString("item_name"));
-			item.setItemImg(rs.getString("item_img"));
 			pro.setProPrice(rs.getInt("pro_price"));
 			cart.setCartAmount(rs.getInt("cart_amount"));
 			cart.setTotalprice(rs.getInt("totalprice"));
+			
+			
+			sql = " select THUMB_FILENAME, THUMB_FILEPATH "
+					+ " from att_thumb"
+					+ " where att_seqno = (select att_seqno from att where item_seqno = ?)";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, rs.getInt("item_seqno"));
+			ResultSet rs2 = stmt.executeQuery();
+			if(rs2.next()) {
+				
+				item.setItemImg(rs2.getString("thumb_filename"));
+				
+			}
 			pro.setItem(item);
 			cart.setPro(pro);
 			
 		}
 		
-		
+
 		stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -74,7 +87,7 @@ public class BuyDao {
 		Item item = null;
 		if(chklist == null) {
 		try {
-			String sql = "select i.item_img as item_img,i.item_name as item_name,a.pro_price as pro_price,a.cart_amount as cart_amount,"
+			String sql = "select i.item_seqno as item_seqno, i.item_img as item_img,i.item_name as item_name,a.pro_price as pro_price,a.cart_amount as cart_amount,"
 					+ " (a.pro_price * a.cart_amount) as totalprice, a.pro_seqno as pro_seqno,a.cart_seqno as cart_seqno"
 					+ " from item i,(select p.pro_seqno,c.mem_id,p.pro_price, p.item_seqno,c.cart_seqno as cart_seqno,c.cart_amount"
 					+ " from cart c,pro p where c.pro_seqno = p.pro_seqno"
@@ -89,13 +102,30 @@ public class BuyDao {
 				pro = new Pro();
 				item = new Item();
 				
-				item.setItemImg(rs.getString("item_img"));
 				item.setItemName(rs.getString("item_name"));
 				pro.setProPrice(rs.getInt("pro_price"));
 				pro.setProSeqno(rs.getInt("pro_seqno"));
 				cart.setCartSeqno(rs.getInt("cart_seqno"));
 				cart.setCartAmount(rs.getInt("cart_amount"));
 				cart.setTotalprice(rs.getInt("totalprice"));
+				
+				
+				sql = " select THUMB_FILENAME, THUMB_FILEPATH "
+						+ " from att_thumb"
+						+ " where att_seqno = (select att_seqno from att where item_seqno = ?)";
+				
+				stmt = conn.prepareStatement(sql);
+				stmt.setInt(1, rs.getInt("item_seqno"));
+				ResultSet rs2 = stmt.executeQuery();
+				if(rs2.next()) {
+					
+					item.setItemImg(rs2.getString("thumb_filename"));
+					
+				}
+				
+				
+				
+				
 				pro.setItem(item);
 				cart.setPro(pro);
 				cartlist.add(cart);
@@ -113,7 +143,7 @@ public class BuyDao {
 			
 			
 			String sql = " select (select item_name from item i where i.item_seqno = p.item_seqno) item_name, ";
-				   sql+= " (select item_img from item i where i.item_seqno = p.item_seqno) item_img, ";
+				   sql+= " (select item_seqno from item i where i.item_seqno = p.item_seqno) item_seqno, ";
 				   sql+= " c.cart_seqno as cart_seqno, c.cart_amount as cart_amount,p.pro_price as pro_price ";
 				   sql+= " from (select * from cart";
 				   sql+= " where mem_id = ?) c, ";
@@ -141,10 +171,26 @@ public class BuyDao {
 					item = new Item();
 					
 					item.setItemName(rs.getString("item_name"));
-					item.setItemImg(rs.getString("item_img"));
 					pro.setProPrice(rs.getInt("pro_price"));
 					cart.setCartSeqno(rs.getInt("cart_seqno"));
 					cart.setCartAmount(rs.getInt("cart_amount"));
+					
+					
+					sql = " select THUMB_FILENAME, THUMB_FILEPATH "
+							+ " from att_thumb"
+							+ " where att_seqno = (select att_seqno from att where item_seqno = ?)";
+					
+					stmt = conn.prepareStatement(sql);
+					stmt.setInt(1, rs.getInt("item_seqno"));
+					ResultSet rs2 = stmt.executeQuery();
+					if(rs2.next()) {
+						
+						item.setItemImg(rs2.getString("thumb_filename"));
+						
+					}
+					
+					
+					
 					
 					pro.setItem(item);
 					cart.setPro(pro);
@@ -194,7 +240,7 @@ public class BuyDao {
 			
 			
 			sql = "select (select item_name from item i where i.item_seqno = p.item_seqno) as item_name,"
-					+ " (select item_img from item i where i.item_seqno = p.item_seqno) as item_img,"
+					+ " (select item_seqno from item i where i.item_seqno = p.item_seqno) as item_seqno,"
 					+ " p.pro_price as pro_price, m.amount as amount,(p.pro_price * amount) as price"
 					+ " from pro p,"
 					+ " ("
@@ -215,10 +261,27 @@ public class BuyDao {
 				orders = new Orders();
 				
 				item.setItemName(rs.getString("item_name"));
-				item.setItemImg(rs.getString("item_img"));
 				pro.setProPrice(rs.getInt("pro_price"));
 				pro.setProAmount(rs.getInt("amount"));
 				orders.setOrderAmount(rs.getInt("amount"));
+				
+				
+				sql = " select THUMB_FILENAME, THUMB_FILEPATH "
+						+ " from att_thumb"
+						+ " where att_seqno = (select att_seqno from att where item_seqno = ?)";
+				
+				stmt = conn.prepareStatement(sql);
+				stmt.setInt(1, rs.getInt("item_seqno"));
+				ResultSet rs2 = stmt.executeQuery();
+				if(rs2.next()) {
+					
+					item.setItemImg(rs2.getString("thumb_filename"));
+					
+				}
+				
+				
+				
+				
 				
 				pro.setItem(item);
 				orders.setPro(pro);

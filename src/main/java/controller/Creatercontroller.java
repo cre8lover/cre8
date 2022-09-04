@@ -50,7 +50,7 @@ public class Creatercontroller extends HttpServlet {
 		if(cmd.equals("creReg")) {
 			String add = (String)req.getSession().getAttribute("auth");
 			String id = (String)req.getSession().getAttribute("sess_id");
-			System.out.println(id);
+//			System.out.println(id);
 			
 			if(id == null || add == null) {
 				goView(req, resp, "/member/memreg.jsp");
@@ -95,7 +95,6 @@ public class Creatercontroller extends HttpServlet {
 			
 		}//광고 하나를 클릭했을때 나오는 페이지 
 			else if(cmd.equals("marketingDetail")) {	
-				System.out.println("서블릿 확인" );
 			int seqno = Integer.parseInt(req.getParameter("seqno"));
 				System.out.println(seqno);
 			//List<Marketing> marketing2 = cs.mkk(seqno); 
@@ -148,14 +147,16 @@ public class Creatercontroller extends HttpServlet {
 		
 		//일반 수정 등록
 		   } else if(cmd.equals("promodify")) {
+			   
 		  String seqno = req.getParameter("seqno");
-		  if(seqno != "") {
+		  if(seqno != null) {
 		    seqno = cs.productmodify(req);
 		  }else {
 		   seqno = cs.productadd(req);
 		  }
 		  goView(req,resp,"/cre/product_registration?seqno="+seqno);
 		   } 
+		
 		   else if(cmd.equals("cremodifyreg")) { 
 		          //크리에이터 정보수정
 		            Map<String, String> cremo = cs.cremodifyreg(req);

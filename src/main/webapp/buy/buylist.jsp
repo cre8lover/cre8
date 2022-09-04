@@ -127,7 +127,7 @@
 						 <c:set value="${pro.item}" var="itemp"/>
 						<tr>
 <%-- 							<th rowspan='2' style="overflow:hidden;padding: 15px;width:20%;"><img class="jmh_imgsize" src="<%= request.getContextPath() %>/img/짜릿.png" alt="My Image"></th> --%>
-							<th style="overflow:hidden;padding: 15px;width:20%;" >${itemp.itemImg }</th>
+							<th style="overflow:hidden;padding: 15px;width:20%;" ><img class="" src="/upload/thumbnail/${itemp.itemImg }" style="height:225px;"></th>
 							<th style="width:60%"><a style="font-size:20px; line-height:0%;">${itemp.itemName }
 								<input type="hidden" class="itemname" value="${itemp.itemName }"></a></th>
 							<th style="width:10%">${cartp.cartAmount}</th>

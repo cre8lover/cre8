@@ -29,8 +29,30 @@ public class Pro implements Serializable {
 	private Integer discount;
 	private Integer reviewcount;
 	private String companyname;
+	private Att att_file;
+	private Thumbnail thumb;
 	
 	
+	
+	
+	
+	
+	public Thumbnail getThumb() {
+		return thumb;
+	}
+
+	public void setThumb(Thumbnail thumb) {
+		this.thumb = thumb;
+	}
+
+	public Att getAtt_file() {
+		return att_file;
+	}
+
+	public void setAtt_file(Att att_file) {
+		this.att_file = att_file;
+	}
+
 	public String getCompanyname() {
 		return companyname;
 	}
