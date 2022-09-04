@@ -96,7 +96,7 @@ public class Creatercontroller extends HttpServlet {
 		}//광고 하나를 클릭했을때 나오는 페이지 
 			else if(cmd.equals("marketingDetail")) {	
 			int seqno = Integer.parseInt(req.getParameter("seqno"));
-				System.out.println(seqno);
+//				System.out.println(seqno);
 			//List<Marketing> marketing2 = cs.mkk(seqno); 
 			
 			req.setAttribute("marketing", cs.mkk(seqno));
