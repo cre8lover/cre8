@@ -8,7 +8,7 @@
 <meta charset="UTF-8">
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/member/meminfo.css">
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/cre8.css">
-<title>회원가입</title>
+<title>정보 수정</title>
 </head>
 <body>
 

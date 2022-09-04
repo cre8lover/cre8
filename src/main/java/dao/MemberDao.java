@@ -731,9 +731,6 @@ public class MemberDao {
 		return rs;
 		
 	}
-	
-	
-
 }
 checkid(String id) {
 		int rs = 0;

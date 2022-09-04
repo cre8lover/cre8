@@ -84,7 +84,9 @@
                     <div class="pro-img">
                         <img class="" src="/upload/thumbnail/${list.item.itemImg}" style="height:225px;">
                     </div>
+
                   </a>
+
                     <h3 class="product-name">
                         <p><b>${list.aucDetail }</b></p>
                     </h3>

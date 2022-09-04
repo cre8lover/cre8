@@ -7,6 +7,7 @@
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="<%= request.getContextPath() %>/css/cre8.css">
+<script src="<%= request.getContextPath() %>/js/memreg.js"></script>
 <title>회원가입</title>
 </head>
 <body>
@@ -24,11 +25,13 @@
 		
         <div class="khm_memreg">
             <div class="khm_content">
-            <form action="<%= request.getContextPath() %>/mem/memregform" onsubmit="return checkag()">
+            <form name="cre8reg" method="post" action="<%= request.getContextPath() %>/mem/memregform" onsubmit="return regCheck()">
                 <!-- 아이디 -->
                 <div>
                     <h3>아이디</h3>
-                    <input type="text" id="id" name="id" class="khm_text" maxlength="20" placeholder="아이디">
+                    <input type="text" id="id" name="id" class="khm_text" maxlength="20" placeholder="아이디" onchange="idcheck('<%= request.getContextPath() %>')">
+                    <input type="hidden" id="isidcheck">
+                    <p id="idcheckmsg" style="color:red;"></p>
                 </div>
 
                 <!-- 비밀번호 -->
@@ -51,7 +54,7 @@
                 <!-- 생년월일 -->
                 <div>
                     <h3>생년월일</h3>
-                    <input type="text" name="birth" class="khm_text" maxlength="8" placeholder="주민번호앞 8자리">
+                    <input type="text" name="birth" class="khm_text" maxlength="6" placeholder="주민번호앞 6자리">
                 </div>
 
                 <!-- 이메일 -->

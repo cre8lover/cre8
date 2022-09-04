@@ -1,4 +1,4 @@
-
+//
   
   function moneyCheck(id){
 	var bestid = document.getElementById("bestmoney");

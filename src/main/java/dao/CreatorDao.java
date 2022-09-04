@@ -596,6 +596,7 @@ public class CreatorDao {
 
 	public String productmodify(HttpServletRequest req) {
 		      
+		
 		String proStat = req.getParameter("proStat");
 		if(proStat == null) {
 			proStat = "WAIT";
@@ -614,7 +615,7 @@ public class CreatorDao {
 		String itemName = req.getParameter("itemName");
 		String itemseqno = req.getParameter("itemseqno");
 		      
-		//      System.out.println(proStat +"/"+ proPrice +"/"+ proHits +"/"+ proSaleprice +"/"+ proOpendate +"/"+ proClosedate +"/"+ proDetail +"/"+ seqno +"/"+ itemDetail +"/"+  itemName +"/"+ itemseqno);
+//      System.out.println(proStat +"/"+ proPrice +"/"+ proHits +"/"+ proSaleprice +"/"+ proOpendate +"/"+ proClosedate +"/"+ proDetail +"/"+ seqno +"/"+ itemDetail +"/"+  itemName +"/"+ itemseqno);
 		      
 		      
 		String sql = "update item set ITEM_NAME = ? , "
@@ -637,7 +638,9 @@ public class CreatorDao {
 		               + " pro_detail = ?, "
 		               + " pro_amount = ? "
 		               + " where pro_seqno = ? ";
+		         
 		         stmt = conn.prepareStatement(sql);
+		         
 		         stmt.setString(1, proStat);
 		         stmt.setString(2, proPrice);
 		         stmt.setString(3, proHits);
@@ -649,14 +652,13 @@ public class CreatorDao {
 		         stmt.setString(9, seqno);
 		         stmt.executeQuery();
 		         
-		         
 		         stmt.close();
 		 } catch (SQLException e) {
 		         // TODO Auto-generated catch block
 		         e.printStackTrace();
 		 }
 		      
-	//	      System.out.println(seqno);
+//		      System.out.println(seqno);
 		 return seqno;
 	}
 
