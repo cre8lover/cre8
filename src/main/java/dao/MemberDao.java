@@ -22,6 +22,7 @@ import org.apache.commons.fileupload.RequestContext;
 
 import common.OracleConn;
 import dto.Address;
+import dto.Att;
 import dto.Auc;
 import dto.AucNowing;
 import dto.Cart;
@@ -31,6 +32,7 @@ import dto.Orderdetail;
 import dto.Orders;
 import dto.Pro;
 import dto.Ship;
+import dto.Thumbnail;
 import dto.Waybill;
 
 public class MemberDao {
@@ -117,7 +119,7 @@ public class MemberDao {
 //		Address add = new Address();
 		
 		String sql = "select m.mem_id, m.mem_email, m.mem_tel, m.mem_name, ";
-				sql += " nvl(a.add_address, '주소를 입력하세요') as add_address"; 
+				sql += " nvl(a.add_address, '주소를 입력하세요') as add_address";
 				sql += " from mem m, address a";
 				sql += " where m.mem_id = a.mem_id(+)"; 
 				sql += " and m.mem_id = ?";
@@ -136,12 +138,53 @@ public class MemberDao {
 				member.setMemEmail(rs.getString("mem_email"));
 				member.setMemTel(rs.getString("mem_tel"));
 				member.setMemName(rs.getString("mem_name"));
-
 				
 				addr = new Address();
 				addr.setAddAddress(rs.getString("add_address"));
 			}
 			member.setAddressSet(addr);
+			
+			sql = "select * from att where mem_id = ?";
+			 stmt = conn.prepareStatement(sql);
+			 stmt.setString(1, id);
+
+			 rs = stmt.executeQuery();
+			 
+			 List<Att> fileList = new ArrayList<Att>();
+			 
+			 while(rs.next()) {
+				 Att att = new Att();
+				 
+				 att.setAttSeqno(rs.getInt("att_seqno"));
+				 att.setAttName(rs.getString("att_filename"));
+				 att.savefilename(rs.getString("att_savefilename"));
+				 att.setAttSize(rs.getString("att_filesize"));
+				 att.setAttType(rs.getString("att_filetype"));
+				 att.setAttPath(rs.getString("att_filepath"));
+
+				 if(rs.getString("filetype").contains("image")) {
+				 
+					 sql = "select * from att_thumb where att_seqno = ?";
+					 stmt = conn.prepareStatement(sql);
+					 stmt.setString(1, rs.getString("att_seqno"));
+					 ResultSet rs2 = stmt.executeQuery();
+				 
+					 while(rs2.next()) {
+						 
+						 Thumbnail th = new Thumbnail();
+						 th.setThumbSeqNo(rs2.getString("thumb_seqno"));
+						 th.setFileName(rs2.getString("thumb_filename"));
+						 th.setFileSize(rs2.getString("thumb_filesize"));
+						 th.setFilePath(rs2.getString("thumb_filepath"));
+						 att.setThumbnail(th);
+						 
+					 }
+					 
+				 }
+				 fileList.add(att);
+			 }
+			 
+			 member.setAtt(fileList);
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -661,6 +704,117 @@ public class MemberDao {
 		
 		
 		return map;
+	}
+
+	public int checkid(String id) {
+		int rs = 0;
+		String sql ="select mem_id from mem where mem_id = ?";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			
+			stmt.setString(1, id);
+			
+			ResultSet res = stmt.executeQuery();
+			if(res.next()) {
+				rs = 1;
+			} else {
+				rs = 0;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return rs;
+		
+	}
+	
+	
+
+}
+checkid(String id) {
+		int rs = 0;
+		String sql ="select mem_id from mem where mem_id = ?";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			
+			stmt.setString(1, id);
+			
+			ResultSet res = stmt.executeQuery();
+			if(res.next()) {
+				rs = 1;
+			} else {
+				rs = 0;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return rs;
+		
+	}
+	
+	
+
+}
+		int rs = 0;
+		String sql ="select mem_id from mem where mem_id = ?";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			
+			stmt.setString(1, id);
+			
+			ResultSet res = stmt.executeQuery();
+			if(res.next()) {
+				rs = 1;
+			} else {
+				rs = 0;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return rs;
+		
+	}
+	
+	
+
+}
+		int rs = 0;
+		String sql ="select mem_id from mem where mem_id = ?";
+		
+		try {
+			PreparedStatement stmt = conn.prepareStatement(sql);
+			
+			stmt.setString(1, id);
+			
+			ResultSet res = stmt.executeQuery();
+			if(res.next()) {
+				rs = 1;
+			} else {
+				rs = 0;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		return rs;
+		
 	}
 	
 	

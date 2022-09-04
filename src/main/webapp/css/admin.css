@@ -38,6 +38,11 @@
   color: black;
 }
 
+.khm_topnav-active{
+	background:white;
+	color:balck;
+}
+
 /* Footer */
 .khm_footer {
   padding: 20px;

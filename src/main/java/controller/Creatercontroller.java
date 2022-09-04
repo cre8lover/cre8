@@ -112,6 +112,7 @@ public class Creatercontroller extends HttpServlet {
 			
 			goView(req, resp, "/creater/jmh_salesHistory.jsp");
 			
+			
 		} else if(cmd.equals("auction_reg")) {
 		
 			String seqno = req.getParameter("seqno");
@@ -127,8 +128,10 @@ public class Creatercontroller extends HttpServlet {
 		  } else if(cmd.equals("auction_modify")) {
 			  
 		 String seqno = req.getParameter("seqno");
-		 if (seqno == null) { seqno = cs.aucadd(req);}
-		 else { cs.aucmodify(req);}
+		 if (seqno != null) { cs.aucmodify(req);}
+		 else { 
+		 seqno = cs.aucadd(req);
+		 }
 		 
 		 goView(req, resp, "/cre/auction_reg?seqno="+seqno);
 		 

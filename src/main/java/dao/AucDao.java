@@ -30,7 +30,7 @@ public class AucDao {
       Auc auc = null;
       Item item = null;
       
-      String sql = "select *  from (    select i.item_img as item_img, i.item_name as item_name, a.auc_detail as auc_detail, a.auc_price as auc_price, "
+      String sql = "select *  from ( select i.item_seqno as item_seqno, i.item_img as item_img, i.item_name as item_name, a.auc_detail as auc_detail, a.auc_price as auc_price, "
             + " a.auc_closeprice as auc_closeprice, a.auc_seqno as auc_seqno,    a.auc_hits as auc_hits, a.auc_start as sdate, to_char(a.auc_finish, 'YYYY-MM-DD,HH24:MI:SS') as fdate, "
             + " (to_date(a.auc_finish, 'YYYY-MM-DD,HH24:MI:SS')-to_date(a.auc_start, 'YYYY-MM-DD,HH24:MI:SS')) as minusday "
             + " from item i, auc a where i.item_seqno = a.item_seqno) order by sdate desc";
@@ -41,6 +41,7 @@ public class AucDao {
          while (rs.next()) {
             auc = new Auc();
             item = new Item();
+            String itemseqno = rs.getString("item_seqno");
             auc.setAucImg(rs.getString("item_img"));
             item.setItemName(rs.getString("item_name"));
             item.setItemDetail(rs.getString("auc_detail"));
@@ -50,11 +51,23 @@ public class AucDao {
             auc.setAucFinish(rs.getString("fdate"));
             auc.setAucSeqno(rs.getInt("auc_seqno"));
             auc.setAucAmount(rs.getInt("minusday"));
+            
+            
+			sql = " select THUMB_FILENAME, THUMB_FILEPATH "
+					+ " from att_thumb"
+					+ " where att_seqno = (select att_seqno from att where item_seqno = ?)";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, itemseqno);
+			ResultSet rs2 = stmt.executeQuery();
+			if(rs2.next()) {
+				item.setItemImg(rs2.getString("thumb_filename"));
+			}
             auc.setItem(item);
             auclist.add(auc);
          }
          
-         sql = "select *  from (    select i.item_img as item_img, i.item_name as item_name, a.auc_detail as auc_detail, a.auc_price as auc_price, "
+         sql = "select *  from (select i.item_seqno as item_seqno, i.item_img as item_img, i.item_name as item_name, a.auc_detail as auc_detail, a.auc_price as auc_price, "
             + " a.auc_closeprice as auc_closeprice, a.auc_seqno as auc_seqno,    a.auc_hits as auc_hits, a.auc_start as sdate, to_char(a.auc_finish, 'YYYY-MM-DD,HH24:MI:SS') as fdate, "
             + " (to_date(a.auc_finish, 'YYYY-MM-DD,HH24:MI:SS')-to_date(a.auc_start, 'YYYY-MM-DD,HH24:MI:SS')) as minusday "
             + " from item i, auc a where i.item_seqno = a.item_seqno) order by auc_hits desc";
@@ -65,6 +78,7 @@ public class AucDao {
          while (rs.next()) {
             auc = new Auc();
             item = new Item();
+            String itemseqno = rs.getString("item_seqno");
             auc.setAucImg(rs.getString("item_img"));
             item.setItemName(rs.getString("item_name"));
             item.setItemDetail(rs.getString("auc_detail"));
@@ -75,12 +89,23 @@ public class AucDao {
             auc.setAucSeqno(rs.getInt("auc_seqno"));
             auc.setAucAmount(rs.getInt("minusday"));
 
+            
+			sql = " select THUMB_FILENAME, THUMB_FILEPATH "
+					+ " from att_thumb"
+					+ " where att_seqno = (select att_seqno from att where item_seqno = ?)";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, itemseqno);
+			ResultSet rs2 = stmt.executeQuery();
+			if(rs2.next()) {
+				item.setItemImg(rs2.getString("thumb_filename"));
+			}
             auc.setItem(item);
             hitlist.add(auc);
          }
          
          
-         sql = "select *  from (    select i.item_img as item_img, i.item_name as item_name, a.auc_detail as auc_detail, a.auc_price as auc_price, "
+         sql = "select *  from (select i.item_seqno as item_seqno, i.item_img as item_img, i.item_name as item_name, a.auc_detail as auc_detail, a.auc_price as auc_price, "
                + " a.auc_closeprice as auc_closeprice, a.auc_seqno as auc_seqno,    a.auc_hits as auc_hits, a.auc_start as sdate, to_char(a.auc_finish, 'YYYY-MM-DD,HH24:MI:SS') as fdate, "
                + " (to_date(a.auc_finish, 'YYYY-MM-DD,HH24:MI:SS')-to_date(a.auc_start, 'YYYY-MM-DD,HH24:MI:SS')) as minusday "
                + " from item i, auc a where i.item_seqno = a.item_seqno) order by minusday";
@@ -91,6 +116,7 @@ public class AucDao {
             while (rs.next()) {
                auc = new Auc();
                item = new Item();
+               String itemseqno = rs.getString("item_seqno");
                auc.setAucImg(rs.getString("item_img"));
                item.setItemName(rs.getString("item_name"));
                item.setItemDetail(rs.getString("auc_detail"));
@@ -100,6 +126,16 @@ public class AucDao {
                auc.setAucFinish(rs.getString("fdate"));
                auc.setAucSeqno(rs.getInt("auc_seqno"));
                auc.setAucAmount(rs.getInt("minusday"));
+               sql = " select THUMB_FILENAME, THUMB_FILEPATH "
+					+ " from att_thumb"
+					+ " where att_seqno = (select att_seqno from att where item_seqno = ?)";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setString(1, itemseqno);
+			ResultSet rs2 = stmt.executeQuery();
+			if(rs2.next()) {
+				item.setItemImg(rs2.getString("thumb_filename"));
+			}
                auc.setItem(item);
                lastlist.add(auc);
             }
@@ -107,9 +143,9 @@ public class AucDao {
          stmt.close();   
    
       } catch (SQLException e) {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
+      
       aucmap.put("last", lastlist);
       aucmap.put("hit", hitlist);
       aucmap.put("auc", auclist);

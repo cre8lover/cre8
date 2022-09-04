@@ -24,6 +24,28 @@ public class Auc implements Serializable {
 	private Integer aucHits;
 	private List<AucNowing> aucNowingSet;
 	private Cart cartSet;
+	private Att att_file;
+	private Thumbnail thumb;
+	
+	
+	
+	
+	
+	public Att getAtt_file() {
+		return att_file;
+	}
+
+	public void setAtt_file(Att att_file) {
+		this.att_file = att_file;
+	}
+
+	public Thumbnail getThumb() {
+		return thumb;
+	}
+
+	public void setThumb(Thumbnail thumb) {
+		this.thumb = thumb;
+	}
 
 	public void setAucSeqno(Integer aucSeqno) {
 		this.aucSeqno = aucSeqno;

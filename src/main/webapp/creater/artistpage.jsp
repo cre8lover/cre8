@@ -53,7 +53,7 @@
          
          <div class="info2">
             <img class="" src="<%= request.getContextPath() %>/img/user.png" style="height:150px;">
-            <p class= name2><b>알파카&nbsp;</b>님</p>
+            <p class= name2><b>${sess_name}&nbsp;</b>님</p>
             <div class="proreg">
             <a href ="javascript:newwindow('<%= request.getContextPath() %>/cre/product_registration','add');">등록</a>
             </div> 
@@ -82,8 +82,9 @@
                 <div class="product span3">
                 <a href="<%= request.getContextPath() %>/auc/auctionDetail?seqno=${list.aucSeqno}">
                     <div class="pro-img">
-                        <img class="" ${list.aucImg } style="height:225px;">
+                        <img class="" src="/upload/thumbnail/${list.item.itemImg}" style="height:225px;">
                     </div>
+                  </a>
                     <h3 class="product-name">
                         <p><b>${list.aucDetail }</b></p>
                     </h3>
@@ -101,7 +102,6 @@
                      <button class="custom-btn btn-1" href = "#">삭제</button>
                      </c:if>
                   </div>
-                  </a>
                 </div>
             </c:forEach>
    
@@ -110,7 +110,7 @@
          
          <div class="info2">
             <img class="" src="<%= request.getContextPath() %>/img/user.png" style="height:150px;">
-            <p class= name2><b>알파카&nbsp;</b>님</p>
+            <p class= name2><b>${sess_name}&nbsp;</b>님</p>
             <div class="proreg">
             <a href ="javascript:newwindow('<%= request.getContextPath() %>/cre/auction_reg','add');">경매등록</a>
             </div> 

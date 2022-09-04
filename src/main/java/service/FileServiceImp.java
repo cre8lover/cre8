@@ -12,6 +12,7 @@ import org.apache.commons.io.FilenameUtils;
 
 import dao.FileDao;
 import dto.Att;
+import dto.Auc;
 import dto.Item;
 import dto.Pro;
 import dto.Thumbnail;
@@ -82,7 +83,7 @@ public class FileServiceImp implements FileService {
 		String thumbFilePath = "D:/jmh/upload/thumbnail/";
 		File thumbFile = new File(thumbFilePath+thumbFileName);
 		
-		Thumbnails.of(file).size(200, 200).toFile(thumbFile);
+		Thumbnails.of(file).size(338, 338).toFile(thumbFile);
 		
 		Thumbnail thumbnail = new Thumbnail();
 		thumbnail.setFileName(thumbFileName);
@@ -128,6 +129,36 @@ public class FileServiceImp implements FileService {
 		}
 		pro.setItem(proitem);
 		return pro;
+		
+	}
+
+	@Override
+	public Auc getFormParameter2(FileItem item, Auc auc, Item proitem) throws ParseException {
+		//<input> : 태그값
+		//System.out.printf("필드이름 : %s, 필드값: %s\n", item.getFieldName(), item.getString());
+		
+		String get = item.getString();
+		
+		if (item.getFieldName().equals("auc_stat")) {
+			auc.setAucStat(get);
+		}else if (item.getFieldName().equals("auc_price")) {
+			auc.setAucPrice(Integer.parseInt(get));
+		}else if (item.getFieldName().equals("auc_shortdetail")) {
+			auc.setAucShortdetail(get);
+		}else if (item.getFieldName().equals("auc_start")) {
+			auc.setAucStart(get);
+		}else if (item.getFieldName().equals("auc_finish")) {
+			auc.setAucFinish(get);
+		}else if (item.getFieldName().equals("auc_detail")) {
+			auc.setAucDetail(get);
+		}else if (item.getFieldName().equals("itemDetail")) {
+			proitem.setItemDetail(get);
+		}else if (item.getFieldName().equals("item_name")) {
+			proitem.setItemName(get);
+			
+		}
+		auc.setItem(proitem);
+		return auc;
 		
 	}
 	

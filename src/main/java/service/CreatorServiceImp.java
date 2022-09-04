@@ -22,7 +22,7 @@ import dto.Pro;
 public class CreatorServiceImp implements CreatorService{
 	
 	
-//	private static final String CHARSET = "utf-8";
+	private static final String CHARSET = "utf-8";
 	CreatorDao creatorDao = new CreatorDao();
 	Mem mem = new Mem();
 
@@ -85,8 +85,42 @@ public class CreatorServiceImp implements CreatorService{
 	
 	@Override
     public String aucadd(HttpServletRequest req) {
-		return creatorDao.aucadd(req);
+		DiskFileItemFactory factory = new DiskFileItemFactory(); 
+		factory.setDefaultCharset(CHARSET);//상수로 선언하는게 좋다.
+		//factory form의 데이터를 가져와서 저장 utf8로 저장하는게 좋음
+		ServletFileUpload upload = new ServletFileUpload(factory);
+		
+		Auc auc = new Auc();
+		Item proitem = new Item();
+		Att attachfile = null;
+		FileService fileService = new FileServiceImp();
+		
+		try {
+			List<FileItem> items = upload.parseRequest(req);
+			//멀티파트 확인법
+			for(FileItem item : items) {
+				if (item.isFormField()) {//2진데이터인지 텍스트인지 구별해줌
+					auc =  fileService.getFormParameter2(item,auc,proitem); 
+				}else {
+					attachfile = fileService.fileUpload(item);
+				}
+			}
+		} catch (FileUploadException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		auc.setAtt_file(attachfile);
+	    String id = (String)req.getSession().getAttribute("sess_id");
+	    
+
+		
+		return creatorDao.aucadd(auc, id);
     }
+	
+	
+	
     @Override
     public Auc aucdetail(String seqno) {
     	return creatorDao.aucdetail(seqno);
@@ -105,7 +139,7 @@ public class CreatorServiceImp implements CreatorService{
 	   public String productadd(HttpServletRequest req) {
 		
 		DiskFileItemFactory factory = new DiskFileItemFactory(); 
-//		factory.setDefaultCharset("CHARSET");//상수로 선언하는게 좋다.
+		factory.setDefaultCharset("CHARSET");//상수로 선언하는게 좋다.
 		//factory form의 데이터를 가져와서 저장 utf8로 저장하는게 좋음
 		ServletFileUpload upload = new ServletFileUpload(factory);
 		
