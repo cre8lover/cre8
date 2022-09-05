@@ -153,6 +153,7 @@ public class MemberServiceImp implements MemberService {
 			e.printStackTrace();
 		}
 		
+		mem.setAtt(attachfile);
 		String id = (String)sess.getAttribute("sess_id");
 		mem.setMemId(id);
 		dao.infoinsert(mem);	
