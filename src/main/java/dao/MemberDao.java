@@ -136,17 +136,15 @@ public class MemberDao {
 				addr.setAddAddress(rs.getString("add_address"));
 			}
 			member.setAddressSet(addr);
-			
+
 			sql = "select * from att where mem_id = ?";
 			 stmt = conn.prepareStatement(sql);
 			 stmt.setString(1, id);
 
 			 rs = stmt.executeQuery();
 			 
-			 List<Att> fileList = new ArrayList<Att>();
-			 
-			 while(rs.next()) {
-				 Att att = new Att();
+			 Att att = new Att();
+			 if(rs.next()) {
 				 
 				 att.setAttSeqno(rs.getInt("att_seqno"));
 				 att.setAttName(rs.getString("att_filename"));
@@ -174,10 +172,10 @@ public class MemberDao {
 					 }
 					 
 				 }
-				 fileList.add(att);
+				 
 			 }
 			 
-			 member.setAtt(fileList);
+			 member.setAtt(att);
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

@@ -11,6 +11,7 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.FilenameUtils;
 
 import dao.FileDao;
+import dto.Address;
 import dto.Att;
 import dto.Auc;
 import dto.Item;
@@ -165,25 +166,26 @@ public class FileServiceImp implements FileService {
 
 	public Mem getFormParameter_mypage(FileItem item, Mem mem) {
 		String get = item.getString();
-
-		if (item.getFieldName().equals("auc_stat")) {
-			mem.setAucStat(get);
+		Address add = new Address();
+		if (item.getFieldName().equals("eamil")) {
+			mem.setMemTel(get);
 		}else if (item.getFieldName().equals("auc_price")) {
-			mem.setAucPrice(Integer.parseInt(get));
-		}else if (item.getFieldName().equals("auc_shortdetail")) {
-			mem.setAucShortdetail(get);
-		}else if (item.getFieldName().equals("auc_start")) {
-			mem.setAucStart(get);
-		}else if (item.getFieldName().equals("auc_finish")) {
-			mem.setAucFinish(get);
-		}else if (item.getFieldName().equals("auc_detail")) {
-			mem.setAucDetail(get);
-		}else if (item.getFieldName().equals("itemDetail")) {
-			proitem.setItemDetail(get);
-		}else if (item.getFieldName().equals("item_name")) {
-			proitem.setItemName(get);
-			
+			mem.setMemEmail(get);
+		}else if (item.getFieldName().equals("sns")) {
+			mem.setMemSnsinfo(get);
+		}else if (item.getFieldName().equals("cate")) {
+			add.setAddCategory(get);
+		}else if (item.getFieldName().equals("mobile")) {
+			add.setAddPhone(get);
+		}else if (item.getFieldName().equals("person")) {
+			add.setAddPerson(get);
+		}else if (item.getFieldName().equals("address")) {
+			add.setAddAddress(get);
+		}else if (item.getFieldName().equals("address_detail")) {
+			add.setAddetail(get);
 		}
+		mem.setAddressSet(add);
+		
 		return mem;
 	}
 	
