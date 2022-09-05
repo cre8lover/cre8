@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 
 import common.OracleConn;
 import dto.Address;
@@ -95,6 +96,8 @@ public class MemberDao {
 			stmt.setString(1, mem.getMemId());
 
 			stmt.executeQuery();
+			
+			
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -214,6 +217,7 @@ public class MemberDao {
 				member.setAddressSet(a);
 				
 			}
+			
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -552,6 +556,52 @@ public class MemberDao {
 			
 			stmt.executeQuery();
 
+			/*
+			  
+		 //첨부파일
+			if(att != null) {
+				
+				sql = "INSERT INTO attachfile(att_seqno, att_name, att_savename, att_size, att_type, att_path, mem_id)"
+						+ " VALUES (att_seqno.NEXTVAL, ?,?,?,?,?,?)";
+			
+			PreparedStatement stmt;
+			String attach_no = null;
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, att.getAttName());
+				stmt.setString(2, att.getSavefilename());
+				stmt.setString(3, att.getAttSize());
+				stmt.setString(4, att.getAttType());
+				stmt.setString(5, att.getAttPath());
+				stmt.setString(6, req.getParameter("id"));
+				stmt.executeQuery();
+				
+				sql = "SELECT max(no) FROM att";
+				stmt = conn.prepareStatement(sql);
+				rs = stmt.executeQuery();
+				rs.next();
+				attach_no = rs.getString(1);
+				
+				conn.commit();
+				
+				String fileType = att.getAttType();
+				
+				//썸네일
+				if(fileType.substring(0, fileType.indexOf("/")).equals("image")) {
+					sql = "INSERT INTO attachfile_thumb (thumb_seqno, thumb_filename, thumb_filesize, thumb_filepath, att_seqno) "
+							+ " VALUES (thumb_seqno.nextval, ?, ?, ?, ?)";
+					
+						stmt = conn.prepareStatement(sql);
+						Thumbnail thumb = att.getThumbnail();
+						stmt.setString(1, thumb.getFileName());
+						stmt.setString(2, thumb.getFileSize());
+						stmt.setString(3, thumb.getFilePath());
+						stmt.setString(4, attach_no);
+						stmt.executeQuery();
+				}
+			}
+			
+			 */
+			
 			
 			stmt.close();	
 	
