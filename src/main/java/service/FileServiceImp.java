@@ -14,6 +14,7 @@ import dao.FileDao;
 import dto.Att;
 import dto.Auc;
 import dto.Item;
+import dto.Mem;
 import dto.Pro;
 import dto.Thumbnail;
 import net.coobird.thumbnailator.Thumbnails;
@@ -160,6 +161,30 @@ public class FileServiceImp implements FileService {
 		auc.setItem(proitem);
 		return auc;
 		
+	}
+
+	public Mem getFormParameter_mypage(FileItem item, Mem mem) {
+		String get = item.getString();
+
+		if (item.getFieldName().equals("auc_stat")) {
+			mem.setAucStat(get);
+		}else if (item.getFieldName().equals("auc_price")) {
+			mem.setAucPrice(Integer.parseInt(get));
+		}else if (item.getFieldName().equals("auc_shortdetail")) {
+			mem.setAucShortdetail(get);
+		}else if (item.getFieldName().equals("auc_start")) {
+			mem.setAucStart(get);
+		}else if (item.getFieldName().equals("auc_finish")) {
+			mem.setAucFinish(get);
+		}else if (item.getFieldName().equals("auc_detail")) {
+			mem.setAucDetail(get);
+		}else if (item.getFieldName().equals("itemDetail")) {
+			proitem.setItemDetail(get);
+		}else if (item.getFieldName().equals("item_name")) {
+			proitem.setItemName(get);
+			
+		}
+		return mem;
 	}
 	
 }
