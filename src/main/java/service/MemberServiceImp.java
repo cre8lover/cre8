@@ -100,10 +100,10 @@ public class MemberServiceImp implements MemberService {
 		
 		factory.setDefaultCharset(CHARSET);
 		ServletFileUpload upload = new ServletFileUpload(factory);
-		
 		mem = new Mem();
+		
 		HttpSession sess = req.getSession();
-
+		/*
 		String id = (String)sess.getAttribute("sess_id");
 		mem.setMemId(id);
 		
@@ -131,7 +131,30 @@ public class MemberServiceImp implements MemberService {
 		
 		mem.setAddressSet(add);
 		
+		*/
 		
+		Att attachfile = null;
+		FileServiceImp fileService = new FileServiceImp();
+		
+		try {
+			List<FileItem> items =  upload.parseRequest(req);
+			for(FileItem item : items) {
+				if(item.isFormField()) {
+					mem = fileService.getFormParameter_mypage(item, mem);
+				} else {
+					attachfile = fileService.fileUpload(item);
+				}
+			}
+		} catch (FileUploadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		String id = (String)sess.getAttribute("sess_id");
+		mem.setMemId(id);
 		dao.infoinsert(mem);	
 	}
 	
