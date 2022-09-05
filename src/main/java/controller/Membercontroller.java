@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dto.Address;
+import dto.Att;
 import dto.Cart;
 import dto.Mem;
 import dto.Orders;
@@ -61,7 +62,6 @@ public class Membercontroller extends HttpServlet {
 			
 			Map<String, String> status = member.login(id, pw);
 			
-
 			switch(status.get("login")) {
 			case "ok" :
 				
@@ -118,7 +118,6 @@ public class Membercontroller extends HttpServlet {
 		} else if(cmd.equals("meminfo")) {
 			
 		 	String sess_id = (String)sess.getAttribute("sess_id");
-			
 		 	Mem info = member.meminfo(sess_id);
 		 	req.setAttribute("info", info);
 			goView(req, resp, "/member/meminfo.jsp");

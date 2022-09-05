@@ -8,8 +8,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
 import dao.MemberDao;
 import dto.Address;
+import dto.Att;
 import dto.Cart;
 import dto.Mem;
 import dto.Orders;
@@ -19,6 +25,7 @@ import dto.Ship;
 public class MemberServiceImp implements MemberService {
 	MemberDao dao = new MemberDao();
 	Mem mem;
+	private static final String CHARSET = "utf-8";
 
 	@Override
 	public Map<String, String> login(String id, String pw) {
@@ -59,7 +66,7 @@ public class MemberServiceImp implements MemberService {
 	
 	@Override
 	public Mem meminfo(String id) {
-		
+
 		return dao.info(id);
 	}
 
@@ -89,6 +96,11 @@ public class MemberServiceImp implements MemberService {
 
 	@Override
 	public void infoinsert(HttpServletRequest req) {
+		DiskFileItemFactory factory = new DiskFileItemFactory();
+		
+		factory.setDefaultCharset(CHARSET);
+		ServletFileUpload upload = new ServletFileUpload(factory);
+		
 		mem = new Mem();
 		HttpSession sess = req.getSession();
 
