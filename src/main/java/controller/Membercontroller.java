@@ -21,6 +21,7 @@ import dto.Mem;
 import dto.Orders;
 import dto.Pro;
 import dto.Ship;
+import dto.Thumbnail;
 import service.MemberService;
 import service.MemberServiceImp;
 
@@ -110,6 +111,13 @@ public class Membercontroller extends HttpServlet {
 		 	String sess_id = (String)sess.getAttribute("sess_id");
 			
 		 	Mem mempage = member.mypage(sess_id);
+		 	if(mempage.getAtt().getAttName() == null ) {
+		 		Att att = new Att();
+		 		Thumbnail thumb = new Thumbnail();
+		 		mempage.setAtt(att);
+		 		mempage.getAtt().setAttThumb(thumb);
+		 		mempage.getAtt().getAttThumb().setFileName("profile.png");
+		 	}
 		 	req.setAttribute("page", mempage);
 			
 		 	
