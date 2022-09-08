@@ -111,7 +111,8 @@ public class MemberDao {
 		Mem member = new Mem();
 //		Address add = new Address();
 		
-		String sql = "select m.mem_id, m.mem_email, m.mem_tel, m.mem_name, ";
+		String sql = "select m.mem_id, m.mem_email, m.mem_tel, m.mem_name,"
+				+ "	 ";
 				sql += " nvl(a.add_address, '주소를 입력하세요') as add_address";
 				sql += " from mem m, address a";
 				sql += " where m.mem_id = a.mem_id(+)"; 
