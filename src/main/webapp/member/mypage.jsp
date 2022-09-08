@@ -29,6 +29,7 @@
 					<h3>${my.memName}님 환영합니다!</h3>
 					<button style="float:center;" onclick="newwindow('<%= request.getContextPath() %>/mem/meminfo','info')">정보수정</button>
 					<button style="float:center;" onclick="newwindow('<%= request.getContextPath() %>/mem/buyHistory','buylist')">구매내역</button>
+					<button style="float:center;" onclick="location.href='<%= request.getContextPath() %>/cre/creReg'">작가등록</button>
 				
 				</div>
 				<table class="table-fill" style="margin-top:100px">
