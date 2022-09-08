@@ -147,13 +147,13 @@ public class MemberDao {
 			 if(rs.next()) {
 				 
 				 att.setAttSeqno(rs.getInt("att_seqno"));
-				 att.setAttName(rs.getString("att_filename"));
-				 att.savefilename(rs.getString("att_savefilename"));
-				 att.setAttSize(rs.getString("att_filesize"));
-				 att.setAttType(rs.getString("att_filetype"));
-				 att.setAttPath(rs.getString("att_filepath"));
+				 att.setAttName(rs.getString("att_name"));
+				 att.savefilename(rs.getString("att_savename"));
+				 att.setAttSize(rs.getString("att_size"));
+				 att.setAttType(rs.getString("att_type"));
+				 att.setAttPath(rs.getString("att_path"));
 
-				 if(rs.getString("filetype").contains("image")) {
+				 if(rs.getString("att_type").contains("image")) {
 				 
 					 sql = "select * from att_thumb where att_seqno = ?";
 					 stmt = conn.prepareStatement(sql);
@@ -519,12 +519,12 @@ public class MemberDao {
 
 	public void infoinsert(Mem mem) {
 		Address add = mem.getAddressSet();
-		
+		Att att = mem.getAtt();
 		String sql = "update mem set mem_email = ?, mem_tel = ?,";
 				sql += " mem_snsinfo = ? where mem_id = ?";
 		
 		try {
-			conn.prepareStatement(sql);
+			stmt = conn.prepareStatement(sql);
 		
 			stmt.setString(1, mem.getMemEmail());
 			stmt.setString(2, mem.getMemTel());
@@ -554,12 +554,10 @@ public class MemberDao {
 			
 			stmt.executeQuery();
 
-			/*
-			  
 		 //첨부파일
 			if(att != null) {
 				
-				sql = "INSERT INTO attachfile(att_seqno, att_name, att_savename, att_size, att_type, att_path, mem_id)"
+				sql = "INSERT INTO att(att_seqno, att_name, att_savename, att_size, att_type, att_path, mem_id)"
 						+ " VALUES (att_seqno.NEXTVAL, ?,?,?,?,?,?)";
 			
 			PreparedStatement stmt;
@@ -570,26 +568,24 @@ public class MemberDao {
 				stmt.setString(3, att.getAttSize());
 				stmt.setString(4, att.getAttType());
 				stmt.setString(5, att.getAttPath());
-				stmt.setString(6, req.getParameter("id"));
+				stmt.setString(6, mem.getMemId());
 				stmt.executeQuery();
 				
-				sql = "SELECT max(no) FROM att";
+				sql = "SELECT max(att_seqno) FROM att";
 				stmt = conn.prepareStatement(sql);
-				rs = stmt.executeQuery();
+				ResultSet rs = stmt.executeQuery();
 				rs.next();
 				attach_no = rs.getString(1);
 				
-				conn.commit();
 				
 				String fileType = att.getAttType();
 				
 				//썸네일
 				if(fileType.substring(0, fileType.indexOf("/")).equals("image")) {
-					sql = "INSERT INTO attachfile_thumb (thumb_seqno, thumb_filename, thumb_filesize, thumb_filepath, att_seqno) "
+					sql = "INSERT INTO att_thumb (thumb_seqno, thumb_filename, thumb_filesize, thumb_filepath, att_seqno) "
 							+ " VALUES (thumb_seqno.nextval, ?, ?, ?, ?)";
-					
+					Thumbnail thumb = att.getAttThumb();
 						stmt = conn.prepareStatement(sql);
-						Thumbnail thumb = att.getThumbnail();
 						stmt.setString(1, thumb.getFileName());
 						stmt.setString(2, thumb.getFileSize());
 						stmt.setString(3, thumb.getFilePath());
@@ -597,9 +593,6 @@ public class MemberDao {
 						stmt.executeQuery();
 				}
 			}
-			
-			 */
-			
 			
 			stmt.close();	
 	
