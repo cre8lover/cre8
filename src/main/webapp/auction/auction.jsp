@@ -35,9 +35,8 @@
          <c:forEach items="${auclist}" var="list">
          <c:set value="${list.item}" var="item"/>
             <li class="_grid shopping-cart--list-item" onclick="location.href='<%= request.getContextPath() %>/auc/auctionDetail?seqno=${list.aucSeqno}'">
-               <div class="_column product-image">
-                  <%-- <img class="product-image--img" src="<%= request.getContextPath() %>/img/dd.jpg" alt="Item image" /> --%>
-                  <div><img class="" src="/upload/thumbnail/${item.itemImg}"></div>
+               <div class="_column product-image"> 
+                  <div><img class="auc_img" src="/upload/thumbnail/${item.itemImg}"></div>
                </div>
                <div class="_column product-info">
                   <h4 class="product-name"><b>${item.itemName}</b> <span class="khm_startprice">시작가 ₩${list.aucPrice}~</span> </h4>
