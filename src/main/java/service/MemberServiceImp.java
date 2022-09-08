@@ -132,15 +132,16 @@ public class MemberServiceImp implements MemberService {
 		mem.setAddressSet(add);
 		
 		*/
-		
+		Address add = new Address();
 		Att attachfile = null;
 		FileServiceImp fileService = new FileServiceImp();
 		
 		try {
 			List<FileItem> items =  upload.parseRequest(req);
 			for(FileItem item : items) {
+				
 				if(item.isFormField()) {
-					mem = fileService.getFormParameter_mypage(item, mem);
+					mem = fileService.getFormParameter_mypage(item, mem, add);
 				} else {
 					attachfile = fileService.fileUpload(item);
 				}
@@ -152,7 +153,6 @@ public class MemberServiceImp implements MemberService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 		mem.setAtt(attachfile);
 		String id = (String)sess.getAttribute("sess_id");
 		mem.setMemId(id);

@@ -70,8 +70,8 @@ public class FileServiceImp implements FileService {
 			String type = fileType.substring(0,fileType.indexOf("/"));
 		
 			if(type.equals("image")) {
-							
 				attachfile.setAttThumb(setThumbnail(saveFileName,file));
+				
 			}
 		}
 		return attachfile;
@@ -164,12 +164,13 @@ public class FileServiceImp implements FileService {
 		
 	}
 
-	public Mem getFormParameter_mypage(FileItem item, Mem mem) {
+	public Mem getFormParameter_mypage(FileItem item, Mem mem, Address add) {
+		//System.out.printf("필드이름 : %s, 필드값: %s\n", item.getFieldName(), item.getString());
+
 		String get = item.getString();
-		Address add = new Address();
-		if (item.getFieldName().equals("eamil")) {
+		if (item.getFieldName().equals("phone")) {
 			mem.setMemTel(get);
-		}else if (item.getFieldName().equals("auc_price")) {
+		}else if (item.getFieldName().equals("email")) {
 			mem.setMemEmail(get);
 		}else if (item.getFieldName().equals("sns")) {
 			mem.setMemSnsinfo(get);

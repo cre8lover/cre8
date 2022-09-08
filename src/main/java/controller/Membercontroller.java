@@ -123,6 +123,7 @@ public class Membercontroller extends HttpServlet {
 			goView(req, resp, "/member/meminfo.jsp");
 			
 		} else if(cmd.equals("infoinsert")) {
+			
 		 	member.infoinsert(req);
 		 	
 		 	String sess_id = (String)sess.getAttribute("sess_id");
