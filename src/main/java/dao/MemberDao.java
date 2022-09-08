@@ -167,7 +167,7 @@ public class MemberDao {
 						 th.setFileName(rs2.getString("thumb_filename"));
 						 th.setFileSize(rs2.getString("thumb_filesize"));
 						 th.setFilePath(rs2.getString("thumb_filepath"));
-						 att.setThumbnail(th);
+						 att.setAttThumb(th);
 						 
 					 }
 					 
