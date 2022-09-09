@@ -1,27 +1,19 @@
 package dao;
 
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-import javax.servlet.ServletContainerInitializer;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.fileupload.RequestContext;
 
 import common.OracleConn;
 import dto.Address;
+import dto.Att;
 import dto.Auc;
 import dto.AucNowing;
 import dto.Cart;
@@ -31,6 +23,7 @@ import dto.Orderdetail;
 import dto.Orders;
 import dto.Pro;
 import dto.Ship;
+import dto.Thumbnail;
 import dto.Waybill;
 
 public class MemberDao {
@@ -103,6 +96,8 @@ public class MemberDao {
 			stmt.setString(1, mem.getMemId());
 
 			stmt.executeQuery();
+			
+			
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -116,8 +111,9 @@ public class MemberDao {
 		Mem member = new Mem();
 //		Address add = new Address();
 		
-		String sql = "select m.mem_id, m.mem_img ,m.mem_email, m.mem_tel, m.mem_name, ";
-				sql += " nvl(a.add_address, '주소를 입력하세요') as add_address"; 
+		String sql = "select m.mem_id, m.mem_email, m.mem_tel, m.mem_name,"
+				+ "	 ";
+				sql += " nvl(a.add_address, '주소를 입력하세요') as add_address";
 				sql += " from mem m, address a";
 				sql += " where m.mem_id = a.mem_id(+)"; 
 				sql += " and m.mem_id = ?";
@@ -136,12 +132,51 @@ public class MemberDao {
 				member.setMemEmail(rs.getString("mem_email"));
 				member.setMemTel(rs.getString("mem_tel"));
 				member.setMemName(rs.getString("mem_name"));
-				member.setMemImg(rs.getString("mem_img"));
 				
 				addr = new Address();
 				addr.setAddAddress(rs.getString("add_address"));
 			}
 			member.setAddressSet(addr);
+
+			sql = "select * from att where mem_id = ?";
+			 stmt = conn.prepareStatement(sql);
+			 stmt.setString(1, id);
+
+			 rs = stmt.executeQuery();
+			 
+			 Att att = new Att();
+			 if(rs.next()) {
+				 
+				 att.setAttSeqno(rs.getInt("att_seqno"));
+				 att.setAttName(rs.getString("att_name"));
+				 att.savefilename(rs.getString("att_savename"));
+				 att.setAttSize(rs.getString("att_size"));
+				 att.setAttType(rs.getString("att_type"));
+				 att.setAttPath(rs.getString("att_path"));
+
+				 if(rs.getString("att_type").contains("image")) {
+				 
+					 sql = "select * from att_thumb where att_seqno = ?";
+					 stmt = conn.prepareStatement(sql);
+					 stmt.setString(1, rs.getString("att_seqno"));
+					 ResultSet rs2 = stmt.executeQuery();
+				 
+					 while(rs2.next()) {
+						 
+						 Thumbnail th = new Thumbnail();
+						 th.setThumbSeqNo(rs2.getString("thumb_seqno"));
+						 th.setFileName(rs2.getString("thumb_filename"));
+						 th.setFileSize(rs2.getString("thumb_filesize"));
+						 th.setFilePath(rs2.getString("thumb_filepath"));
+						 att.setAttThumb(th);
+						 
+					 }
+					 
+				 }
+				 
+			 }
+			 
+			 member.setAtt(att);
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -181,6 +216,7 @@ public class MemberDao {
 				member.setAddressSet(a);
 				
 			}
+			
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -207,7 +243,7 @@ public class MemberDao {
 				+ " order by order_date desc) a";
 		
 		try {
-			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt = conn.prepareStatement(sql);
 			
 			stmt.setString(1, id);
 			ResultSet rs = stmt.executeQuery();
@@ -259,7 +295,6 @@ public class MemberDao {
 				+ " where p.auc_seqno = o.auc_seqno and o.mem_id = ?"
 				+ " order by order_date desc) a";
 		
-		PreparedStatement stmt;
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, id);
@@ -421,7 +456,6 @@ public class MemberDao {
 				+ "                 where s.add_seqno=a.add_seqno) s"
 				+ "    where w.ship_seqno=s.ship_seqno) s"
 				+ " where a.order_seqno = s.order_seqno";
-		PreparedStatement stmt;
 		try {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, id);
@@ -486,12 +520,12 @@ public class MemberDao {
 
 	public void infoinsert(Mem mem) {
 		Address add = mem.getAddressSet();
-		
+		Att att = mem.getAtt();
 		String sql = "update mem set mem_email = ?, mem_tel = ?,";
 				sql += " mem_snsinfo = ? where mem_id = ?";
 		
 		try {
-			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt = conn.prepareStatement(sql);
 		
 			stmt.setString(1, mem.getMemEmail());
 			stmt.setString(2, mem.getMemTel());
@@ -521,6 +555,45 @@ public class MemberDao {
 			
 			stmt.executeQuery();
 
+		 //첨부파일
+			if(att != null) {
+				
+				sql = "INSERT INTO att(att_seqno, att_name, att_savename, att_size, att_type, att_path, mem_id)"
+						+ " VALUES (att_seqno.NEXTVAL, ?,?,?,?,?,?)";
+			
+			PreparedStatement stmt;
+			String attach_no = null;
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, att.getAttName());
+				stmt.setString(2, att.getSavefilename());
+				stmt.setString(3, att.getAttSize());
+				stmt.setString(4, att.getAttType());
+				stmt.setString(5, att.getAttPath());
+				stmt.setString(6, mem.getMemId());
+				stmt.executeQuery();
+				
+				sql = "SELECT max(att_seqno) FROM att";
+				stmt = conn.prepareStatement(sql);
+				ResultSet rs = stmt.executeQuery();
+				rs.next();
+				attach_no = rs.getString(1);
+				
+				
+				String fileType = att.getAttType();
+				
+				//썸네일
+				if(fileType.substring(0, fileType.indexOf("/")).equals("image")) {
+					sql = "INSERT INTO att_thumb (thumb_seqno, thumb_filename, thumb_filesize, thumb_filepath, att_seqno) "
+							+ " VALUES (thumb_seqno.nextval, ?, ?, ?, ?)";
+					Thumbnail thumb = att.getAttThumb();
+						stmt = conn.prepareStatement(sql);
+						stmt.setString(1, thumb.getFileName());
+						stmt.setString(2, thumb.getFileSize());
+						stmt.setString(3, thumb.getFilePath());
+						stmt.setString(4, attach_no);
+						stmt.executeQuery();
+				}
+			}
 			
 			stmt.close();	
 	
@@ -537,7 +610,6 @@ public class MemberDao {
 		
 		String sql = "select mem_id, mem_pw from mem where mem_id = ? ";
 		
-			PreparedStatement stmt;
 			try {
 				stmt = conn.prepareStatement(sql);
 				stmt.setString(1, id);
@@ -584,7 +656,7 @@ public class MemberDao {
 		String sql = "select mem_id,mem_email from mem where mem_email = ? ";
 		
 		try {
-			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt = conn.prepareStatement(sql);
 			
 			stmt.setString(1, idemail);
 			ResultSet rs = stmt.executeQuery();
@@ -618,7 +690,6 @@ public class MemberDao {
 		Map<String, String> map = new HashMap<String, String>();
 		
 		String sql = "select mem_id,mem_email,mem_pw from mem where mem_email = ? and mem_id = ?";
-		PreparedStatement stmt;
 		try {
 			stmt = conn.prepareStatement(sql);
 			
@@ -668,7 +739,7 @@ public class MemberDao {
 		String sql ="select mem_id from mem where mem_id = ?";
 		
 		try {
-			PreparedStatement stmt = conn.prepareStatement(sql);
+			stmt = conn.prepareStatement(sql);
 			
 			stmt.setString(1, id);
 			
@@ -679,16 +750,13 @@ public class MemberDao {
 				rs = 0;
 			}
 			
+			stmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
-		
 		return rs;
 		
 	}
-	
-	
-
 }

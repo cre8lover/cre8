@@ -3,6 +3,7 @@ package dto;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Mem implements Serializable {
@@ -29,6 +30,7 @@ public class Mem implements Serializable {
 	private Reply replySet;
 	private Review reviewSet;
 	private String check;
+	private Att att;
 
 	public String getCheck() {
 		return check;
@@ -37,6 +39,14 @@ public class Mem implements Serializable {
 		this.check = check;
 	}
 	public Mem() {
+	}
+	
+	
+	public Att getAtt() {
+		return att;
+	}
+	public void setAtt(Att att) {
+		this.att = att;
 	}
 	public int getSeqno() {
 		return seqno;

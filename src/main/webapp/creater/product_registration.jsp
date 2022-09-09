@@ -25,7 +25,7 @@
         <h4>상품등록/수정(일반)</h4>
       </div>
       <div class='panel-body'>
-        <form class='form-horizontal' role='form' id="reg" action="<%= request.getContextPath() %>/cre/promodify">
+        <form class='form-horizontal' enctype="multipart/form-data" method="post" name="proform" role='form' id="reg" action="<%= request.getContextPath() %>/cre/promodify">
           <div class='form-group'>
             <label class='control-label col-md-2 col-md-offset-2' for='id_pets'>판매상태</label>
             <div class='col-md-8'>
@@ -77,7 +77,7 @@
             <div class='col-md-8'>
               <div class='col-md-2'>
                 <div class='form-group internal'>
-                  <input class='form-control col-md-8' id='' placeholder='정가' type='number' step="10000" name="proPrice" value="${pro.proPrice}">
+                  <input class='form-control col-md-8' id='' placeholder='정가' type='number'  name="proPrice" value="${pro.proPrice}">
                 </div>
               </div>
               <div class='col-md-6 indent-small'>
@@ -169,9 +169,55 @@
             <label class='control-label col-md-2 col-md-offset-2' for='id_comments'>사진첨부</label>
             <div class='col-md-6'>
               	<div class="filebox">
+              	<c:if test="${pro.att_file.attName == null }">
 				    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
 				    <label for="file">파일찾기</label> 
-				    <input type="file" id="file">
+				    <input type="file" id="file" name="filename">
+				</c:if>
+              	<c:if test="${pro.att_file.attName != null }">
+				    <input class="upload-name" value="${pro.att_file.attName}" placeholder="첨부파일">
+				    <img src="/upload/thumbnail/${pro.thumb.fileName}">
+					<input type="button"value="삭제" onclick="fileDel('${file.attSeqNo}','${file.saveFileName}','${file.filePath}',
+					'${thumb_file }')">
+				</c:if>
+<script>
+function fileDel(attSeqNo,saveFileName,filePath,thumb_file){
+	
+	var ans = confirm("정말로 삭제하시겠습니까?");
+	
+	if (ans){
+		var x = new XMLHttpRequest();
+		x.onreadystatechange = function(){
+			if(x.readyState === 4 && x.status === 200){
+				
+				var tag = document.getElementById("fileSector");
+				
+				
+				if (x.responseText.trim() === "0"){
+					alert("파일 삭제에 실패 하였습니다.");
+				} else {
+					alert("파일 삭제에 완료 하였습니다.");
+					tag.innerHTML = "<input type='file' name='filename'>";
+				}
+				
+			}else{
+			console.log('에러코드는:' + x.status);
+				
+			}
+		
+		};
+	}
+	
+	//방식,매핑정보,동기방식
+	x.open("POST", "/cre/fileDel", true);
+	x.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	x.send("no="+attSeqNo+"&savefilename="+saveFileName+"&filepath="+filePath+"&thumb_filename="+thumb_file);
+
+}
+
+</script>
+				
+				
 				</div>
             </div>
             </div>

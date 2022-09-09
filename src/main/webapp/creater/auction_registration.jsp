@@ -25,7 +25,7 @@
         <h4>상품등록(경매)</h4>
       </div>
       <div class='panel-body'>
-        <form class='form-horizontal' id="reg"role='form' action="<%= request.getContextPath() %>/cre/auction_modify">
+        <form class='form-horizontal' enctype="multipart/form-data" method="post" id="reg" role='form' action="<%= request.getContextPath() %>/cre/auction_modify">
         <!--   <div class='form-group'>
            <label class='control-label col-md-2 col-md-offset-2' for='id_pets'>노출상태</label>
             <div class='col-md-8'>
@@ -66,7 +66,7 @@
               </div>
               <div class='col-md-6 indent-small'>
                 <div class='form-group internal'>
-                  <input class='form-control' id='id_first_name' name="item_name"placeholder='상품명' type='text' value="${pro.item.itemName }">
+                  <input class='form-control' id='id_first_name' name="item_name" placeholder='상품명' type='text' value="${pro.item.itemName }">
                 </div>
               </div>
             </div>
@@ -76,7 +76,7 @@
             <div class='col-md-8'>
               <div class='col-md-2'>
                 <div class='form-group internal'>
-                  <input class='form-control col-md-8' id='' placeholder='시작가' type='number' name="auc_price"step="10000" value="${pro.aucPrice}">
+                  <input class='form-control col-md-8' id='' placeholder='시작가' type='number' name="auc_price" value="${pro.aucPrice}">
                 </div>
               </div>
               <div class='col-md-6 indent-small'>
@@ -125,7 +125,7 @@
               	<div class="filebox">
 				    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
 				    <label for="file">파일찾기</label> 
-				    <input type="file" id="file">
+				    <input type="file" id="file" name="filename">
 				</div>
             </div>
           <div class='form-group'>
@@ -134,10 +134,10 @@
               <textarea class='form-control' id='id_comments' placeholder='Additional comments' rows='3' name="auc_detail">${pro.aucDetail}</textarea>
             </div>
           </div>
+          <input type="hidden" name="seqno" <c:if test="${pro.aucSeqno != null }">value="${pro.aucSeqno }"</c:if>>
+          <input type="hidden" name="itemseqno" value="${pro.item.itemSeqno }">
           <div class='form-group'>
             <div class='col-md-offset-4 col-md-3'>
-            <input type="hidden" name="seqno" value="${pro.aucSeqno }">
-            <input type="hidden" name="itemseqno" value="${pro.item.itemSeqno }">
               <input class='btn-lg btn-primary' id="insert" value="상품등록" type='submit'>
             </div>
             <div class='col-md-3'>
@@ -151,7 +151,7 @@
 </body>
 <script>
 
-    $("#reg").click( function() {
+    $("#insert").click( function() {
 
     	var ans = confirm("상품이 등록되었습니다.");
             if (ans){

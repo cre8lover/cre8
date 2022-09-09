@@ -65,7 +65,7 @@
 							<th><input type="checkbox" name="allponecheck" value="${pro.proSeqno }"></th>
 							
 							<%-- <th><img src="<%= request.getContextPath() %>/img/b1.jpg"></th> --%>
-							<th>${item.itemImg }</th>
+							<th><img class="" src="/upload/thumbnail/${item.itemImg }" style="height:225px;"></th>
 							<th>${item.itemName }</th>
 							<th>${cartp.cartAmount }</th>
 							<th>${cartp.totalprice }</th>

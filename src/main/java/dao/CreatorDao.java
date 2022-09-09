@@ -4,6 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -12,18 +14,23 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import common.OracleConn;
-import dto.Artdetail;
+import dto.Att;
 import dto.Auc;
 import dto.Creator;
 import dto.Item;
 import dto.Marketing;
 import dto.Mem;
 import dto.Pro;
+import dto.Thumbnail;
 
 public class CreatorDao {
 	
 	Connection conn = OracleConn.getInstance().getConn();
 	PreparedStatement stmt;
+<<<<<<< HEAD
+=======
+	FileDao filedao = new FileDao();
+>>>>>>> branch 'master' of https://github.com/cre8lover/cre8.git
 	
 	//creater/creReg.jsp
 	public void Creatoradd(HttpServletRequest request){
@@ -325,22 +332,37 @@ public class CreatorDao {
 	public List<Pro> Prolist(String id) {
 		List<Pro> prolist = new ArrayList<>();
 		try {
-			String sql= "select i.item_img,i.item_detail,p.pro_amount,p.pro_saleprice, p.pro_seqno"
+			String sql= "select i.item_seqno,i.item_img,i.item_detail,p.pro_amount,p.pro_saleprice, p.pro_seqno"
 					+ " from (select * from pro where pro_stat not in 'END') p, item i"
 					+ " where p.item_seqno = i.item_seqno and i.mem_id =?";
 			
 		stmt = conn.prepareStatement(sql);
 		stmt.setString(1, id);
 		ResultSet rs = stmt.executeQuery();
-		
 		while(rs.next()) {
 			Pro p = new Pro();
 			Item i = new Item();
+			int itemseqno = rs.getInt("item_seqno");
 			i.setItemImg(rs.getString("item_img"));
 			i.setItemDetail(rs.getString("item_detail"));
 			p.setProAmount(rs.getInt("pro_amount"));
 			p.setProSaleprice(rs.getInt("pro_saleprice"));
 			p.setProSeqno(rs.getInt("pro_seqno"));
+			
+			
+			
+			sql = " select THUMB_FILENAME, THUMB_FILEPATH "
+					+ " from att_thumb"
+					+ " where att_seqno = (select att_seqno from att where item_seqno = ?)";
+			
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, itemseqno);
+			ResultSet rs2 = stmt.executeQuery();
+			if(rs2.next()) {
+				
+				i.setItemImg(rs2.getString("thumb_filename"));
+				
+			}
 			p.setItem(i);
 			prolist.add(p);
 		}
@@ -348,16 +370,18 @@ public class CreatorDao {
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
 		return prolist;
 		}
 
+	
 
 	public List<Auc> Auclist(String id) {
 	      List<Auc> auclist = new ArrayList<>();
 	      Auc a = null;
 	      Item i = null;
 	      try {
-	         String sql = "select a.auc_img, a.auc_detail, a.auc_price, a.auc_closeprice, a.auc_stat, a.auc_seqno"
+	         String sql = "select i.item_seqno as item_seqno, a.auc_img, a.auc_detail, a.auc_price, a.auc_closeprice, a.auc_stat, a.auc_seqno"
 	               + " from (select * from auc where auc_stat not in 'END') a,item i"
 	               + " where a.item_seqno = i.item_seqno and i.mem_id =?";
 	      stmt = conn.prepareStatement(sql);
@@ -367,12 +391,32 @@ public class CreatorDao {
 	      while(rs.next()) {
 	         a = new Auc();
 	         i = new Item();
+	         String itemseqno = rs.getString("item_seqno");
 	         a.setAucImg(rs.getString("auc_img"));
 	         a.setAucDetail(rs.getString("auc_detail"));
 	         a.setAucPrice(rs.getInt("auc_price"));
 	         a.setAucCloseprice(rs.getInt("auc_closeprice"));
 	         a.setAucStat(rs.getString("auc_stat"));
 	         a.setAucSeqno(rs.getInt("auc_seqno"));
+	         
+	         
+				
+				
+				sql = " select THUMB_FILENAME, THUMB_FILEPATH "
+						+ " from att_thumb"
+						+ " where att_seqno = (select att_seqno from att where item_seqno = ?)";
+				
+				stmt = conn.prepareStatement(sql);
+				stmt.setString(1, itemseqno);
+				ResultSet rs2 = stmt.executeQuery();
+				if(rs2.next()) {
+					
+					i.setItemImg(rs2.getString("thumb_filename"));
+					
+					a.setItem(i);
+				}
+	         
+	         
 	         auclist.add(a);
 	      }
 	      
@@ -430,7 +474,7 @@ public class CreatorDao {
 	            cre.setMem(mem);
 	            
 	         }
-	         
+	         stmt.close();
 	      } catch (SQLException e) {
 	         e.printStackTrace();
 	      }
@@ -514,6 +558,9 @@ public class CreatorDao {
 		            + " cat_seqno, pro_stat, pro_price, pro_opendate, pro_closedate, pro_detail,pro_saleprice,pro_amount "
 		            + " from pro p where pro_seqno = ? ";
 		      
+		
+		
+		
 		try {
 		         stmt =conn.prepareStatement(sql);
 		         stmt.setString(1, seqno);
@@ -534,8 +581,38 @@ public class CreatorDao {
 		            pro.setProHits(rs.getInt("cat_seqno"));
 		            pro.setProAmount(rs.getInt("pro_amount"));
 		            pro.setProSeqno(Integer.parseInt(seqno));
+		            
+		            
+		            sql = " select att_name,att_savename,thumb_filename, att_path, thumb_filepath"
+		            		+ " from att a, att_thumb at"
+		            		+ " where a.att_seqno = at.att_seqno"
+		            		+ " and item_seqno = ? ";
+		            
+		            stmt =conn.prepareStatement(sql);
+			         stmt.setInt(1, rs.getInt("item_seqno"));
+			         ResultSet rs2 = stmt.executeQuery();
+		            
+			         if (rs2.next()) {
+			        	 Att att = new Att ();
+			        	 Thumbnail thum = new Thumbnail();
+			        	 
+			        	 att.setAttName(rs2.getString("att_name"));
+			        	 att.setSavefilename(rs2.getString("att_savename"));
+			        	 att.setAttPath(rs2.getString("att_path"));
+			        	 thum.setFileName(rs2.getString("thumb_filename"));
+			        	 thum.setFilePath(rs2.getString("thumb_filepath"));
+			        	 pro.setAtt_file(att);
+			        	 pro.setThumb(thum);
+			         }
+		            
+		            
+		            
+		            
 		            pro.setItem(item);
+		            
+		            
 		         }
+		         stmt.close();
 		} catch (SQLException e) {
 		         e.printStackTrace();
 		      
@@ -548,6 +625,7 @@ public class CreatorDao {
 
 	public String productmodify(HttpServletRequest req) {
 		      
+		
 		String proStat = req.getParameter("proStat");
 		if(proStat == null) {
 			proStat = "WAIT";
@@ -566,7 +644,7 @@ public class CreatorDao {
 		String itemName = req.getParameter("itemName");
 		String itemseqno = req.getParameter("itemseqno");
 		      
-		//      System.out.println(proStat +"/"+ proPrice +"/"+ proHits +"/"+ proSaleprice +"/"+ proOpendate +"/"+ proClosedate +"/"+ proDetail +"/"+ seqno +"/"+ itemDetail +"/"+  itemName +"/"+ itemseqno);
+//      System.out.println(proStat +"/"+ proPrice +"/"+ proHits +"/"+ proSaleprice +"/"+ proOpendate +"/"+ proClosedate +"/"+ proDetail +"/"+ seqno +"/"+ itemDetail +"/"+  itemName +"/"+ itemseqno);
 		      
 		      
 		String sql = "update item set ITEM_NAME = ? , "
@@ -589,7 +667,9 @@ public class CreatorDao {
 		               + " pro_detail = ?, "
 		               + " pro_amount = ? "
 		               + " where pro_seqno = ? ";
+		         
 		         stmt = conn.prepareStatement(sql);
+		         
 		         stmt.setString(1, proStat);
 		         stmt.setString(2, proPrice);
 		         stmt.setString(3, proHits);
@@ -597,10 +677,9 @@ public class CreatorDao {
 		         stmt.setString(5, proOpendate);
 		         stmt.setString(6, proClosedate);
 		         stmt.setString(7, proDetail);
-		         stmt.setString(8, seqno);
-		         stmt.setString(9, proAmount);
+		         stmt.setString(8, proAmount);
+		         stmt.setString(9, seqno);
 		         stmt.executeQuery();
-		         
 		         
 		         stmt.close();
 		 } catch (SQLException e) {
@@ -608,23 +687,22 @@ public class CreatorDao {
 		         e.printStackTrace();
 		 }
 		      
-	//	      System.out.println(seqno);
+//		      System.out.println(seqno);
 		 return seqno;
 	}
 
-	   public String aucadd(HttpServletRequest req) {
+	   public String aucadd(Auc auc, String id) {
 		      
 		      String seqno = "";
-		      String id = (String)req.getSession().getAttribute("sess_id");
-		      String item_name = req.getParameter("item_name");
-
-		      String auc_stat = req.getParameter("auc_stat");
+		      
+		      String item_name = auc.getItem().getItemName();
+		      String auc_stat = auc.getAucStat();
 		      if(auc_stat == null) auc_stat = "WAIT";
-		      String auc_price = req.getParameter("auc_price");
-		      String auc_start = req.getParameter("auc_start");
-		      String auc_finish = req.getParameter("auc_finish");
-		      String auc_shortdetail = req.getParameter("auc_shortdetail");
-		      String auc_detail = req.getParameter("auc_detail");
+		      int auc_price = auc.getAucPrice();
+		      String auc_start = auc.getAucStart();
+		      String auc_finish = auc.getAucFinish();
+		      String auc_shortdetail = auc.getAucShortdetail();
+		      String auc_detail = auc.getAucDetail();
 		      
 		      
 		      
@@ -635,7 +713,7 @@ public class CreatorDao {
 		         stmt = conn.prepareStatement(sql);
 		         stmt.setString(1, item_name);
 		         stmt.setString(2, id);
-		         stmt.executeQuery()   ;
+		         stmt.executeQuery();
 		         
 		         sql = "select max(item_seqno) from item";
 		         stmt = conn.prepareStatement(sql);
@@ -650,13 +728,13 @@ public class CreatorDao {
 		         
 		         stmt = conn.prepareStatement(sql);
 		         stmt.setString(1, auc_stat);
-		         stmt.setString(2, auc_price);
+		         stmt.setInt(2, auc_price);
 		         stmt.setString(3, auc_start);
 		         stmt.setString(4, auc_finish);
 		         stmt.setString(5, auc_shortdetail);
 		         stmt.setString(6, auc_detail);
 		         stmt.setString(7, itemseqno);
-		         stmt.executeQuery()   ;
+		         stmt.executeQuery();
 		         
 		         sql = "select max(auc_seqno) from auc";
 		         stmt = conn.prepareStatement(sql);
@@ -664,6 +742,26 @@ public class CreatorDao {
 		         rs.next();
 		         
 		         seqno = rs.getString(1);
+		         
+		         
+		         
+		     	if (auc.getAtt_file() != null) {
+					
+					String att_seqno = filedao.insertAttachFile(itemseqno, auc.getAtt_file());
+					String fileType = auc.getAtt_file().getAttType();
+					if (fileType.substring(0,fileType.indexOf("/")).equals("image")) {
+					
+						filedao.insertThumbNail(auc.getAtt_file(),att_seqno);
+					
+					}
+				}
+	         
+		         
+		         
+		         
+		         
+		         
+		         
 		         
 		         stmt.close();
 		      } catch (SQLException e) {
@@ -757,7 +855,7 @@ public class CreatorDao {
 		            
 		            stmt = conn.prepareStatement(sql);
 		            stmt.setString(1, auc_stat);
-		            stmt.setInt(2, Integer.parseInt(auc_price));
+		            stmt.setString(2, auc_price);
 		            stmt.setString(3, auc_start);
 		            stmt.setString(4, auc_finish);
 		            stmt.setString(5, auc_shortdetail);
@@ -780,30 +878,35 @@ public class CreatorDao {
 		   }
 
 
-		   public String productadd(HttpServletRequest req) {
-			      String seqno = "";
-			      
-			      String proStat = req.getParameter("proStat");
-			      String proPrice = req.getParameter("proPrice");
-			      String proHits = req.getParameter("proHits");
-			      String proSaleprice = req.getParameter("proSaleprice");
-			      String proOpendate = req.getParameter("proOpendate");
-			      String proClosedate = req.getParameter("proClosedate");
-			      String proDetail = req.getParameter("proDetail");
-			      String proAmount = req.getParameter("amount");
-			            System.out.println(proAmount);
-			      String itemDetail = req.getParameter("itemDetail");
-			      String itemName = req.getParameter("itemName");
-			      
-			      
-			      String id = (String)req.getSession().getAttribute("sess_id");
+		   public String productadd(Pro pro, String id) {
+			   DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+			   String seqno = "";
+			      
+//			      String proStat = req.getParameter("proStat");
+//			      String proPrice = req.getParameter("proPrice");
+//			      String proHits = req.getParameter("proHits");
+//			      String proSaleprice = req.getParameter("proSaleprice");
+//			      String proOpendate = req.getParameter("proOpendate");
+//			      
+//			      
+//			      
+//			      String proClosedate = req.getParameter("proClosedate");
+//			      String proDetail = req.getParameter("proDetail");
+//			      String proAmount = req.getParameter("amount");
+//			      String itemDetail = req.getParameter("itemDetail");
+//			      String itemName = req.getParameter("itemName");
+			      
+			      
+//			      String id = (String)req.getSession().getAttribute("sess_id");
 			      String sql = "insert into item(item_seqno,item_detail,item_name,mem_id) values(item_seqno.nextval,?,?,?)";
 			      
 			      try {
 			         stmt = conn.prepareStatement(sql);
-			         stmt.setString(1, itemDetail);
-			         stmt.setString(2, itemName);
+			         stmt.setString(1, pro.getItem().getItemDetail());
+//			         stmt.setString(1, itemDetail);
+			         stmt.setString(2, pro.getItem().getItemName());
+//			         stmt.setString(2, itemName);
 			         stmt.setString(3, id);
 			         
 			         stmt.executeQuery();
@@ -815,39 +918,65 @@ public class CreatorDao {
 			         
 			         rs.next();
 			         
-			         
+			         String itemseqno = rs.getString(1);
 			         
 			         sql = " insert into pro(pro_seqno, pro_price, cat_seqno, pro_saleprice, pro_opendate,";
 			         sql += " pro_closedate, pro_detail,mem_id,item_seqno,pro_amount ";
-			if (proStat != null) sql += ",pro_stat";
+			if (pro.getProStat() != null) sql += ",pro_stat";
 			         sql   += " ) values (pro_seqno.nextval,?,?,?,?,?,?,?,?,?";
-			if (proStat != null) sql += ",?";
+			if (pro.getProStat() != null) sql += ",?";
 			         sql += " )";
 			         
 			         stmt = conn.prepareStatement(sql);
-			         stmt.setString(1, proPrice);
-			         stmt.setString(2, proHits);
-			         stmt.setString(3, proSaleprice);
-			         stmt.setString(4, proOpendate);
-			         stmt.setString(5, proClosedate);
-			         stmt.setString(6, proDetail);
+			         stmt.setInt(1, pro.getProPrice());
+			         stmt.setInt(2, pro.getProHits());
+			         stmt.setInt(3, pro.getProSaleprice());
+			         stmt.setString(4,dateFormat.format(pro.getProOpendate()));
+			         stmt.setString(5, dateFormat.format(pro.getProClosedate()));
+			         stmt.setString(6, pro.getProDetail());
 			         stmt.setString(7, id);
-			         stmt.setString(8, rs.getString(1));
-			         stmt.setString(9, proAmount);
+			         stmt.setString(8, itemseqno);
+			         stmt.setInt(9, pro.getProAmount());
+//			         stmt.setString(1, proPrice);
+//			         stmt.setString(2, proHits);
+//			         stmt.setString(3, proSaleprice);
+//			         stmt.setString(4, proOpendate);
+//			         stmt.setString(5, proClosedate);
+//			         stmt.setString(6, proDetail);
+//			         stmt.setString(7, id);
+//			         stmt.setString(8, rs.getString(1));
+//			         stmt.setString(9, proAmount);
 			         
-			if (proStat != null) stmt.setString(10, proStat);
+			if (pro.getProStat() != null) stmt.setString(10, pro.getProStat());
 			         stmt.executeQuery();
+			         
 			         sql = "select max(pro_seqno) from pro";
 			         stmt = conn.prepareStatement(sql);
 			         ResultSet rs2 = stmt.executeQuery();
 
 			         if(rs2.next()) seqno = rs2.getString(1);
 			         
+			         
+						if (pro.getAtt_file() != null) {
+						
+							String att_seqno = filedao.insertAttachFile(itemseqno, pro.getAtt_file());
+							String fileType = pro.getAtt_file().getAttType();
+							if (fileType.substring(0,fileType.indexOf("/")).equals("image")) {
+							
+								filedao.insertThumbNail(pro.getAtt_file(),att_seqno);
+							
+							}
+						}
+			         
+			         
+			         
+			         
+			         
+			         
 			         stmt.close();
 			      } catch (SQLException e) {
 			         e.printStackTrace();
 			      }
-			      
 			      
 			      
 			      return seqno;

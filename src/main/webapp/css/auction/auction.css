@@ -31,6 +31,11 @@ h1, .sub-heading {
  * @section: utilities;
  * @see: Justify Grid [http://justifygrid.com/]
  */
+ .auc_img{
+	 width: 258px;
+    height: 207px;
+    overflow: hidden;
+    }
 ._grid {
   text-align: justify !important;
   text-justify: distribute-all-lines;
@@ -101,7 +106,9 @@ h1, .sub-heading {
  * @extends: _column;
  */
 .product-image {
-  width: 27%;
+  	width: 258px;
+    height: 207px;
+    overflow: hidden;
 }
 .product-image--img {
  

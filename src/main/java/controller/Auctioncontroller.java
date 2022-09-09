@@ -85,7 +85,7 @@ public class Auctioncontroller extends HttpServlet {
 			String srt = req.getParameter("money");
 			String seqno = req.getParameter("seqno");
 			String id = (String)req.getSession().getAttribute("sess_id");
-			System.out.println(id);
+//			System.out.println(id);
 			auc.aucnow(srt,seqno,id);
 			req.setAttribute("seqno", seqno);
 			

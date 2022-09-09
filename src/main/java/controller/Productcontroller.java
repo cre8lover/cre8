@@ -45,7 +45,7 @@ public class Productcontroller extends HttpServlet {
 		
 		ProServiceImp proservice = new ProServiceImp();
 		if(cmd.equals("clothes")) {
-			System.out.println("옷 맵핑 확인");
+//			System.out.println("옷 맵핑 확인");
 			List<Pro> prolist1 = pro.proList_clothes();
 			req.setAttribute("proList", prolist1);
 			goView(req, resp, "/listimg/product_clothes.jsp");
@@ -72,7 +72,7 @@ public class Productcontroller extends HttpServlet {
 			goView(req, resp, "/listimg/product_travel.jsp");
 			
 		} else if(cmd.equals("productDetail")) {
-			System.out.println("서블릿 확인" );
+//			System.out.println("서블릿 확인" );
 			String seqno = req.getParameter("seqno");
 			
 			if (seqno == null) {
