@@ -25,13 +25,11 @@ public class CreatorDao {
 	Connection conn = OracleConn.getInstance().getConn();
 	PreparedStatement stmt;
 	
-	
 	//creater/creReg.jsp
 	public void Creatoradd(HttpServletRequest request){
 		try {
-			String sql = "insert into creator (cre_seqno, cre_company, cre_phone, cre_name, cre_address, cre_regnum, cre_salenum, cre_pot, mem_id) ";
-		     	   sql +=" values (cre_seqno.nextval,?,?,?,?,?,?,?,?)";
-		     	   //mem_id빠짐
+			String sql = "call p_creatoradd(?,?,?,?,?,?,?,?)";
+		     	   
 		     	  
 		    String str = (request.getParameter("creadress") + request.getParameter("creadress2"));
 
