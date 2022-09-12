@@ -2,6 +2,8 @@ package controller;
 
 import javax.servlet.http.HttpServlet;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +13,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.json.simple.JSONObject;
 
 import dto.Cart;
 import dto.Orders;
@@ -53,38 +57,27 @@ public class Buycontroller extends HttpServlet {
 			
 			String[] chklist =  req.getParameterValues("allponecheck");
 			
-			if (orderbutton != null) {
-				
-				
-				
-				List<Cart> prolist = buy.myCart(logid,chklist);
-				
-				
-				
-				if(prolist != null) {
-					req.setAttribute("cartp", prolist);
-				}
-				req.setAttribute("total", req.getParameter("total"));
-				goView(req, resp, "/buy/buylist.jsp");
-				
-				
-			} else {
-			
-				
-				List<Cart> prolist = buy.myCart(logid,chklist);
-			
+			List<Cart> prolist = buy.myCart(logid,chklist);
 			
 			if(prolist != null) {
 				req.setAttribute("cartp", prolist);
 			}
-			
-			goView(req, resp, "/buy/cart.jsp");
+
+			if (orderbutton != null) {
+				req.setAttribute("total", req.getParameter("total"));
+				goView(req, resp, "/buy/buylist.jsp");
+				
+			} else {
+				goView(req, resp, "/buy/cart.jsp");
 			}
+				
+				
+			
+			
 			
 		}  else if(cmd.equals("buy")) {
-			List<Orders> prolist = buy.orderlist(logid);
-			
-			
+			String o_seqno = req.getParameter("seqno");
+			List<Orders> prolist = buy.orderlist(logid, o_seqno);
 			if(prolist != null) {
 			req.setAttribute("cartp", prolist);
 			}
@@ -92,7 +85,11 @@ public class Buycontroller extends HttpServlet {
 			goView(req, resp, "/buy/buy.jsp");
 
 		} else if(cmd.equals("order")) {
-	        buy.orderand(req,resp);
+	        int rs = buy.orderand(req,resp);
+	        String seqno = String.valueOf(rs);
+	        PrintWriter out = resp.getWriter();
+	        out.print(seqno);
+	        
 		}
 	
 	}

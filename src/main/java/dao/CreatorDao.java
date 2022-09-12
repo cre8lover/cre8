@@ -27,12 +27,9 @@ public class CreatorDao {
 	
 	Connection conn = OracleConn.getInstance().getConn();
 	PreparedStatement stmt;
-<<<<<<< HEAD
-=======
+
 	FileDao filedao = new FileDao();
->>>>>>> branch 'master' of https://github.com/cre8lover/cre8.git
 	
-	//creater/creReg.jsp
 	public void Creatoradd(HttpServletRequest request){
 		try {
 			String sql = "call p_creatoradd(?,?,?,?,?,?,?,?)";

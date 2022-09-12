@@ -118,6 +118,7 @@ window.onload = function(){
             $.ajax({
               url: "order", // 예: https://www.myservice.com/payments/complete
               type: "POST",
+              /*async: false,*/
               traditional: true,
               contentType: "application/x-www-form-urlencoded; charset=utf-8",
                 data: {
@@ -136,8 +137,7 @@ window.onload = function(){
             },
             datatype:"json",
             success:function(data){
-            
-               location.replace("buy");//성공시 보낼페이지
+               location.href = "buy?seqno="+data;//성공시 보낼페이지
             }
               })
              
