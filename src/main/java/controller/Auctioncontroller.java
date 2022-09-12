@@ -44,9 +44,7 @@ public class Auctioncontroller extends HttpServlet {
 		
 		
 		if(cmd.equals("auction")) {
-			
-			
-			
+
 			Map<String, List<Auc>> aucmap = auc.aucList();
 			
 			List<Auc> hitlist = aucmap.get("hit");

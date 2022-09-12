@@ -1,5 +1,6 @@
 package dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,13 +15,14 @@ import dto.Auc;
 import dto.AucNowing;
 import dto.Item;
 import dto.Mem;
+import oracle.jdbc.OracleTypes;
 
 public class AucDao {
    
    
    Connection conn = OracleConn.getInstance().getConn();
    PreparedStatement stmt;
-   
+   CallableStatement cstmt;
    
    public Map<String, List<Auc>> aucList() {
       Map<String, List<Auc>> aucmap = new HashMap<String, List<Auc>>();
@@ -154,36 +156,29 @@ public class AucDao {
    }
 
 
+//   디테일페이지
    public Auc detailList(String seqno) {
       Auc auc = null;
       Item item = null;
       List<AucNowing> anlist = new ArrayList<AucNowing>();
       AucNowing an = null;
       Mem name = null;
-      String sql = "select i.item_seqno as item_seqno, i.item_name as item_name, i.item_img as item_img, "
-            + " y.auc_seqno as auc_seqno, y.auc_img as auc_img, y.auc_shortdetail as auc_shortdetail, "
-            + " y.auc_price as auc_price, to_char(y.auc_finish, 'YYYY-MM-DD,HH24:MI:SS') as auc_finish, y.aucCloseprice as aucCloseprice, "
-            + " y.auc_count as auc_count, i.mem_id as mem_id, i.item_detail as item_detail"
-            + " from item i,"
-            + "    (select a.item_seqno, a.auc_seqno, a.auc_img as auc_img ,"
-            + "    a.auc_shortdetail, a.auc_price, a.auc_finish, a.auc_start, "
-            + "    (select max(an.aucnow_lastprice) from auc_nowing an where a.auc_seqno=an.auc_seqno) as aucCloseprice, "
-            + "    (select count(an.aucnow_seqno) as auc_count from auc_nowing an where a.auc_seqno = an.auc_seqno) as auc_count "
-            + " from auc a) y"
-            + " where y.item_seqno = i.item_seqno"
-            + " and y.auc_seqno = ?";
-      
+      String sql = "call p_auc_detail(?,?,?)";
+      	
       try {
-         stmt = conn.prepareStatement(sql);
-         stmt.setString(1, seqno);
-         ResultSet rs = stmt.executeQuery();
-         
+         cstmt = conn.prepareCall(sql);
+         cstmt.setString(1, seqno);
+         cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+         cstmt.registerOutParameter(3, OracleTypes.CURSOR);
+         cstmt.executeQuery();
+         ResultSet rs = (ResultSet)cstmt.getObject(2);
+         ResultSet rs2 = (ResultSet)cstmt.getObject(3);
          while (rs.next()) {
             auc = new Auc();
             item = new Item();
             
             item.setItemName(rs.getString("item_name"));
-            
+            item.setItemSeqno(rs.getInt("item_seqno"));
             item.setItemDetail(rs.getString("item_detail"));
             auc.setAucSeqno(rs.getInt("auc_seqno"));
             auc.setAucImg(rs.getString("auc_img"));
@@ -193,54 +188,125 @@ public class AucDao {
             auc.setAucCloseprice(rs.getInt("aucCloseprice"));
             auc.setAucHits(rs.getInt("auc_count"));
             auc.setAucDetail(rs.getString("mem_id"));
-            
-            sql = "select att_savename from att where item_seqno = ?";
-            
-            stmt = conn.prepareStatement(sql);
-            stmt.setString(1, rs.getString("item_seqno"));
-            ResultSet rs2 = stmt.executeQuery();
-            
-            if(rs2.next()) {
-            	item.setItemImg(rs2.getString("att_savename"));
-            }
-            
-            
+            item.setItemImg(rs.getString("item_img"));
             auc.setItem(item);
          }
          
-         sql = " select m.mem_name as mem_name, an.aucnow_date as aucnow_date, an.aucnow_lastprice as aucnow_lastprice, m.mem_id as mem_id "
-               + " from auc_nowing an ,  mem m"
-               + " where m.mem_id = an.mem_id"
-               + " and an.auc_seqno = ?"
-               + " order by an.aucnow_lastprice desc";
-         
-         stmt = conn.prepareStatement(sql);
-         stmt.setString(1, seqno);
-         rs = stmt.executeQuery();
-         
-         while (rs.next()) {
+
+         while (rs2.next()) {
             an = new AucNowing();
             name = new Mem();
-            
-            name.setMemName(rs.getString("mem_name"));
-            name.setMemId(rs.getString("mem_id"));
-            an.setAucnowLastprice(rs.getInt("aucnow_lastprice"));
-            an.setAucnowDate(rs.getDate("aucnow_date"));
+
+            name.setMemName(rs2.getString("mem_name"));
+            name.setMemId(rs2.getString("mem_id"));
+            an.setAucnowLastprice(rs2.getInt("aucnow_lastprice"));
+            an.setAucnowDate(rs2.getDate("aucnow_date"));
             an.setMem(name);
             anlist.add(an);
          }
          auc.setAucNowingSet(anlist);
          
-         stmt.close();   
+         cstmt.close();   
 
       } catch (SQLException e) {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
 
       return auc;
    }
-
+   
+   
+//   public Auc detailList(String seqno) {
+//	      Auc auc = null;
+//	      Item item = null;
+//	      List<AucNowing> anlist = new ArrayList<AucNowing>();
+//	      AucNowing an = null;
+//	      Mem name = null;
+//	      String sql = "select i.item_seqno as item_seqno, i.item_name as item_name, i.item_img as item_img, "
+//	            + " y.auc_seqno as auc_seqno, y.auc_img as auc_img, y.auc_shortdetail as auc_shortdetail, "
+//	            + " y.auc_price as auc_price, to_char(y.auc_finish, 'YYYY-MM-DD,HH24:MI:SS') as auc_finish, y.aucCloseprice as aucCloseprice, "
+//	            + " y.auc_count as auc_count, i.mem_id as mem_id, i.item_detail as item_detail"
+//	            + " from item i,"
+//	            + "    (select a.item_seqno, a.auc_seqno, a.auc_img as auc_img ,"
+//	            + "    a.auc_shortdetail, a.auc_price, a.auc_finish, a.auc_start, "
+//	            + "    (select max(an.aucnow_lastprice) from auc_nowing an where a.auc_seqno=an.auc_seqno) as aucCloseprice, "
+//	            + "    (select count(an.aucnow_seqno) as auc_count from auc_nowing an where a.auc_seqno = an.auc_seqno) as auc_count "
+//	            + " from auc a) y"
+//	            + " where y.item_seqno = i.item_seqno"
+//	            + " and y.auc_seqno = ?";
+//	      
+//	      try {
+//	         stmt = conn.prepareStatement(sql);
+//	         stmt.setString(1, seqno);
+//	         ResultSet rs = stmt.executeQuery();
+//	         
+//	         while (rs.next()) {
+//	            auc = new Auc();
+//	            item = new Item();
+//	            
+//	            item.setItemName(rs.getString("item_name"));
+//	            
+//	            item.setItemDetail(rs.getString("item_detail"));
+//	            auc.setAucSeqno(rs.getInt("auc_seqno"));
+//	            auc.setAucImg(rs.getString("auc_img"));
+//	            auc.setAucShortdetail(rs.getString("auc_shortdetail"));
+//	            auc.setAucPrice(rs.getInt("auc_price"));
+//	            auc.setAucFinish(rs.getString("auc_finish"));
+//	            auc.setAucCloseprice(rs.getInt("aucCloseprice"));
+//	            auc.setAucHits(rs.getInt("auc_count"));
+//	            auc.setAucDetail(rs.getString("mem_id"));
+//	            
+//	            sql = "select att_savename from att where item_seqno = ?";
+//	            
+//	            stmt = conn.prepareStatement(sql);
+//	            stmt.setString(1, rs.getString("item_seqno"));
+//	            ResultSet rs2 = stmt.executeQuery();
+//	            
+//	            if(rs2.next()) {
+//	            	item.setItemImg(rs2.getString("att_savename"));
+//	            }
+//	            
+//	            
+//	            auc.setItem(item);
+//	         }
+//	         
+//	         sql = " select m.mem_name as mem_name, an.aucnow_date as aucnow_date, an.aucnow_lastprice as aucnow_lastprice, m.mem_id as mem_id "
+//	               + " from auc_nowing an ,  mem m"
+//	               + " where m.mem_id = an.mem_id"
+//	               + " and an.auc_seqno = ?"
+//	               + " order by an.aucnow_lastprice desc";
+//	         
+//	         stmt = conn.prepareStatement(sql);
+//	         stmt.setString(1, seqno);
+//	         rs = stmt.executeQuery();
+//	         
+//	         while (rs.next()) {
+//	            an = new AucNowing();
+//	            name = new Mem();
+//	            
+//	            name.setMemName(rs.getString("mem_name"));
+//	            name.setMemId(rs.getString("mem_id"));
+//	            an.setAucnowLastprice(rs.getInt("aucnow_lastprice"));
+//	            an.setAucnowDate(rs.getDate("aucnow_date"));
+//	            an.setMem(name);
+//	            anlist.add(an);
+//	         }
+//	         auc.setAucNowingSet(anlist);
+//	         
+//	         stmt.close();   
+//
+//	      } catch (SQLException e) {
+//	         // TODO Auto-generated catch block
+//	         e.printStackTrace();
+//	      }
+//
+//	      return auc;
+//	   }
+   
+   
+   
+   
+   
 
    public void aucnow(String srt, String seqno, String id) {
       
