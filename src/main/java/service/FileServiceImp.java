@@ -104,6 +104,7 @@ public class FileServiceImp implements FileService {
 		//System.out.printf("필드이름 : %s, 필드값: %s\n", item.getFieldName(), item.getString());
 		String get = item.getString();
 		if (item.getFieldName().equals("proStat")) {
+			if (get == null) get = "WAIT";
 			pro.setProStat(get);
 			
 		}else if (item.getFieldName().equals("proPrice")) {

@@ -1,5 +1,6 @@
 package dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+
 import common.OracleConn;
 import dto.Att;
 import dto.Auc;
@@ -22,12 +24,17 @@ import dto.Marketing;
 import dto.Mem;
 import dto.Pro;
 import dto.Thumbnail;
+import oracle.jdbc.OracleTypes;
+import oracle.sql.ANYDATA;
+import oracle.sql.STRUCT;
+import oracle.sql.StructDescriptor;
 
 public class CreatorDao {
 	
 	Connection conn = OracleConn.getInstance().getConn();
 	PreparedStatement stmt;
-
+	CallableStatement cstmt;
+	
 	FileDao filedao = new FileDao();
 	
 	public void Creatoradd(HttpServletRequest request){
@@ -875,6 +882,36 @@ public class CreatorDao {
 		   }
 
 
+//		   public String productadd(Pro pro, String id) {
+//			   
+//			   String seqno = "";
+//
+//			      String sql = "call p_pro_add(?,?)";
+//			      try {
+//			    	  StructDescriptor proaadd = StructDescriptor.createDescriptor("OBJ_PRO",conn);
+//			    	  Object[] pro_addobj = new Object[1];
+//			    	  pro_addobj[0] = pro;
+//			    	  STRUCT pro_addarr = new STRUCT(proaadd,conn,pro_addobj);
+////			    	  pro_addarr[0] = new STRUCT(proaadd,conn,pro_addobj);
+//			    	  ANYDATA anyda = ANYDATA.convertDatum(pro_addarr);
+//			         cstmt = conn.prepareCall(sql);
+//			         cstmt.setObject(1, anyda);
+//			         cstmt.registerOutParameter(2, OracleTypes.INTEGER);
+//			         
+//			         cstmt.executeQuery();
+//			         
+//			         seqno = cstmt.getString(2);
+//			         
+//			         cstmt.close();
+//			         
+//	      } catch (SQLException e) {
+//	         e.printStackTrace();
+//	      }
+//	      
+//	      
+//	      return seqno;
+//	   }
+		   
 		   public String productadd(Pro pro, String id) {
 			   DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -885,9 +922,6 @@ public class CreatorDao {
 //			      String proHits = req.getParameter("proHits");
 //			      String proSaleprice = req.getParameter("proSaleprice");
 //			      String proOpendate = req.getParameter("proOpendate");
-//			      
-//			      
-//			      
 //			      String proClosedate = req.getParameter("proClosedate");
 //			      String proDetail = req.getParameter("proDetail");
 //			      String proAmount = req.getParameter("amount");
@@ -896,7 +930,10 @@ public class CreatorDao {
 			      
 			      
 //			      String id = (String)req.getSession().getAttribute("sess_id");
-			      String sql = "insert into item(item_seqno,item_detail,item_name,mem_id) values(item_seqno.nextval,?,?,?)";
+			      String sql = "insert into item(item_seqno,item_detail,item_name,mem_id) "
+			      			 + "values(item_seqno.nextval,?,?,?)";
+			      
+			      
 			      
 			      try {
 			         stmt = conn.prepareStatement(sql);
