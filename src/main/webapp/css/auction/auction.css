@@ -147,17 +147,17 @@ h1, .sub-heading {
 
 
 
-/* 탭 컨텐츠 스타일 */
+/* 탭 컨텐츠 스타일 
 .tab_content {
   display: none;
   clear: both;
   overflow: hidden;
-}
+}*/
 
 
-/* 선택 된 탭 콘텐츠를 표시 */
+/*  선택 된 탭 콘텐츠를 표시 
 #all:checked ~ #all_content,
 #programming:checked ~ #programming_content,
 #design:checked ~ #design_content {
   display: block;
-}
+} */
