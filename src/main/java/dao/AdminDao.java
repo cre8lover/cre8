@@ -294,27 +294,25 @@ public class AdminDao {
 	}
 
 	public void marketReg(Marketing market) {
-		String sql = "insert into marketing (mar_seqno, mar_cate, mar_product, mar_price, mar_company, "
-				+ " mar_opendate, mar_closedate, mar_detail, mar_ceo, mar_phone, mar_regnum)"
-				+ " values (mar_seqno.nextval, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+		String sql = "call p_marketReg(?,?,?,?,?,?,?,?,?,?)";
 		
 		try {
-			PreparedStatement stmt = conn.prepareStatement(sql);
+			cstmt = conn.prepareCall(sql);
 			
-			stmt.setString(1, market.getMarCategory());
-			stmt.setString(2, market.getMarProduct());
-			stmt.setString(3, market.getMarPrice());
-			stmt.setString(4, market.getMarCompany());
-			stmt.setString(5, market.getMarOpendate());
-			stmt.setString(6, market.getMarClosedate());
-			stmt.setString(7, market.getMarDetail());
-			stmt.setString(8, market.getMarCeo());
-			stmt.setString(9, market.getMarPhone());
-			stmt.setString(10, market.getMarRegnum());
+			cstmt.setString(1, market.getMarCategory());
+			cstmt.setString(2, market.getMarProduct());
+			cstmt.setString(3, market.getMarPrice());
+			cstmt.setString(4, market.getMarCompany());
+			cstmt.setString(5, market.getMarOpendate());
+			cstmt.setString(6, market.getMarClosedate());
+			cstmt.setString(7, market.getMarDetail());
+			cstmt.setString(8, market.getMarCeo());
+			cstmt.setString(9, market.getMarPhone());
+			cstmt.setString(10, market.getMarRegnum());
 			
-			stmt.executeQuery();
+			cstmt.executeQuery();
 			
-			stmt.close();
+			cstmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -324,50 +322,15 @@ public class AdminDao {
 	public List<Marketing> buylist(AdminKeyWord adkey) {
 		List<Marketing> list = new ArrayList<Marketing>();
 
-		String sql ="SELECT rownum, d.*"
-				+ " FROM("
-				+ " SELECT m.mar_opendate, a.mem_name, m.mar_price, count(*) over(partition by a.mem_name) count,"
-				+ "    ((count(*) over(partition by a.mem_name)) * m.mar_price) total, m.mar_product, "
-				+ "		decode(m.mar_stat, 'ING', '판매중', 'END', '판매종료') as mar_stat"
-				+ " FROM("
-				+ "    SELECT o.order_seqno, o.mem_id, o.order_date, o.mar_seqno, e.mem_name "
-				+ "    FROM("
-				+ "       select o.order_seqno, o.mem_id, o.order_date, m.mar_seqno"
-				+ "       from orders o, mini_order m "
-				+ "       where o.order_seqno = m.order_seqno) o, mem e"
-				+ "    where e.mem_id = o.mem_id and o.mar_seqno is not null"
-				+ "    order by o.order_date desc) a, marketing m";
-			sql	+= " where m.mar_seqno = a.mar_seqno) d";
-		
-		if(adkey.getClassification() != null && adkey.getClassification().equals("998")) { 
-				sql += " where mar_stat like '%"+adkey.getKeyword()+"%' ";	
-				sql += " or mar_product like '%"+adkey.getKeyword()+"%' ";
-				sql += " or mem_name like '%"+adkey.getKeyword()+"%' ";
-	/*			
-				if (adkey.getSdate() != null && adkey.getFdate() != null) {
-					sql+=" and mar_opendate >= TO_DATE('"+adkey.getSdate()+"', 'YYYY-MM-DD') "
-							+ " and mar_opendate <= TO_DATE('"+adkey.getFdate()+"', 'YYYY-MM-DD')";
-						
-				} else if (adkey.getSdate() != null && adkey.getFdate() == null) {
-					
-						sql+=" and mar_opendate >= TO_DATE('"+adkey.getSdate()+"', 'YYYY-MM-DD') ";
-						
-				} else if (adkey.getSdate() == null && adkey.getFdate() != null) {
-						sql+=" and mar_opendate >= TO_DATE('"+adkey.getFdate()+"', 'YYYY-MM-DD') ";
-
-				}
-	*/			
-		} else if (adkey.getClassification() != null && !adkey.getClassification().equals("998")) {
-		  
-				sql += " where " + adkey.getClassification()+ " like '%"+adkey.getKeyword()+"%'";
-    	
-		} 
+		String sql = " call p_buylist(?,?,?) ";
 		
 		try {
-			stmt = conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_SENSITIVE,
-											ResultSet.CONCUR_UPDATABLE);
-
-			ResultSet rs = stmt.executeQuery();
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, adkey.getClassification());
+			cstmt.setString(2, adkey.getKeyword());
+			cstmt.registerOutParameter(3, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			ResultSet rs = (ResultSet)cstmt.getObject(3);
 			while(rs.next()) {
 				Marketing m = new Marketing();
 				m.setMarSeqno(rs.getInt("rownum"));
@@ -381,7 +344,7 @@ public class AdminDao {
 				list.add(m);
 			}
 			
-			stmt.close();
+			cstmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -394,15 +357,14 @@ public class AdminDao {
 
 		Marketing m = new Marketing();
 		
-		String sql = "select mar_seqno, mar_cate, mar_product, mar_price, mar_company,"
-				+ " mar_opendate, mar_closedate, mar_detail, mar_ceo, mar_phone, mar_regnum "
-				+ " from marketing where mar_seqno = ?";
+		String sql = "call p_modify(?,?)";
 		
 		try {
-			stmt = conn.prepareStatement(sql);
-			
-			stmt.setString(1, seqno);
-			ResultSet rs = stmt.executeQuery();
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, seqno);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
 			
 			if(rs.next()) {
 				m.setMarSeqno(rs.getInt("mar_seqno"));
@@ -420,7 +382,7 @@ public class AdminDao {
 			}
 			
 			
-		stmt.close();
+		cstmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -430,29 +392,26 @@ public class AdminDao {
 	}
 
 	public void update(Marketing market) {
-		String sql = "update marketing set mar_cate =?, mar_product=?, mar_price=?, mar_company=?, "
-				+ " mar_opendate=?, mar_closedate=?, mar_detail=?, mar_ceo=?, mar_phone=?, mar_regnum=?"
-				+ " where mar_seqno =?";
+		String sql = "call p_marketModiy(?,?,?,?,?,?,?,?,?,?,?)";
 		
-			PreparedStatement stmt;
 			try {
-				stmt = conn.prepareStatement(sql);
+				cstmt = conn.prepareCall(sql);
 				
-				stmt.setString(1, market.getMarCategory());
-				stmt.setString(2, market.getMarProduct());
-				stmt.setString(3, market.getMarPrice());
-				stmt.setString(4, market.getMarCompany());
-				stmt.setString(5, market.getMarOpendate());
-				stmt.setString(6, market.getMarClosedate());
-				stmt.setString(7, market.getMarDetail());
-				stmt.setString(8, market.getMarCeo());
-				stmt.setString(9, market.getMarPhone());
-				stmt.setString(10, market.getMarRegnum());
-				stmt.setInt(11, market.getMarSeqno());
+				cstmt.setString(1, market.getMarCategory());
+				cstmt.setString(2, market.getMarProduct());
+				cstmt.setString(3, market.getMarPrice());
+				cstmt.setString(4, market.getMarCompany());
+				cstmt.setString(5, market.getMarOpendate());
+				cstmt.setString(6, market.getMarClosedate());
+				cstmt.setString(7, market.getMarDetail());
+				cstmt.setString(8, market.getMarCeo());
+				cstmt.setString(9, market.getMarPhone());
+				cstmt.setString(10, market.getMarRegnum());
+				cstmt.setInt(11, market.getMarSeqno());
 				
-				stmt.executeQuery();
+				cstmt.executeQuery();
 				
-				stmt.close();
+				cstmt.close();
 				
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
