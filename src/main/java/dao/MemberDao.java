@@ -383,24 +383,13 @@ public class MemberDao {
 		List<Ship> detail = new ArrayList<Ship>();
 		List<Ship> order = new ArrayList<Ship>();
 		
-		String sql = "SELECT *"
-				+ " FROM("
-				+ "    select o.order_seqno, d.orderdetail_way, o.order_date"
-				+ "    from orders o, orderdetail d"
-				+ "    where o.order_seqno=d.order_seqno"
-				+ "    and o.mem_id = ?"
-				+ "    order by o.order_date desc) a,"
-				+ "    (select s.order_seqno, s.ship_seqno, w.waybill_name, w.waybill_number, s.add_address"
-				+ "    from waybill w,"
-				+ "                (select s.order_seqno, s.ship_seqno, a.add_address, a.add_num"
-				+ "                 from ship s, address a"
-				+ "                 where s.add_seqno=a.add_seqno) s"
-				+ "    where w.ship_seqno=s.ship_seqno) s"
-				+ " where a.order_seqno = s.order_seqno";
+		String sql = "call ordercheck_detail(?,?)";
 		try {
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, id);
-			ResultSet rs = stmt.executeQuery();
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
 			
 			while(rs.next()) {
 				Ship s = new Ship();
@@ -423,15 +412,13 @@ public class MemberDao {
 				detail.add(s);
 			}
 			
-			sql = "select rownum, o.order_seqno, o.order_date, o.order_totalprice, s.ship_status"
-				+ " from orders o, ship s"
-				+ " where o.order_seqno = s.order_seqno"
-				+ " and o.mem_id = ?"
-				+ " order by o.order_seqno desc";
+			sql = "call ordercheck_order(?,?)";
 
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, id);
-			rs = stmt.executeQuery();
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			rs = (ResultSet)cstmt.getObject(2);
 
 			while(rs.next()) {
 				Ship s = new Ship();
@@ -449,7 +436,7 @@ public class MemberDao {
 			ship.put("order", order);
 			ship.put("detail", detail);
 			
-			stmt.close();	
+			cstmt.close();	
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -462,39 +449,28 @@ public class MemberDao {
 	public void infoinsert(Mem mem) {
 		Address add = mem.getAddressSet();
 		Att att = mem.getAtt();
-		String sql = "update mem set mem_email = ?, mem_tel = ?,";
-				sql += " mem_snsinfo = ? where mem_id = ?";
+		String sql = "call p_infoupdate(?,?,?,?,?,?,?,?,?)";
 		
 		try {
-			stmt = conn.prepareStatement(sql);
+			cstmt = conn.prepareCall(sql);
 		
-			stmt.setString(1, mem.getMemEmail());
-			stmt.setString(2, mem.getMemTel());
 			
 			if( mem.getMemSnsinfo() != null) { 
-				stmt.setString(3, mem.getMemSnsinfo());
+				cstmt.setString(1, mem.getMemSnsinfo());
 			} else { 
-				stmt.setString(3, ""); 
+				cstmt.setString(1, ""); 
 			}
 			
-			stmt.setString(4, mem.getMemId());
-		
-			stmt.executeQuery();
-
-			sql = "update address set add_category = ?, add_phone = ?,"
-					+ " add_person = ?, add_address = ?, ADD_DETAIL = ?"
-					+ " where mem_id = ?";
+			cstmt.setString(2, mem.getMemEmail());
+			cstmt.setString(3, mem.getMemTel());
+			cstmt.setString(4, mem.getMemId());
+			cstmt.setString(5, add.getAddCategory());
+			cstmt.setString(6, add.getAddPerson());
+			cstmt.setString(7, add.getAddPhone());
+			cstmt.setString(8, add.getAddAddress());
+			cstmt.setString(9, add.getAddetail());
 			
-			stmt = conn.prepareStatement(sql);
-			
-			stmt.setString(1, add.getAddCategory());
-			stmt.setString(2, add.getAddPhone());
-			stmt.setString(3, add.getAddPerson());
-			stmt.setString(4, add.getAddAddress());
-			stmt.setString(5, add.getAddetail());
-			stmt.setString(6, mem.getMemId());
-			
-			stmt.executeQuery();
+			cstmt.executeQuery();
 
 		 //첨부파일
 			if(att != null) {
@@ -536,7 +512,7 @@ public class MemberDao {
 				}
 			}
 			
-			stmt.close();	
+			cstmt.close();	
 	
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
