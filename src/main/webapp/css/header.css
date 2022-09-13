@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+a{
+	text-decoration-line: none;
+}
+
 .header {
   padding: 10px;
   background: #071E3D; 

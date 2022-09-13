@@ -12,24 +12,26 @@ import dto.Orders;
 
 public class BuyServiceimp implements BuyService{
 	BuyDao Dao = new BuyDao();
-	
+	@Override
 	public List<Cart> myCart(String logid, String[] chklist) {
 		
 		return Dao.myCart(logid, chklist);
 	}
 	
-	public Cart buylist(String id) {
-
-		return Dao.buylist(id);
-				
+	/*
+	 * public Cart buylist(String id) {
+	 * 
+	 * return Dao.buylist(id);
+	 * 
+	 * }
+	 */
+	@Override
+	public List<Orders> orderlist(String logid, String o_seqno) {
+			return Dao.orderlist(logid,o_seqno);
 	}
-
-	public List<Orders> orderlist(String logid) {
-			return Dao.orderlist(logid);
-	}
-
-	public void orderand(HttpServletRequest req, HttpServletResponse resp) {
+	@Override
+	public int orderand(HttpServletRequest req, HttpServletResponse resp) {
 		
-		Dao.orderand(req,resp);
+		return Dao.orderand(req,resp);
 	}
 }
