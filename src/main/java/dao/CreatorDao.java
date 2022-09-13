@@ -42,7 +42,7 @@ public class CreatorDao {
 	public void Creatoradd(HttpServletRequest request){
 		try {
 			String sql = "call p_creatoradd(?,?,?,?,?,?,?,?)";
-		     	   
+		     	   //프로시저시험해봅니
 		     	  
 		    String str = (request.getParameter("creadress") + request.getParameter("creadress2"));
 
