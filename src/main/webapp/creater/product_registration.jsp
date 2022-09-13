@@ -30,7 +30,7 @@
             <label class='control-label col-md-2 col-md-offset-2' for='id_pets'>판매상태</label>
             <div class='col-md-8'>
               <div class='make-switch' data-on-label='판매중' data-off-label='대기' id='id_pets_switch'>
-                <input id='id_pets' type='checkbox' <c:if test="${pro.proStat eq 'PRO_ING'}"> checked </c:if>name="proStat" value="PRO_ING">
+                <input id='id_pets' type='checkbox' <c:if test="${pro.proStat eq 'PRO_ING'}"> checked </c:if> name="proStat" value="PRO_ING">
               </div>
             </div>
           </div>

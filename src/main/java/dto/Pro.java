@@ -13,8 +13,8 @@ public class Pro implements Serializable {
 	private Integer proSeqno;
 	private Integer proPrice;
 	private String proDetail;
-	private Date proOpendate;
-	private Date proClosedate;
+	private String proOpendate;
+	private String proClosedate;
 	private Integer proSaleprice;
 	private Integer proAmount;
 	private String proStat;
@@ -104,19 +104,19 @@ public class Pro implements Serializable {
 		this.proDetail = proDetail;
 	}
 
-	public Date getProOpendate() {
+	public String getProOpendate() {
 		return proOpendate;
 	}
 
-	public void setProOpendate(Date proOpendate) {
+	public void setProOpendate(String proOpendate) {
 		this.proOpendate = proOpendate;
 	}
 
-	public Date getProClosedate() {
+	public String getProClosedate() {
 		return proClosedate;
 	}
 
-	public void setProClosedate(Date proClosedate) {
+	public void setProClosedate(String proClosedate) {
 		this.proClosedate = proClosedate;
 	}
 

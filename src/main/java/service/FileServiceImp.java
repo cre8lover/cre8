@@ -104,7 +104,6 @@ public class FileServiceImp implements FileService {
 		//System.out.printf("필드이름 : %s, 필드값: %s\n", item.getFieldName(), item.getString());
 		String get = item.getString();
 		if (item.getFieldName().equals("proStat")) {
-			if (get == null) get = "WAIT";
 			pro.setProStat(get);
 			
 		}else if (item.getFieldName().equals("proPrice")) {
@@ -116,10 +115,10 @@ public class FileServiceImp implements FileService {
 		}else if (item.getFieldName().equals("proSaleprice")) {
 			pro.setProSaleprice(Integer.parseInt(get));
 		}else if (item.getFieldName().equals("proOpendate")) {
-			pro.setProOpendate(sdFormat.parse(get));
+			pro.setProOpendate(get);
 			
 		}else if (item.getFieldName().equals("proClosedate")) {
-			pro.setProClosedate(sdFormat.parse(get));
+			pro.setProClosedate(get);
 		}else if (item.getFieldName().equals("proDetail")) {
 			pro.setProDetail(get);
 		}else if (item.getFieldName().equals("amount")) {
