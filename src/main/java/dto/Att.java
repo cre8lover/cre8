@@ -19,6 +19,7 @@ public class Att implements Serializable {
 	private Marketing marketing;
 	private Artdetail artdetail;
 	private Mem mem;
+	private Thumbnail thumbnail;
 	private String itemSeqno;
 	private String marSeqno;
 	private String artSeqno;
@@ -28,6 +29,18 @@ public class Att implements Serializable {
 
 	
 	
+	public Thumbnail getThumbnail() {
+		return thumbnail;
+	}
+
+
+
+	public void setThumbnail(Thumbnail thumbnail) {
+		this.thumbnail = thumbnail;
+	}
+
+
+
 	public String getAttSize() {
 		return attSize;
 	}

@@ -11,11 +11,9 @@ import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.io.FilenameUtils;
 
 import dao.FileDao;
-import dto.Address;
 import dto.Att;
 import dto.Auc;
 import dto.Item;
-import dto.Mem;
 import dto.Pro;
 import dto.Thumbnail;
 import net.coobird.thumbnailator.Thumbnails;
@@ -70,8 +68,8 @@ public class FileServiceImp implements FileService {
 			String type = fileType.substring(0,fileType.indexOf("/"));
 		
 			if(type.equals("image")) {
+							
 				attachfile.setAttThumb(setThumbnail(saveFileName,file));
-				
 			}
 		}
 		return attachfile;
@@ -162,32 +160,6 @@ public class FileServiceImp implements FileService {
 		auc.setItem(proitem);
 		return auc;
 		
-	}
-
-	public Mem getFormParameter_mypage(FileItem item, Mem mem, Address add) {
-		//System.out.printf("필드이름 : %s, 필드값: %s\n", item.getFieldName(), item.getString());
-
-		String get = item.getString();
-		if (item.getFieldName().equals("phone")) {
-			mem.setMemTel(get);
-		}else if (item.getFieldName().equals("email")) {
-			mem.setMemEmail(get);
-		}else if (item.getFieldName().equals("sns")) {
-			mem.setMemSnsinfo(get);
-		}else if (item.getFieldName().equals("cate")) {
-			add.setAddCategory(get);
-		}else if (item.getFieldName().equals("mobile")) {
-			add.setAddPhone(get);
-		}else if (item.getFieldName().equals("person")) {
-			add.setAddPerson(get);
-		}else if (item.getFieldName().equals("address")) {
-			add.setAddAddress(get);
-		}else if (item.getFieldName().equals("address_detail")) {
-			add.setAddetail(get);
-		}
-		mem.setAddressSet(add);
-		
-		return mem;
 	}
 	
 }

@@ -18,7 +18,7 @@
 	<div class="body" style="height:100%">
  		<div class="leftSideBar"></div>
 		<div class="content" style="width:100%;"> 
-		<form action="<%= request.getContextPath() %>/mem/infoinsert" enctype="multipart/form-data" id = "insert" method="post">
+		<form action="<%= request.getContextPath() %>/mem/infoinsert" id = "insert" method="post">
 		<div class="khm_box">
 			<h2>기본정보</h2>
 			<hr>
@@ -46,7 +46,7 @@
 			    <tr>
 			      <td>이메일</td>
 			      <td>
-					<input style="width:100%" type="text" value="${info.memEmail }" placeholder="ex)cre8@naver.com"  name="email">
+					<input style="width:100%" type="text" value="${info.memEmail }" placeholder="ex)cre8@naver.com"  name="eamil">
 				  </td>
 			    </tr>
 			  </tbody>
@@ -116,7 +116,7 @@
 					<div class="filebox">
 					    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
 					    <label for="file"></label> 
-					    <input type="file" name="filename" id="file">
+					    <input type="file" id="file">
 					</div>
 				  </td>
 			    </tr>

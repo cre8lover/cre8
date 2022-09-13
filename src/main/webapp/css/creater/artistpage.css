@@ -1,7 +1,5 @@
 @charset "UTF-8";
-a{
-	text-decoration-line: none;
-}
+
 #productView{
 	display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -11,7 +9,7 @@ a{
 }
 .pro-img {
 width: 250px;
-height: 250px;
+height: 300px;
 background-color: gray;
 }
 .product-list .product {

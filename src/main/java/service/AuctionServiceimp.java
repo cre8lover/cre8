@@ -5,14 +5,13 @@ import java.util.Map;
 
 import dao.AucDao;
 import dto.Auc;
-import dto.Auc_Criteria;
 
 public class AuctionServiceimp implements AuctionServeice {
 	AucDao Dao = new AucDao();
 	
 	@Override
-	public List<Auc> aucList(Auc_Criteria cri) {
-		return Dao.aucList(cri);
+	public Map<String, List<Auc>> aucList() {
+		return Dao.aucList();
 	}
 
 

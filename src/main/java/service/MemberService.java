@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import dto.Att;
 import dto.Cart;
 import dto.Mem;
 import dto.Pro;
@@ -38,7 +37,4 @@ public interface MemberService {
 	Map<String, String> findPw(String id, String email);
 
 	int idcheck(String id);
-
-
-
 }

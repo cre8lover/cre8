@@ -12,8 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dto.Auc;
-import dto.Auc_Criteria;
-import dto.Auc_Page;
 import service.AuctionServeice;
 import service.AuctionServiceimp;
 
@@ -48,21 +46,26 @@ public class Auctioncontroller extends HttpServlet {
 		if(cmd.equals("auction")) {
 			
 			
-			String currentPage = req.getParameter("currentPage");
-			if(currentPage == null) currentPage = "1";
 			
-			Auc_Criteria cri = new Auc_Criteria(Integer.parseInt(currentPage));
-			cri.setCategory(req.getParameter("tab_item"));
+			Map<String, List<Auc>> aucmap = auc.aucList();
 			
-			if (cri.getCategory() == null) {
-				cri.setCategory("sdate");
+			List<Auc> hitlist = aucmap.get("hit");
+			List<Auc> lastlist = aucmap.get("last");
+			List<Auc> auclist = aucmap.get("auc");
+			
+			if (hitlist != null) {
+				req.setAttribute("hitlist", hitlist);
 			}
 			
-			List<Auc> auclist = auc.aucList(cri);
-			auclist.get(0).getItem().getItemAmount();
-			req.setAttribute("pageMaker", new Auc_Page(auclist.get(0).getItem().getItemAmount(),cri));
-			req.setAttribute("auclist", auclist);
-			req.setAttribute("cate", cri.getCategory());
+			if (lastlist != null) {
+				req.setAttribute("lastlist", lastlist);
+			}
+			
+			if (auclist != null) {
+				req.setAttribute("auclist", auclist);
+			}
+
+			
 			goView(req, resp, "/auction/auction.jsp");
 			
 			

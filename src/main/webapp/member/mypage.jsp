@@ -1,7 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -24,14 +24,12 @@
 			
 			<div class="mypage"> 
 				<c:set value="${page}" var="my" />
-				<div class="profile">
-
-						<img src="/upload/thumbnail/${my.att.attThumb.fileName }" style="height:225px; width: 225px; border-radius: 50%;">	
-
+				<div class="profile"> 
+					<img src="<%= request.getContextPath() %>/img/profile.png" style="height:225px;">					
+					<h3>${my.att.attName}님 환영합니다!</h3>
 					<h3>${my.memName}님 환영합니다!</h3>
 					<button style="float:center;" onclick="newwindow('<%= request.getContextPath() %>/mem/meminfo','info')">정보수정</button>
 					<button style="float:center;" onclick="newwindow('<%= request.getContextPath() %>/mem/buyHistory','buylist')">구매내역</button>
-					<button style="float:center;" onclick="location.href='<%= request.getContextPath() %>/cre/creReg'">작가등록</button>
 				
 				</div>
 				<table class="table-fill" style="margin-top:100px">
