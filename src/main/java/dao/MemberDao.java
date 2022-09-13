@@ -176,18 +176,14 @@ public class MemberDao {
 	public Mem info(String id) {
 		Mem member = new Mem();
 		
-		String sql = "select a.add_detail, m.mem_name, m.mem_email, m.mem_tel,"
-				+ " m.mem_snsinfo, m.mem_img, a.add_category,"
-				+ " a.add_phone,a.add_person,a.add_address"
-				+ " from mem m, address a"
-				+ " where m.mem_id = a.mem_id(+) and m.mem_id = ?";
+		String sql = "call p_info(?,?)";
 
 		try {
-			stmt = conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_SENSITIVE,
-				  	  ResultSet.CONCUR_UPDATABLE);
-		
-			stmt.setString(1, id);
-			ResultSet rs = stmt.executeQuery();
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
 			
 			if(rs.next()) {
 				member.setMemName(rs.getString("mem_name"));
@@ -206,7 +202,7 @@ public class MemberDao {
 				
 			}
 			
-			stmt.close();
+			cstmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -217,25 +213,15 @@ public class MemberDao {
 	public List<Pro> membuylist(String id) {
 		List<Pro> pro = new ArrayList<Pro>();
 		
-		String sql = "select rownum, a.*"
-				+ " from("
-				+ " select (select item_img from item i where i.item_seqno = p.item_seqno) item_img,"
-				+ " (select item_name from item i where i.item_seqno = p.item_seqno) item_name,"
-				+ " o.order_date order_date, o.amount order_amount, o.order_totalprice order_totalprice"
-				+ " from pro p,"
-				+ " ("
-				+ " select order_totalprice, o.mem_id, pro_seqno, order_date, m.amount"
-				+ " from orders o, mini_order m"
-				+ " where o.order_seqno = m.order_seqno"
-				+ " ) o"
-				+ " where p.pro_seqno = o.pro_seqno and o.mem_id = ?"
-				+ " order by order_date desc) a";
+		String sql = "call p_membuylist(?,?)";
 		
 		try {
-			stmt = conn.prepareStatement(sql);
+			cstmt = conn.prepareCall(sql);
 			
-			stmt.setString(1, id);
-			ResultSet rs = stmt.executeQuery();
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
 			
 			while(rs.next()) {
 				Pro p = new Pro();
@@ -254,7 +240,7 @@ public class MemberDao {
 				p.setItem(i);
 				pro.add(p);
 			}
-			stmt.close();
+			cstmt.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -270,25 +256,14 @@ public class MemberDao {
 		List<Cart> cart = new ArrayList<Cart>();
 		List<Cart> cart2 = new ArrayList<Cart>();
 		
-		String sql = "select rownum, a.*"
-				+ " from("
-				+ " select (select item_img from item i where i.item_seqno = p.item_seqno) item_img,"
-				+ " (select item_name from item i where i.item_seqno = p.item_seqno) item_name,"
-				+ " o.order_date order_date, o.amount order_amount, o.order_totalprice oreder_totalprice, p.auc_stat"
-				+ " from auc p,"
-				+ " ("
-				+ " select order_totalprice, o.mem_id, auc_seqno, order_date, m.amount"
-				+ " from orders o, mini_order m"
-				+ " where o.order_seqno = m.order_seqno"
-				+ " ) o"
-				+ " where p.auc_seqno = o.auc_seqno and o.mem_id = ?"
-				+ " order by order_date desc) a";
+		String sql = "call p_memauclist_end(?,?)";
 		
 		try {
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, id);
-			
-			ResultSet rs = stmt.executeQuery();
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
 			
 			while(rs.next()) {
 				Cart c = new Cart();
@@ -314,22 +289,13 @@ public class MemberDao {
 				cart.add(c);
 			}
 			
-			sql = "select rownum, a.*"
-				+ " from("
-				+ " select a.auc_seqno, aucnow_date, (select item_name from item i where i.item_seqno = a.item_seqno) auc_name,"
-				+ " (select item_img from item i where i.item_seqno = a.item_seqno) auc_img,"
-				+ " a.auc_stat, a.auc_closeprice"
-				+ " from (select auc_seqno, Max(aucnow_date) as aucnow_date"
-				+ " from auc_nowing"
-				+ " where mem_id = ?"
-				+ " group by auc_seqno) an, auc a"
-				+ " where a.auc_seqno = an.auc_seqno"
-				+ " order by aucnow_date desc) a";
+			sql = "call p_memauclist_ing(?,?)";
 			
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, id);
-			
-			rs = stmt.executeQuery();
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			rs = (ResultSet)cstmt.getObject(2);
 			
 			while(rs.next()) {
 				Cart cc = new Cart();
@@ -356,7 +322,7 @@ public class MemberDao {
 			auc.put("END", cart);
 			auc.put("ING", cart2);
 			
-		stmt.close();	
+		cstmt.close();	
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -370,28 +336,14 @@ public class MemberDao {
 	public List<Pro> buystat(String id) {
 		List<Pro> pro = new ArrayList<Pro>();
 		
-		String sql = "select rownum, (select item_img from item i where i.item_seqno = p.item_seqno) item_img,"
-				+ " (select item_name from item i where i.item_seqno = p.item_seqno) item_name,"
-				+ " p.pro_price, a.order_date, a.orderdetail_stat, a.pro_seqno"
-				+ " from pro p,"
-				+ " ("
-				+ "select o.order_seqno, o.order_date, od.orderdetail_stat, o.pro_seqno"
-				+ " from (select o.order_seqno, o.order_date, m.pro_seqno from orders o, mini_order m "
-				+ " where m.order_seqno = o.order_seqno and o.mem_id = ?) o,"
-				+ " ("
-				+ " select order_seqno, orderdetail_stat"
-				+ " from orderdetail"
-				+ " where orderdetail_stat not in 'END'"
-				+ " ) od"
-				+ " where o.order_seqno = od.order_seqno"
-				+ " order by o.order_date desc"
-				+ " ) a"
-				+ " where p.pro_seqno = a.pro_seqno";
+		String sql = "call buystat(?,?)";
 
 		try {
-			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setString(1, id);
-			ResultSet rs = stmt.executeQuery();
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
 			
 			while(rs.next()) {
 				Pro p = new Pro();
@@ -417,7 +369,7 @@ public class MemberDao {
 			}
 			
 			
-			stmt.close();	
+			cstmt.close();	
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
