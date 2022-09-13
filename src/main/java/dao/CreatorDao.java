@@ -1,17 +1,21 @@
 package dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
 
 import common.OracleConn;
 import dto.Att;
@@ -22,19 +26,23 @@ import dto.Marketing;
 import dto.Mem;
 import dto.Pro;
 import dto.Thumbnail;
+import oracle.jdbc.OracleTypes;
+import oracle.sql.ANYDATA;
+import oracle.sql.STRUCT;
+import oracle.sql.StructDescriptor;
 
 public class CreatorDao {
 	
 	Connection conn = OracleConn.getInstance().getConn();
 	PreparedStatement stmt;
+	CallableStatement cstmt;
+	
 	FileDao filedao = new FileDao();
 	
-	//creater/creReg.jsp
 	public void Creatoradd(HttpServletRequest request){
 		try {
-			String sql = "insert into creator (cre_seqno, cre_company, cre_phone, cre_name, cre_address, cre_regnum, cre_salenum, cre_pot, mem_id) ";
-		     	   sql +=" values (cre_seqno.nextval,?,?,?,?,?,?,?,?)";
-		     	   //mem_id빠짐
+			String sql = "call p_creatoradd(?,?,?,?,?,?,?,?)";
+		     	   
 		     	  
 		    String str = (request.getParameter("creadress") + request.getParameter("creadress2"));
 
@@ -876,45 +884,50 @@ public class CreatorDao {
 
 
 		   public String productadd(Pro pro, String id) {
-			   DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
 			   String seqno = "";
-			      
-//			      String proStat = req.getParameter("proStat");
-//			      String proPrice = req.getParameter("proPrice");
-//			      String proHits = req.getParameter("proHits");
-//			      String proSaleprice = req.getParameter("proSaleprice");
-//			      String proOpendate = req.getParameter("proOpendate");
-//			      
-//			      
-//			      
-//			      String proClosedate = req.getParameter("proClosedate");
-//			      String proDetail = req.getParameter("proDetail");
-//			      String proAmount = req.getParameter("amount");
-//			      String itemDetail = req.getParameter("itemDetail");
-//			      String itemName = req.getParameter("itemName");
-			      
-			      
-//			      String id = (String)req.getSession().getAttribute("sess_id");
-			      String sql = "insert into item(item_seqno,item_detail,item_name,mem_id) values(item_seqno.nextval,?,?,?)";
-			      
+			      String sql = "call p_pro_add_test(?,?)";
 			      try {
-			         stmt = conn.prepareStatement(sql);
-			         stmt.setString(1, pro.getItem().getItemDetail());
-//			         stmt.setString(1, itemDetail);
-			         stmt.setString(2, pro.getItem().getItemName());
-//			         stmt.setString(2, itemName);
-			         stmt.setString(3, id);
+			    	  
+			    	  if(pro.getProStat() == null) pro.setProStat("WAIT");
+			    	  
+			    	  StructDescriptor st_thumb = StructDescriptor.createDescriptor("OBJ_THUMB",conn);
+			    	  Object[] thumb_obj = {pro.getAtt_file().getAttThumb().getFileName(),
+						    			    pro.getAtt_file().getAttThumb().getFileSize(),
+						    			    pro.getAtt_file().getAttThumb().getFilePath()
+						    	  			};
+			    	  STRUCT thumb_rec = new STRUCT(st_thumb,conn,thumb_obj);
+			    	  
+			    	  StructDescriptor st_att = StructDescriptor.createDescriptor("OBJ_ATT",conn);
+			    	  Object[] att_obj = {pro.getAtt_file().getAttName(),
+						    			  pro.getAtt_file().getSavefilename(),
+						    			  pro.getAtt_file().getAttSize(),
+						    			  pro.getAtt_file().getAttType(),
+						    			  pro.getAtt_file().getAttPath(),
+						    			  thumb_rec
+						    	  		  };
+			    	  STRUCT att_rec = new STRUCT(st_att,conn,att_obj);
+			    	  
+			    	  
+			    	  
+			    	  StructDescriptor st_pro = StructDescriptor.createDescriptor("OBJ_PRO",conn);
+			    	  Object[] pro_obj = {pro.getItem().getItemDetail(),pro.getItem().getItemName(),
+			    			  			  id,pro.getProPrice(),pro.getProHits(),pro.getProSaleprice(),
+			    			  			  pro.getProOpendate(),pro.getProClosedate(),pro.getProDetail(),
+			    			  			  pro.getProAmount(),pro.getProStat(),pro.getProSeqno(),att_rec
+			    			  			  };
+			    	  
+			    	  STRUCT proadd_rec = new STRUCT(st_pro,conn,pro_obj);
+			         cstmt = conn.prepareCall(sql);
+			         cstmt.setObject(1, proadd_rec);
+			         cstmt.registerOutParameter(2, OracleTypes.INTEGER);
 			         
-			         stmt.executeQuery();
+			         cstmt.executeQuery();
 			         
-			         sql = "select max(item_seqno) from item";
-			         stmt = conn.prepareStatement(sql);
-
-			         ResultSet rs = stmt.executeQuery();
+			         seqno = cstmt.getString(2);
 			         
-			         rs.next();
+			         cstmt.close();
 			         
+<<<<<<< HEAD
 			         String itemseqno = rs.getString(1);
 			         
 			         sql = " insert into pro(pro_seqno, pro_price, cat_seqno, pro_saleprice, pro_opendate,";
@@ -940,44 +953,119 @@ public class CreatorDao {
 //			         stmt.setString(4, proOpendate);
 //			         stmt.setString(5, proClosedate);
 //			         stmt.setString(6, proDetail);
+=======
+	      } catch (SQLException e) {
+	         e.printStackTrace();
+		}
+	      
+	      
+	      return seqno;
+	   }
+		   
+//		   public String productadd(Pro pro, String id) {
+//			   DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//
+//			   String seqno = "";
+//			      
+////			      String proStat = req.getParameter("proStat");
+////			      String proPrice = req.getParameter("proPrice");
+////			      String proHits = req.getParameter("proHits");
+////			      String proSaleprice = req.getParameter("proSaleprice");
+////			      String proOpendate = req.getParameter("proOpendate");
+////			      String proClosedate = req.getParameter("proClosedate");
+////			      String proDetail = req.getParameter("proDetail");
+////			      String proAmount = req.getParameter("amount");
+////			      String itemDetail = req.getParameter("itemDetail");
+////			      String itemName = req.getParameter("itemName");
+//			      
+//			      
+////			      String id = (String)req.getSession().getAttribute("sess_id");
+//			      String sql = "insert into item(item_seqno,item_detail,item_name,mem_id) "
+//			      			 + "values(item_seqno.nextval,?,?,?)";
+//			      
+//			      
+//			      
+//			      try {
+//			         stmt = conn.prepareStatement(sql);
+//			         stmt.setString(1, pro.getItem().getItemDetail());
+////			         stmt.setString(1, itemDetail);
+//			         stmt.setString(2, pro.getItem().getItemName());
+////			         stmt.setString(2, itemName);
+//			         stmt.setString(3, id);
+//			         
+//			         stmt.executeQuery();
+//			         
+//			         sql = "select max(item_seqno) from item";
+//			         stmt = conn.prepareStatement(sql);
+//
+//			         ResultSet rs = stmt.executeQuery();
+//			         
+//			         rs.next();
+//			         
+//			         String itemseqno = rs.getString(1);
+//			         
+//			         sql = " insert into pro(pro_seqno, pro_price, cat_seqno, pro_saleprice, pro_opendate,";
+//			         sql += " pro_closedate, pro_detail,mem_id,item_seqno,pro_amount ";
+//			if (pro.getProStat() != null) sql += ",pro_stat";
+//			         sql   += " ) values (pro_seqno.nextval,?,?,?,?,?,?,?,?,?";
+//			if (pro.getProStat() != null) sql += ",?";
+//			         sql += " )";
+//			         
+//			         stmt = conn.prepareStatement(sql);
+//			         stmt.setInt(1, pro.getProPrice());
+//			         stmt.setInt(2, pro.getProHits());
+//			         stmt.setInt(3, pro.getProSaleprice());
+//			         stmt.setString(4,dateFormat.format(pro.getProOpendate()));
+//			         stmt.setString(5, dateFormat.format(pro.getProClosedate()));
+//			         stmt.setString(6, pro.getProDetail());
+>>>>>>> branch 'master' of https://github.com/cre8lover/cre8.git
 //			         stmt.setString(7, id);
-//			         stmt.setString(8, rs.getString(1));
-//			         stmt.setString(9, proAmount);
-			         
-			if (pro.getProStat() != null) stmt.setString(10, pro.getProStat());
-			         stmt.executeQuery();
-			         
-			         sql = "select max(pro_seqno) from pro";
-			         stmt = conn.prepareStatement(sql);
-			         ResultSet rs2 = stmt.executeQuery();
-
-			         if(rs2.next()) seqno = rs2.getString(1);
-			         
-			         
-						if (pro.getAtt_file() != null) {
-						
-							String att_seqno = filedao.insertAttachFile(itemseqno, pro.getAtt_file());
-							String fileType = pro.getAtt_file().getAttType();
-							if (fileType.substring(0,fileType.indexOf("/")).equals("image")) {
-							
-								filedao.insertThumbNail(pro.getAtt_file(),att_seqno);
-							
-							}
-						}
-			         
-			         
-			         
-			         
-			         
-			         
-			         stmt.close();
-			      } catch (SQLException e) {
-			         e.printStackTrace();
-			      }
-			      
-			      
-			      return seqno;
-			   }
+//			         stmt.setString(8, itemseqno);
+//			         stmt.setInt(9, pro.getProAmount());
+////			         stmt.setString(1, proPrice);
+////			         stmt.setString(2, proHits);
+////			         stmt.setString(3, proSaleprice);
+////			         stmt.setString(4, proOpendate);
+////			         stmt.setString(5, proClosedate);
+////			         stmt.setString(6, proDetail);
+////			         stmt.setString(7, id);
+////			         stmt.setString(8, rs.getString(1));
+////			         stmt.setString(9, proAmount);
+//			         
+//			if (pro.getProStat() != null) stmt.setString(10, pro.getProStat());
+//			         stmt.executeQuery();
+//			         
+//			         sql = "select max(pro_seqno) from pro";
+//			         stmt = conn.prepareStatement(sql);
+//			         ResultSet rs2 = stmt.executeQuery();
+//
+//			         if(rs2.next()) seqno = rs2.getString(1);
+//			         
+//			         
+//						if (pro.getAtt_file() != null) {
+//						
+//							String att_seqno = filedao.insertAttachFile(itemseqno, pro.getAtt_file());
+//							String fileType = pro.getAtt_file().getAttType();
+//							if (fileType.substring(0,fileType.indexOf("/")).equals("image")) {
+//							
+//								filedao.insertThumbNail(pro.getAtt_file(),att_seqno);
+//							
+//							}
+//						}
+//			         
+//			         
+//			         
+//			         
+//			         
+//			         
+//			         stmt.close();
+//			      } catch (SQLException e) {
+//			         e.printStackTrace();
+//			      }
+//			      
+//			      
+//			      return seqno;
+//			   }
 	
 }	
 
