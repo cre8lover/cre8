@@ -166,7 +166,7 @@ public class Creatercontroller extends HttpServlet {
 		            req.setAttribute("modi", cremo);
 		           goView(req, resp, "/cre/cremodify");
 		            
-		        }
+		   }
 		  
 		  
 		

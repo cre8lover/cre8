@@ -535,6 +535,7 @@ public class CreatorDao {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, id);
 			stmt.setString(2, id);
+			
 			ResultSet rs = stmt.executeQuery();
 			
 			if (rs.next()) {
@@ -927,33 +928,6 @@ public class CreatorDao {
 			         
 			         cstmt.close();
 			         
-<<<<<<< HEAD
-			         String itemseqno = rs.getString(1);
-			         
-			         sql = " insert into pro(pro_seqno, pro_price, cat_seqno, pro_saleprice, pro_opendate,";
-			         sql += " pro_closedate, pro_detail,mem_id,item_seqno,pro_amount ";
-			if (pro.getProStat() != null) sql += ",pro_stat";
-			         sql   += " ) values (pro_seqno.nextval,?,?,?,?,?,?,?,?,?";
-			if (pro.getProStat() != null) sql += ",?";
-			         sql += " )";
-			         
-			         stmt = conn.prepareStatement(sql);
-			         stmt.setInt(1, pro.getProPrice());
-			         stmt.setInt(2, pro.getProHits());
-			         stmt.setInt(3, pro.getProSaleprice());
-			         stmt.setString(4, pro.getProOpendate());
-			         stmt.setString(5, pro.getProClosedate());
-			         stmt.setString(6, pro.getProDetail());
-			         stmt.setString(7, id);
-			         stmt.setString(8, itemseqno);
-			         stmt.setInt(9, pro.getProAmount());
-//			         stmt.setString(1, proPrice);
-//			         stmt.setString(2, proHits);
-//			         stmt.setString(3, proSaleprice);
-//			         stmt.setString(4, proOpendate);
-//			         stmt.setString(5, proClosedate);
-//			         stmt.setString(6, proDetail);
-=======
 	      } catch (SQLException e) {
 	         e.printStackTrace();
 		}
@@ -1018,7 +992,6 @@ public class CreatorDao {
 //			         stmt.setString(4,dateFormat.format(pro.getProOpendate()));
 //			         stmt.setString(5, dateFormat.format(pro.getProClosedate()));
 //			         stmt.setString(6, pro.getProDetail());
->>>>>>> branch 'master' of https://github.com/cre8lover/cre8.git
 //			         stmt.setString(7, id);
 //			         stmt.setString(8, itemseqno);
 //			         stmt.setInt(9, pro.getProAmount());
