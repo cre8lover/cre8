@@ -30,7 +30,7 @@ public class Mem implements Serializable {
 	private Reply replySet;
 	private Review reviewSet;
 	private String check;
-	private List<Att> att;
+	private Att att;
 
 	public String getCheck() {
 		return check;
@@ -42,10 +42,10 @@ public class Mem implements Serializable {
 	}
 	
 	
-	public List<Att> getAtt() {
+	public Att getAtt() {
 		return att;
 	}
-	public void setAtt(List<Att> att) {
+	public void setAtt(Att att) {
 		this.att = att;
 	}
 	public int getSeqno() {
