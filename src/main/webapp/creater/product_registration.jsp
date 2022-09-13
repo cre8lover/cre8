@@ -25,7 +25,9 @@
         <h4>상품등록/수정(일반)</h4>
       </div>
       <div class='panel-body'>
-        <form class='form-horizontal' enctype="multipart/form-data" method="post" name="proform" role='form' id="reg" action="<%= request.getContextPath() %>/cre/promodify">
+        <form class='form-horizontal' enctype="multipart/form-data" method="post" name="proform" role='form' id="reg" action="<%= request.getContextPath() %>/cre/promodify"
+        onsubmit="return fileDel2('${pro.att_file.attSeqno}','${pro.att_file.getSavefilename()}','${pro.att_file.attPath}',
+		'${pro.thumb.fileName }')">
           <div class='form-group'>
             <label class='control-label col-md-2 col-md-offset-2' for='id_pets'>판매상태</label>
             <div class='col-md-8'>
@@ -174,12 +176,17 @@
 				    <label for="file">파일찾기</label> 
 				    <input type="file" id="file" name="filename">
 				</c:if>
+				
+				<div id = "fileSector">
+				
               	<c:if test="${pro.att_file.attName != null }">
 				    <input class="upload-name" value="${pro.att_file.attName}" placeholder="첨부파일">
 				    <img src="/upload/thumbnail/${pro.thumb.fileName}">
-					<input type="button"value="삭제" onclick="fileDel('${file.attSeqNo}','${file.saveFileName}','${file.filePath}',
-					'${thumb_file }')">
+					<input type="button"value="삭제" onclick="fileDel('${pro.att_file.attSeqno}','${pro.att_file.getSavefilename()}','${pro.att_file.attPath}',
+					'${pro.thumb.fileName }')">
 				</c:if>
+				
+				</div>
 <script>
 function fileDel(attSeqNo,saveFileName,filePath,thumb_file){
 	
@@ -197,7 +204,7 @@ function fileDel(attSeqNo,saveFileName,filePath,thumb_file){
 					alert("파일 삭제에 실패 하였습니다.");
 				} else {
 					alert("파일 삭제에 완료 하였습니다.");
-					tag.innerHTML = "<input type='file' name='filename'>";
+					tag.innerHTML = "<input class='upload-name' value='첨부파일' placeholder='첨부파일'><label for='file'>파일찾기</label><input type='file' id='file' name='filename'>";
 				}
 				
 			}else{
@@ -209,9 +216,41 @@ function fileDel(attSeqNo,saveFileName,filePath,thumb_file){
 	}
 	
 	//방식,매핑정보,동기방식
-	x.open("POST", "/cre/fileDel", true);
+	x.open("POST", "<%= request.getContextPath() %>/cre/fileDel", true);
 	x.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	x.send("no="+attSeqNo+"&savefilename="+saveFileName+"&filepath="+filePath+"&thumb_filename="+thumb_file);
+	x.send("attseqno="+attSeqNo+"&savefilename="+saveFileName+"&filepath="+filePath+"&thumb_filename="+thumb_file);
+
+}
+function fileDel2(attSeqNo,saveFileName,filePath,thumb_file){
+	
+	var ans = confirm("정말로 수정하시겠습니까?");
+	
+	if (ans){
+		var x = new XMLHttpRequest();
+		x.onreadystatechange = function(){
+			if(x.readyState === 4 && x.status === 200){
+				
+				var tag = document.getElementById("fileSector");
+				
+				
+				if (x.responseText.trim() === "0"){
+					return false;
+				} else {
+					return true;
+				}
+				
+			}else{
+			console.log('에러코드는:' + x.status);
+				
+			}
+		
+		};
+	}
+	
+	//방식,매핑정보,동기방식
+	x.open("POST", "<%= request.getContextPath() %>/cre/fileDel", true);
+	x.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	x.send("attseqno="+attSeqNo+"&savefilename="+saveFileName+"&filepath="+filePath+"&thumb_filename="+thumb_file);
 
 }
 

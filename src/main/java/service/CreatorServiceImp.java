@@ -76,12 +76,6 @@ public class CreatorServiceImp implements CreatorService{
 		return creatorDao.productdetail(seqno);
 	}
 	
-	@Override
-	public String productmodify(HttpServletRequest req) {
-	      
-		return creatorDao.productmodify(req);
-	   
-	}
 	
 	@Override
     public String aucadd(HttpServletRequest req) {
@@ -169,9 +163,9 @@ public class CreatorServiceImp implements CreatorService{
 		
 		pro.setAtt_file(attachfile);
 	    String id = (String)req.getSession().getAttribute("sess_id");
-	    
-	    
-	      return creatorDao.productadd(pro,id);
+	    if(pro.getProSeqno() != null) return creatorDao.productmodify(pro);
+	    else return creatorDao.productadd(pro,id);
+	      
 	   }
 	
 	@Override

@@ -22,7 +22,7 @@ import net.coobird.thumbnailator.Thumbnails;
 
 public class FileServiceImp implements FileService {
 
-	FileDao filedao = new FileDao();
+	
 	
 	@Override
 	public Att fileUpload(FileItem item) throws Exception {
@@ -117,6 +117,12 @@ public class FileServiceImp implements FileService {
 		}else if (item.getFieldName().equals("proOpendate")) {
 			pro.setProOpendate(get);
 			
+		}else if (item.getFieldName().equals("itemseqno")) {
+			proitem.setItemSeqno(Integer.parseInt(get));
+			
+		}else if (item.getFieldName().equals("seqno")) {
+			pro.setProSeqno(Integer.parseInt(get));
+			
 		}else if (item.getFieldName().equals("proClosedate")) {
 			pro.setProClosedate(get);
 		}else if (item.getFieldName().equals("proDetail")) {
@@ -190,4 +196,27 @@ public class FileServiceImp implements FileService {
 		return mem;
 	}
 	
+	
+	@Override
+	public int delete(String no, String savefilename, String filepath, String thumb_filename) {
+		FileDao filedao = new FileDao();
+		
+		int rs = 0;
+		rs = filedao.deletfile(no);
+		//attachfile 레코드 삭제
+		//파일삭제
+		File file = new File(filepath+savefilename);
+		if (file.exists()) {
+			file.delete();
+			//썸네일 삭제
+			if(thumb_filename != null) {
+				File thumbfile = new File(filepath+"thumbnail/"+thumb_filename);
+				if(thumbfile.exists()) {
+					thumbfile.delete();
+				}
+			}
+			rs=1;
+		}
+		return rs;
+	}
 }

@@ -2,12 +2,10 @@ package controller;
 
 import javax.servlet.http.HttpServlet;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
-import javax.security.auth.message.callback.PrivateKeyCallback.Request;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,6 +18,8 @@ import dto.Marketing;
 import dto.Mem;
 import dto.Pro;
 import service.CreatorServiceImp;
+import service.FileService;
+import service.FileServiceImp;
 
 @WebServlet("/cre/*")
 public class Creatercontroller extends HttpServlet {
@@ -151,21 +151,35 @@ public class Creatercontroller extends HttpServlet {
 		//일반 수정 등록
 		   } else if(cmd.equals("promodify")) {
 			   
-		  String seqno = req.getParameter("seqno");
-		  if(seqno != null) {
-		    seqno = cs.productmodify(req);
-		  }else {
-		   seqno = cs.productadd(req);
-		  }
+		   String seqno = cs.productadd(req);
+		   
 		  goView(req,resp,"/cre/product_registration?seqno="+seqno);
-		   } 
-		
-		   else if(cmd.equals("cremodifyreg")) { 
+		   
+		   
+		   } else if(cmd.equals("cremodifyreg")) { 
 		          //크리에이터 정보수정
 		            Map<String, String> cremo = cs.cremodifyreg(req);
 		            req.setAttribute("modi", cremo);
 		           goView(req, resp, "/cre/cremodify");
 		            
+		   }else if (cmd.equals("fileDel")) {
+			   FileService fileservice = new FileServiceImp();
+			   int rs=0;
+			    String attseqno = req.getParameter("attseqno");
+				String savefilename = req.getParameter("savefilename");
+				String filepath = req.getParameter("filepath");
+				String thumb_filename = req.getParameter("thumb_filename");
+				System.out.println("시퀀스는?"+attseqno);
+				if(attseqno != "") {
+				rs = fileservice.delete(attseqno,savefilename,filepath,thumb_filename);
+				System.out.println("파일삭제결과"+rs);
+				}else {
+					rs = 1;
+				}
+				PrintWriter out = resp.getWriter();
+				
+				out.print(rs);
+			   
 		   }
 		  
 		  
