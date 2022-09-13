@@ -383,7 +383,7 @@ public class MemberDao {
 		List<Ship> detail = new ArrayList<Ship>();
 		List<Ship> order = new ArrayList<Ship>();
 		
-		String sql = "call ordercheck_detail(?,?)";
+		String sql = "call ordercheck_order(?,?)";
 		try {
 			cstmt = conn.prepareCall(sql);
 			cstmt.setString(1, id);
@@ -412,7 +412,7 @@ public class MemberDao {
 				detail.add(s);
 			}
 			
-			sql = "call ordercheck_order(?,?)";
+			sql = "call ordercheck_detail(?,?)";
 
 			cstmt = conn.prepareCall(sql);
 			cstmt.setString(1, id);
