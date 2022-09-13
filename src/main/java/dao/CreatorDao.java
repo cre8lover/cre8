@@ -306,7 +306,7 @@ public class CreatorDao {
 				   item = new Item();
 				   item.setItemName(rs.getString("item_name"));
 				   item.setItemImg(rs.getString("item_img"));
-				   pro.setProOpendate(rs.getDate("pro_opendate"));
+				   pro.setProOpendate(rs.getString("pro_opendate"));
 				   pro.setProStat(rs.getString("pro_stat"));
 				   pro.setProAmount(rs.getInt("total"));
 				   pro.setProDetail(rs.getString("orderdetail_stat"));
@@ -527,7 +527,6 @@ public class CreatorDao {
 			stmt = conn.prepareStatement(sql);
 			stmt.setString(1, id);
 			stmt.setString(2, id);
-			
 			ResultSet rs = stmt.executeQuery();
 			
 			if (rs.next()) {
@@ -572,8 +571,8 @@ public class CreatorDao {
 		            item.setItemSeqno(rs.getInt("item_seqno"));
 		            pro.setProStat(rs.getString("pro_stat"));
 		            pro.setProPrice(rs.getInt("pro_price"));
-		            pro.setProOpendate(rs.getDate("pro_opendate"));
-		            pro.setProClosedate(rs.getDate("pro_closedate"));
+		            pro.setProOpendate(rs.getString("pro_opendate"));
+		            pro.setProClosedate(rs.getString("pro_closedate"));
 		            pro.setProDetail(rs.getString("pro_detail"));
 		            pro.setProSaleprice(rs.getInt("pro_saleprice"));
 		            pro.setProHits(rs.getInt("cat_seqno"));
@@ -929,8 +928,8 @@ public class CreatorDao {
 			         stmt.setInt(1, pro.getProPrice());
 			         stmt.setInt(2, pro.getProHits());
 			         stmt.setInt(3, pro.getProSaleprice());
-			         stmt.setString(4,dateFormat.format(pro.getProOpendate()));
-			         stmt.setString(5, dateFormat.format(pro.getProClosedate()));
+			         stmt.setString(4, pro.getProOpendate());
+			         stmt.setString(5, pro.getProClosedate());
 			         stmt.setString(6, pro.getProDetail());
 			         stmt.setString(7, id);
 			         stmt.setString(8, itemseqno);

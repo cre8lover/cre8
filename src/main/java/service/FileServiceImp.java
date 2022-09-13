@@ -113,10 +113,10 @@ public class FileServiceImp implements FileService {
 		}else if (item.getFieldName().equals("proSaleprice")) {
 			pro.setProSaleprice(Integer.parseInt(get));
 		}else if (item.getFieldName().equals("proOpendate")) {
-			pro.setProOpendate(sdFormat.parse(get));
+			pro.setProOpendate(get);
 			
 		}else if (item.getFieldName().equals("proClosedate")) {
-			pro.setProClosedate(sdFormat.parse(get));
+			pro.setProClosedate(get);
 		}else if (item.getFieldName().equals("proDetail")) {
 			pro.setProDetail(get);
 		}else if (item.getFieldName().equals("amount")) {
