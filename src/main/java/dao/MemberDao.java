@@ -1,5 +1,6 @@
 package dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,23 +26,25 @@ import dto.Pro;
 import dto.Ship;
 import dto.Thumbnail;
 import dto.Waybill;
+import oracle.jdbc.internal.OracleTypes;
 
 public class MemberDao {
 	private final Connection conn = OracleConn.getInstance().getConn();
 	PreparedStatement stmt;
+	CallableStatement cstmt;
 	public Map<String, String> longinProc(String id, String pw) {
 
 		Map<String, String> map = new HashMap<String, String>();
 		
-		String sql = "select m.mem_id, m.mem_pw, m.mem_name, a.auth_name "
-				+ " from mem m , mem_auth a "
-				+ " where a.mem_id = m.mem_id and m.mem_id = ?";
+		String sql = "call p_login(?,?)";
 		
 		try {
-			stmt = conn.prepareStatement(sql);
+			cstmt = conn.prepareCall(sql);
 		
-			stmt.setString(1, id);
-			ResultSet rs = stmt.executeQuery();
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
 			
 			if(rs.next()) {
 				
@@ -59,7 +62,7 @@ public class MemberDao {
 			} else {
 				map.put("login", "no_member");
 			}
-			stmt.close();
+			cstmt.close();
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -71,34 +74,24 @@ public class MemberDao {
 
 	public String reginsert(Mem mem) {
 	
-		String sql = "insert into mem (mem_id, mem_pw, mem_tel, mem_email, mem_birth, mem_name, mem_check)";
-				sql+= " values (?, ?, ?, ?, ?, ?, ?)";
+		String sql = "call p_reginsert(?,?,?,?,?,?,?)";
 		
 		String in = "성공";
 		
 		try {
-			stmt = conn.prepareStatement(sql);
+			cstmt = conn.prepareCall(sql);
 			
+			cstmt.setString(1, mem.getMemId());
+			cstmt.setString(2, mem.getMemPw());
+			cstmt.setString(3, mem.getMemTel());
+			cstmt.setString(4, mem.getMemEmail());
+			cstmt.setString(5, mem.getMemBirth());
+			cstmt.setString(6, mem.getMemName());
+			cstmt.setString(7, mem.getCheck());
 			
-			stmt.setString(1, mem.getMemId());
-			stmt.setString(2, mem.getMemPw());
-			stmt.setString(3, mem.getMemTel());
-			stmt.setString(4, mem.getMemEmail());
-			stmt.setString(5, mem.getMemBirth());
-			stmt.setString(6, mem.getMemName());
-			stmt.setString(7, mem.getCheck());
+			cstmt.executeQuery();
 			
-			stmt.executeQuery();
-			
-			sql = "insert into mem_auth (auth_seqno, mem_id) values (auth_seqno.nextval, ?)";
-			stmt = conn.prepareStatement(sql);
-			
-			stmt.setString(1, mem.getMemId());
-
-			stmt.executeQuery();
-			
-			
-			stmt.close();
+			cstmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
@@ -111,19 +104,15 @@ public class MemberDao {
 		Mem member = new Mem();
 //		Address add = new Address();
 		
-		String sql = "select m.mem_id, m.mem_email, m.mem_tel, m.mem_name,"
-				+ "	 ";
-				sql += " nvl(a.add_address, '주소를 입력하세요') as add_address";
-				sql += " from mem m, address a";
-				sql += " where m.mem_id = a.mem_id(+)"; 
-				sql += " and m.mem_id = ?";
+		String sql = "call p_mypage(?,?)";
 		try {
-			stmt = conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_SENSITIVE,
-											  	  ResultSet.CONCUR_UPDATABLE);
+			cstmt = conn.prepareCall(sql);
 			
-			stmt.setString(1, id);
-
-			ResultSet rs = stmt.executeQuery();
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
 			
 			Address addr = null;
 			
