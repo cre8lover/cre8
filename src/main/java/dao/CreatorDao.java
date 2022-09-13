@@ -554,24 +554,93 @@ public class CreatorDao {
 	}
 
 
+//	public Pro productdetail(String seqno) {
+//		Pro pro = new Pro();
+//		      
+//		String sql = " select (select item_name from item i where i.item_seqno = p.item_seqno) as item_name, "
+//		            + " (select item_img from item i where i.item_seqno = p.item_seqno) as item_img, "
+//		            + " (select item_detail from item i where i.item_seqno = p.item_seqno) as item_detail, "
+//		            + " (select item_seqno from item i where i.item_seqno = p.item_seqno) as item_seqno, "
+//		            + " cat_seqno, pro_stat, pro_price, pro_opendate, pro_closedate, pro_detail,pro_saleprice,pro_amount "
+//		            + " from pro p where pro_seqno = ? ";
+//		      
+//		
+//		
+//		
+//		try {
+//		         stmt =conn.prepareStatement(sql);
+//		         stmt.setString(1, seqno);
+//		         ResultSet rs = stmt.executeQuery();
+//		         
+//		         if(rs.next()) {
+//		            Item item = new Item();
+//		            item.setItemName(rs.getString("item_name"));
+//		            item.setItemImg(rs.getString("item_img"));
+//		            item.setItemDetail(rs.getString("item_detail"));
+//		            item.setItemSeqno(rs.getInt("item_seqno"));
+//		            pro.setProStat(rs.getString("pro_stat"));
+//		            pro.setProPrice(rs.getInt("pro_price"));
+//		            pro.setProOpendate(rs.getString("pro_opendate"));
+//		            pro.setProClosedate(rs.getString("pro_closedate"));
+//		            pro.setProDetail(rs.getString("pro_detail"));
+//		            pro.setProSaleprice(rs.getInt("pro_saleprice"));
+//		            pro.setProHits(rs.getInt("cat_seqno"));
+//		            pro.setProAmount(rs.getInt("pro_amount"));
+//		            pro.setProSeqno(Integer.parseInt(seqno));
+//		            
+//		            
+//		            sql = " select att_name,att_savename,thumb_filename, att_path, thumb_filepath"
+//		            		+ " from att a, att_thumb at"
+//		            		+ " where a.att_seqno = at.att_seqno"
+//		            		+ " and item_seqno = ? ";
+//		            
+//		            stmt =conn.prepareStatement(sql);
+//			         stmt.setInt(1, rs.getInt("item_seqno"));
+//			         ResultSet rs2 = stmt.executeQuery();
+//		            
+//			         if (rs2.next()) {
+//			        	 Att att = new Att ();
+//			        	 Thumbnail thum = new Thumbnail();
+//			        	 
+//			        	 att.setAttName(rs2.getString("att_name"));
+//			        	 att.setSavefilename(rs2.getString("att_savename"));
+//			        	 att.setAttPath(rs2.getString("att_path"));
+//			        	 thum.setFileName(rs2.getString("thumb_filename"));
+//			        	 thum.setFilePath(rs2.getString("thumb_filepath"));
+//			        	 pro.setAtt_file(att);
+//			        	 pro.setThumb(thum);
+//			         }
+//		            
+//		            
+//		            
+//		            
+//		            pro.setItem(item);
+//		            
+//		            
+//		         }
+//		         stmt.close();
+//		} catch (SQLException e) {
+//		         e.printStackTrace();
+//		      
+//		}
+//
+//		      return pro;
+//		   
+//	}
+
 	public Pro productdetail(String seqno) {
 		Pro pro = new Pro();
 		      
-		String sql = " select (select item_name from item i where i.item_seqno = p.item_seqno) as item_name, "
-		            + " (select item_img from item i where i.item_seqno = p.item_seqno) as item_img, "
-		            + " (select item_detail from item i where i.item_seqno = p.item_seqno) as item_detail, "
-		            + " (select item_seqno from item i where i.item_seqno = p.item_seqno) as item_seqno, "
-		            + " cat_seqno, pro_stat, pro_price, pro_opendate, pro_closedate, pro_detail,pro_saleprice,pro_amount "
-		            + " from pro p where pro_seqno = ? ";
-		      
-		
-		
-		
+		String sql = "call p_prodetail(?,?,?)";
 		try {
-		         stmt =conn.prepareStatement(sql);
-		         stmt.setString(1, seqno);
-		         ResultSet rs = stmt.executeQuery();
+		         cstmt =conn.prepareCall(sql);
+		         cstmt.setInt(1, Integer.parseInt(seqno));
+		         cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+		         cstmt.registerOutParameter(3, OracleTypes.CURSOR);
+		         cstmt.executeQuery();
 		         
+		         ResultSet rs = (ResultSet)cstmt.getObject(2);
+		         ResultSet rs2 = (ResultSet)cstmt.getObject(3);
 		         if(rs.next()) {
 		            Item item = new Item();
 		            item.setItemName(rs.getString("item_name"));
@@ -587,21 +656,10 @@ public class CreatorDao {
 		            pro.setProHits(rs.getInt("cat_seqno"));
 		            pro.setProAmount(rs.getInt("pro_amount"));
 		            pro.setProSeqno(Integer.parseInt(seqno));
-		            
-		            
-		            sql = " select att_name,att_savename,thumb_filename, att_path, thumb_filepath"
-		            		+ " from att a, att_thumb at"
-		            		+ " where a.att_seqno = at.att_seqno"
-		            		+ " and item_seqno = ? ";
-		            
-		            stmt =conn.prepareStatement(sql);
-			         stmt.setInt(1, rs.getInt("item_seqno"));
-			         ResultSet rs2 = stmt.executeQuery();
-		            
-			         if (rs2.next()) {
+			        if (rs2.next()) {
 			        	 Att att = new Att ();
 			        	 Thumbnail thum = new Thumbnail();
-			        	 
+			        	 att.setAttSeqno(rs2.getInt("att_seqno"));
 			        	 att.setAttName(rs2.getString("att_name"));
 			        	 att.setSavefilename(rs2.getString("att_savename"));
 			        	 att.setAttPath(rs2.getString("att_path"));
@@ -610,92 +668,16 @@ public class CreatorDao {
 			        	 pro.setAtt_file(att);
 			        	 pro.setThumb(thum);
 			         }
-		            
-		            
-		            
-		            
 		            pro.setItem(item);
-		            
-		            
 		         }
-		         stmt.close();
+		         cstmt.close();
 		} catch (SQLException e) {
 		         e.printStackTrace();
-		      
 		}
-
 		      return pro;
-		   
 	}
+	
 
-
-	public String productmodify(HttpServletRequest req) {
-		      
-		
-		String proStat = req.getParameter("proStat");
-		if(proStat == null) {
-			proStat = "WAIT";
-		}
-		String proPrice = req.getParameter("proPrice");
-		String proHits = req.getParameter("proHits");
-		String proSaleprice = req.getParameter("proSaleprice");
-		String proOpendate = req.getParameter("proOpendate");
-		String proClosedate = req.getParameter("proClosedate");
-		String proDetail = req.getParameter("proDetail");
-		String seqno = req.getParameter("seqno");
-	    String proAmount = req.getParameter("amount");
-      
-		
-		String itemDetail = req.getParameter("itemDetail");
-		String itemName = req.getParameter("itemName");
-		String itemseqno = req.getParameter("itemseqno");
-		      
-//      System.out.println(proStat +"/"+ proPrice +"/"+ proHits +"/"+ proSaleprice +"/"+ proOpendate +"/"+ proClosedate +"/"+ proDetail +"/"+ seqno +"/"+ itemDetail +"/"+  itemName +"/"+ itemseqno);
-		      
-		      
-		String sql = "update item set ITEM_NAME = ? , "
-		            + " ITEM_DETAIL = ? "
-		            + " where item_seqno = ? ";
-		      
-		try {
-		         stmt = conn.prepareStatement(sql);
-		         stmt.setString(1, itemName);
-		         stmt.setString(2, itemDetail);
-		         stmt.setString(3, itemseqno);
-		         stmt.executeQuery();
-		         
-		         sql = "update pro set pro_stat = ?, "
-		               + " pro_price = ?, "
-		               + " pro_hits = ?, "
-		               + " pro_saleprice = ?, "
-		               + " pro_opendate = ?, "
-		               + " pro_closedate = ?, "
-		               + " pro_detail = ?, "
-		               + " pro_amount = ? "
-		               + " where pro_seqno = ? ";
-		         
-		         stmt = conn.prepareStatement(sql);
-		         
-		         stmt.setString(1, proStat);
-		         stmt.setString(2, proPrice);
-		         stmt.setString(3, proHits);
-		         stmt.setString(4, proSaleprice);
-		         stmt.setString(5, proOpendate);
-		         stmt.setString(6, proClosedate);
-		         stmt.setString(7, proDetail);
-		         stmt.setString(8, proAmount);
-		         stmt.setString(9, seqno);
-		         stmt.executeQuery();
-		         
-		         stmt.close();
-		 } catch (SQLException e) {
-		         // TODO Auto-generated catch block
-		         e.printStackTrace();
-		 }
-		      
-//		      System.out.println(seqno);
-		 return seqno;
-	}
 
 	   public String aucadd(Auc auc, String id) {
 		      
@@ -761,14 +743,6 @@ public class CreatorDao {
 					
 					}
 				}
-	         
-		         
-		         
-		         
-		         
-		         
-		         
-		         
 		         stmt.close();
 		      } catch (SQLException e) {
 		         e.printStackTrace();
@@ -883,10 +857,153 @@ public class CreatorDao {
 		      
 		   }
 
+		   
+//		   public String productmodify(HttpServletRequest req) {
+//			      
+//				
+//				String proStat = req.getParameter("proStat");
+//				if(proStat == null) {
+//					proStat = "WAIT";
+//				}
+//				String proPrice = req.getParameter("proPrice");
+//				String proHits = req.getParameter("proHits");
+//				String proSaleprice = req.getParameter("proSaleprice");
+//				String proOpendate = req.getParameter("proOpendate");
+//				String proClosedate = req.getParameter("proClosedate");
+//				String proDetail = req.getParameter("proDetail");
+//				String seqno = req.getParameter("seqno");
+//			    String proAmount = req.getParameter("amount");
+//		      
+//				
+//				String itemDetail = req.getParameter("itemDetail");
+//				String itemName = req.getParameter("itemName");
+//				String itemseqno = req.getParameter("itemseqno");
+//				      
+//				
+//				
+//				
+//				
+////		      System.out.println(proStat +"/"+ proPrice +"/"+ proHits +"/"+ proSaleprice +"/"+ proOpendate +"/"+ proClosedate +"/"+ proDetail +"/"+ seqno +"/"+ itemDetail +"/"+  itemName +"/"+ itemseqno);
+//				      
+//				String sql = "update item set ITEM_NAME = ? , "
+//				            + " ITEM_DETAIL = ? "
+//				            + " where item_seqno = ? ";
+//				      
+//				try {
+//				         stmt = conn.prepareStatement(sql);
+//				         stmt.setString(1, itemName);
+//				         stmt.setString(2, itemDetail);
+//				         stmt.setString(3, itemseqno);
+//				         stmt.executeQuery();
+//				         
+//				         sql = "update pro set pro_stat = ?, "
+//				               + " pro_price = ?, "
+//				               + " pro_hits = ?, "
+//				               + " pro_saleprice = ?, "
+//				               + " pro_opendate = ?, "
+//				               + " pro_closedate = ?, "
+//				               + " pro_detail = ?, "
+//				               + " pro_amount = ? "
+//				               + " where pro_seqno = ? ";
+//				         
+//				         stmt = conn.prepareStatement(sql);
+//				         
+//				         stmt.setString(1, proStat);
+//				         stmt.setString(2, proPrice);
+//				         stmt.setString(3, proHits);
+//				         stmt.setString(4, proSaleprice);
+//				         stmt.setString(5, proOpendate);
+//				         stmt.setString(6, proClosedate);
+//				         stmt.setString(7, proDetail);
+//				         stmt.setString(8, proAmount);
+//				         stmt.setString(9, seqno);
+//				         stmt.executeQuery();
+//				         
+//				         stmt.close();
+//				 } catch (SQLException e) {
+//				         e.printStackTrace();
+//				 }
+//				      
+////				      System.out.println(seqno);
+//				 return seqno;
+//			}
 
+		   
+		   public String productmodify(Pro pro) {
+			      
+//				
+				
+				if(pro.getProStat() == null) {
+					pro.setProStat("WAIT");
+				}
+//				String proPrice = req.getParameter("proPrice");
+//				String proHits = req.getParameter("proHits");
+//				String proSaleprice = req.getParameter("proSaleprice");
+//				String proOpendate = req.getParameter("proOpendate");
+//				String proClosedate = req.getParameter("proClosedate");
+//				String proDetail = req.getParameter("proDetail");
+//				String seqno = req.getParameter("seqno");
+//			    String proAmount = req.getParameter("amount");
+//		      
+//				
+//				String itemDetail = req.getParameter("itemDetail");
+//				String itemName = req.getParameter("itemName");
+//				String itemseqno = req.getParameter("itemseqno");
+//				       if(pro.getProStat() == null) pro.setProStat("WAIT");
+
+//		      System.out.println(proStat +"/"+ proPrice +"/"+ proHits +"/"+ proSaleprice +"/"+ proOpendate +"/"+ proClosedate +"/"+ proDetail +"/"+ seqno +"/"+ itemDetail +"/"+  itemName +"/"+ itemseqno);
+				      
+				String sql = "call P_PRO_MODIFY(?)";
+				      
+				try {
+					
+					StructDescriptor st_thumb = StructDescriptor.createDescriptor("OBJ_THUMB",conn);
+			    	  Object[] thumb_obj = {pro.getAtt_file().getAttThumb().getFileName(),
+						    			    pro.getAtt_file().getAttThumb().getFileSize(),
+						    			    pro.getAtt_file().getAttThumb().getFilePath()
+						    	  			};
+			    	  STRUCT thumb_rec = new STRUCT(st_thumb,conn,thumb_obj);
+			    	  
+			    	  StructDescriptor st_att = StructDescriptor.createDescriptor("OBJ_ATT",conn);
+			    	  Object[] att_obj = {pro.getAtt_file().getAttName(),
+						    			  pro.getAtt_file().getSavefilename(),
+						    			  pro.getAtt_file().getAttSize(),
+						    			  pro.getAtt_file().getAttType(),
+						    			  pro.getAtt_file().getAttPath(),
+						    			  thumb_rec
+						    	  		  };
+			    	  
+			    	  STRUCT att_rec = new STRUCT(st_att,conn,att_obj);
+			    	  
+			    	  StructDescriptor st_pro = StructDescriptor.createDescriptor("OBJ_PROMODIFY",conn);
+			    	  Object[] pro_obj = {pro.getProStat(),pro.getProPrice(),pro.getProHits(),pro.getProSaleprice(),
+			    			  				pro.getProOpendate(),pro.getProClosedate(),pro.getProDetail(),pro.getProSeqno(),
+			    			  				pro.getProAmount(),pro.getItem().getItemDetail(),pro.getItem().getItemName(),
+			    			  				pro.getItem().getItemSeqno(),att_rec
+			    			  			  };
+			    	  
+			    	  STRUCT proadd_rec = new STRUCT(st_pro,conn,pro_obj);
+			    	  
+					 cstmt = conn.prepareCall(sql);
+			         cstmt.setObject(1, proadd_rec);
+			         
+			         cstmt.executeQuery();
+			         
+			         cstmt.close();
+				 } catch (SQLException e) {
+				         e.printStackTrace();
+				 }
+				String seqno = String.valueOf(pro.getProSeqno());
+//				      System.out.println(seqno);
+				 return seqno;
+			}
+		   
+		   
+		   
 		   public String productadd(Pro pro, String id) {
 			   String seqno = "";
-			      String sql = "call p_pro_add_test(?,?)";
+
+		      String sql = "call p_pro_add_test(?,?)";
 			      try {
 			    	  
 			    	  if(pro.getProStat() == null) pro.setProStat("WAIT");

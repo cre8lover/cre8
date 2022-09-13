@@ -19,14 +19,14 @@ public class OracleConn {
 	}
 	
 	public void oracleConn() {
-		final String url="jdbc:oracle:thin:@192.168.10.135:1521:cre8";
+//		final String url="jdbc:oracle:thin:@192.168.10.135:1521:cre8";
 //		final String url="jdbc:oracle:thin:@192.168.219.109:1521:xe";
-//		final String url="jdbc:oracle:thin:@localhost:1521:xe";
+		final String url="jdbc:oracle:thin:@localhost:1521:xe";
 		
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn = DriverManager.getConnection(url,"jmh","jmh");
-//			conn = DriverManager.getConnection(url,"joy","8088");
+//			conn = DriverManager.getConnection(url,"jmh","jmh");
+			conn = DriverManager.getConnection(url,"joy","8088");
 //			System.out.println("오라클 연결완료");
 		} catch (SQLException e) {
 			e.printStackTrace();

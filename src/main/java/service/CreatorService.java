@@ -39,7 +39,6 @@ public interface CreatorService {
 
 	   void aucmodify(HttpServletRequest req);
 	
-	public String productmodify(HttpServletRequest req);
 	
 	public Pro productdetail(String seqno);
 
