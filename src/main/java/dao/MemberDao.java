@@ -27,6 +27,8 @@ import dto.Ship;
 import dto.Thumbnail;
 import dto.Waybill;
 import oracle.jdbc.internal.OracleTypes;
+import oracle.sql.STRUCT;
+import oracle.sql.StructDescriptor;
 
 public class MemberDao {
 	private final Connection conn = OracleConn.getInstance().getConn();
@@ -449,6 +451,81 @@ public class MemberDao {
 
 	}
 
+//	public void infoinsert(Mem mem) {
+//		Address add = mem.getAddressSet();
+//		Att att = mem.getAtt();
+//		String sql = "call p_infoupdate(?,?,?,?,?,?,?,?,?)";
+//		
+//		try {
+//			cstmt = conn.prepareCall(sql);
+//			
+//			
+//			if( mem.getMemSnsinfo() != null) { 
+//				cstmt.setString(1, mem.getMemSnsinfo());
+//			} else { 
+//				cstmt.setString(1, ""); 
+//			}
+//			
+//			cstmt.setString(2, mem.getMemEmail());
+//			cstmt.setString(3, mem.getMemTel());
+//			cstmt.setString(4, mem.getMemId());
+//			cstmt.setString(5, add.getAddCategory());
+//			cstmt.setString(6, add.getAddPerson());
+//			cstmt.setString(7, add.getAddPhone());
+//			cstmt.setString(8, add.getAddAddress());
+//			cstmt.setString(9, add.getAddetail());
+//			
+//			cstmt.executeQuery();
+//			
+//			//첨부파일
+//			if(att != null) {
+//				
+//				sql = "INSERT INTO att(att_seqno, att_name, att_savename, att_size, att_type, att_path, mem_id)"
+//						+ " VALUES (att_seqno.NEXTVAL, ?,?,?,?,?,?)";
+//				
+//				PreparedStatement stmt;
+//				String attach_no = null;
+//				stmt = conn.prepareStatement(sql);
+//				stmt.setString(1, att.getAttName());
+//				stmt.setString(2, att.getSavefilename());
+//				stmt.setString(3, att.getAttSize());
+//				stmt.setString(4, att.getAttType());
+//				stmt.setString(5, att.getAttPath());
+//				stmt.setString(6, mem.getMemId());
+//				stmt.executeQuery();
+//				
+//				sql = "SELECT max(att_seqno) FROM att";
+//				stmt = conn.prepareStatement(sql);
+//				ResultSet rs = stmt.executeQuery();
+//				rs.next();
+//				attach_no = rs.getString(1);
+//				
+//				
+//				String fileType = att.getAttType();
+//				
+//				//썸네일
+//				if(fileType.substring(0, fileType.indexOf("/")).equals("image")) {
+//					sql = "INSERT INTO att_thumb (thumb_seqno, thumb_filename, thumb_filesize, thumb_filepath, att_seqno) "
+//							+ " VALUES (thumb_seqno.nextval, ?, ?, ?, ?)";
+//					Thumbnail thumb = att.getAttThumb();
+//					stmt = conn.prepareStatement(sql);
+//					stmt.setString(1, thumb.getFileName());
+//					stmt.setString(2, thumb.getFileSize());
+//					stmt.setString(3, thumb.getFilePath());
+//					stmt.setString(4, attach_no);
+//					stmt.executeQuery();
+//				}
+//			}
+//			
+//			cstmt.close();	
+//			
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//	}
+	
 	public void infoinsert(Mem mem) {
 		Address add = mem.getAddressSet();
 		Att att = mem.getAtt();
@@ -478,41 +555,30 @@ public class MemberDao {
 		 //첨부파일
 			if(att != null) {
 				
-				sql = "INSERT INTO att(att_seqno, att_name, att_savename, att_size, att_type, att_path, mem_id)"
-						+ " VALUES (att_seqno.NEXTVAL, ?,?,?,?,?,?)";
+				sql = "call p_attinset(?,?)";
 			
-			PreparedStatement stmt;
-			String attach_no = null;
-				stmt = conn.prepareStatement(sql);
-				stmt.setString(1, att.getAttName());
-				stmt.setString(2, att.getSavefilename());
-				stmt.setString(3, att.getAttSize());
-				stmt.setString(4, att.getAttType());
-				stmt.setString(5, att.getAttPath());
-				stmt.setString(6, mem.getMemId());
-				stmt.executeQuery();
+				StructDescriptor st_thumb = StructDescriptor.createDescriptor("OBJ_THUMB",conn);
+				Object[] thumb_obj = {mem.getAtt().getAttThumb().getFileName(),
+									  mem.getAtt().getAttThumb().getFileSize(),
+									  mem.getAtt().getAttThumb().getFilePath()
+									 };
+				STRUCT thumb_rec = new STRUCT(st_thumb, conn, thumb_obj);
 				
-				sql = "SELECT max(att_seqno) FROM att";
-				stmt = conn.prepareStatement(sql);
-				ResultSet rs = stmt.executeQuery();
-				rs.next();
-				attach_no = rs.getString(1);
+				StructDescriptor st_att = StructDescriptor.createDescriptor("OBJ_ATT",conn);
+				Object[] att_obj = {mem.getAtt().getAttName(),
+									mem.getAtt().getSavefilename(),
+									mem.getAtt().getAttSize(),
+									mem.getAtt().getAttType(),
+									mem.getAtt().getAttPath(),
+									thumb_rec
+								   };
+				STRUCT att_rec = new STRUCT(st_att, conn, att_obj);
 				
+				cstmt = conn.prepareCall(sql);
+				cstmt.setObject(1, att_rec);
+				cstmt.setString(2, mem.getMemId());
 				
-				String fileType = att.getAttType();
-				
-				//썸네일
-				if(fileType.substring(0, fileType.indexOf("/")).equals("image")) {
-					sql = "INSERT INTO att_thumb (thumb_seqno, thumb_filename, thumb_filesize, thumb_filepath, att_seqno) "
-							+ " VALUES (thumb_seqno.nextval, ?, ?, ?, ?)";
-					Thumbnail thumb = att.getAttThumb();
-						stmt = conn.prepareStatement(sql);
-						stmt.setString(1, thumb.getFileName());
-						stmt.setString(2, thumb.getFileSize());
-						stmt.setString(3, thumb.getFilePath());
-						stmt.setString(4, attach_no);
-						stmt.executeQuery();
-				}
+				cstmt.executeQuery();
 			}
 			
 			cstmt.close();	
