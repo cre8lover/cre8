@@ -108,9 +108,12 @@ public class CreatorServiceImp implements CreatorService{
 		auc.setAtt_file(attachfile);
 	    String id = (String)req.getSession().getAttribute("sess_id");
 	    
-
+	    if (auc.getAucSeqno() != null) {
+	    	return creatorDao.aucmodify(auc);
+	    }else {
+	    	return creatorDao.aucadd(auc, id);
+	    }
 		
-		return creatorDao.aucadd(auc, id);
     }
 	
 	
@@ -118,10 +121,6 @@ public class CreatorServiceImp implements CreatorService{
     @Override
     public Auc aucdetail(String seqno) {
     	return creatorDao.aucdetail(seqno);
-    }
-    @Override
-    public void aucmodify(HttpServletRequest req) {
-    	creatorDao.aucmodify(req);
     }
 
 	@Override

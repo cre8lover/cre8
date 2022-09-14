@@ -221,39 +221,6 @@ function fileDel(attSeqNo,saveFileName,filePath,thumb_file){
 	x.send("attseqno="+attSeqNo+"&savefilename="+saveFileName+"&filepath="+filePath+"&thumb_filename="+thumb_file);
 
 }
-function fileDel2(attSeqNo,saveFileName,filePath,thumb_file){
-	
-	var ans = confirm("정말로 수정하시겠습니까?");
-	
-	if (ans){
-		var x = new XMLHttpRequest();
-		x.onreadystatechange = function(){
-			if(x.readyState === 4 && x.status === 200){
-				
-				var tag = document.getElementById("fileSector");
-				
-				
-				if (x.responseText.trim() === "0"){
-					return false;
-				} else {
-					return true;
-				}
-				
-			}else{
-			console.log('에러코드는:' + x.status);
-				
-			}
-		
-		};
-	}
-	
-	//방식,매핑정보,동기방식
-	x.open("POST", "<%= request.getContextPath() %>/cre/fileDel", true);
-	x.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-	x.send("attseqno="+attSeqNo+"&savefilename="+saveFileName+"&filepath="+filePath+"&thumb_filename="+thumb_file);
-
-}
-
 </script>
 				
 				

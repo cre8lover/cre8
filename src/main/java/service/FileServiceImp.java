@@ -163,7 +163,10 @@ public class FileServiceImp implements FileService {
 			proitem.setItemDetail(get);
 		}else if (item.getFieldName().equals("item_name")) {
 			proitem.setItemName(get);
-			
+		}else if (item.getFieldName().equals("itemseqno")) {
+			proitem.setItemSeqno(Integer.parseInt(get));
+		}else if (item.getFieldName().equals("seqno")) {
+			auc.setAucSeqno(Integer.parseInt(get));
 		}
 		auc.setItem(proitem);
 		return auc;
