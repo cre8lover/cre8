@@ -392,6 +392,17 @@ public class AdminDao {
 	}
 
 	public void update(Marketing market) {
+//		System.out.println(market.getMarCategory());
+//		System.out.println(market.getMarProduct());
+//		System.out.println(market.getMarPrice());
+//		System.out.println(market.getMarCompany());
+//		System.out.println(market.getMarOpendate());
+//		System.out.println(market.getMarClosedate());
+//		System.out.println(market.getMarDetail());
+//		System.out.println(market.getMarCeo());
+//		System.out.println(market.getMarPhone());
+//		System.out.println(market.getMarRegnum());
+//		System.out.println(market.getMarSeqno());
 		String sql = "call p_marketModiy(?,?,?,?,?,?,?,?,?,?,?)";
 		
 			try {
@@ -408,7 +419,6 @@ public class AdminDao {
 				cstmt.setString(9, market.getMarPhone());
 				cstmt.setString(10, market.getMarRegnum());
 				cstmt.setInt(11, market.getMarSeqno());
-				
 				cstmt.executeQuery();
 				
 				cstmt.close();
