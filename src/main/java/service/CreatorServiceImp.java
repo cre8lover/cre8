@@ -51,13 +51,13 @@ public class CreatorServiceImp implements CreatorService{
 	}
 
 	@Override
-	public List<Pro> Prolist(String id) {
-		return creatorDao.Prolist(id);
+	public List<Pro> Prolist(String seqno, String id) {
+		return creatorDao.Prolist(seqno,id);
 	}
 
 	@Override
-	public List<Auc> Auclist(String id) {
-		return creatorDao.Auclist(id);
+	public List<Auc> Auclist(String seqno, String id) {
+		return creatorDao.Auclist(seqno,id);
 	}
 
 	
