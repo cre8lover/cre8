@@ -127,11 +127,9 @@ public class Creatercontroller extends HttpServlet {
 		 //옥션 수정등록
 		  } else if(cmd.equals("auction_modify")) {
 			  
-		 String seqno = req.getParameter("seqno");
-		 if (seqno != null) { cs.aucmodify(req);}
-		 else { 
-		 seqno = cs.aucadd(req);
-		 }
+
+		 String seqno = cs.aucadd(req);
+		 
 		 
 		 goView(req, resp, "/cre/auction_reg?seqno="+seqno);
 		 
