@@ -79,7 +79,7 @@
             <div class='col-md-6'>
               <div class='form-group'>
                 <div class='col-md-11'>
-                  <input class='form-control' name="phone" placeholder='' type='text'>
+                  <input class='form-control' name="phone" placeholder='01012345678' type='text'>
                 </div>
               </div>        
             </div>
