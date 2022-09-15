@@ -5,8 +5,15 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileUploadException;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+
 import dao.AdminDao;
+import dto.Address;
 import dto.AdminKeyWord;
+import dto.Att;
 import dto.Cat;
 import dto.Item;
 import dto.Marketing;
@@ -15,6 +22,7 @@ import dto.Pro;
 
 public class AdminServiceImp implements AdminService {
 	AdminDao dao = new AdminDao();
+	private static final String CHARSET = "utf-8";
 
 	@Override
 	public Map<String, String> login(String id, String pw) {
@@ -54,6 +62,7 @@ public class AdminServiceImp implements AdminService {
 	@Override
 	public void reg(HttpServletRequest req) {
 		Marketing market = new Marketing();
+/*		
 		String cate = req.getParameter("marcate");
 		String name = req.getParameter("name");
 		String price = req.getParameter("price");
@@ -67,7 +76,7 @@ public class AdminServiceImp implements AdminService {
 		String mobile = phone;
 		if(phone.length() == 11) {
 			mobile = phone.replaceFirst("(^[0-9]{3})([0-9]{4})([0-9]{4})$","$1-$2-$3");
-			}
+		}
 		market.setMarCategory(cate);
 		market.setMarProduct(name);
 		market.setMarPrice(price);
@@ -78,6 +87,34 @@ public class AdminServiceImp implements AdminService {
 		market.setMarPhone(mobile);
 		market.setMarCeo(ceo);
 		market.setMarRegnum(regnum);
+*/		
+		DiskFileItemFactory factory = new DiskFileItemFactory();
+		factory.setDefaultCharset(CHARSET);
+		ServletFileUpload upload = new ServletFileUpload(factory);
+
+		Address add = new Address();
+		Att attachfile = null;
+		FileServiceImp fileService = new FileServiceImp();
+		
+		try {
+			List<FileItem> items =  upload.parseRequest(req);
+			for(FileItem item : items) {
+				
+				if(item.isFormField()) {
+					market = fileService.getFormParameter_marketing(item, market, add);
+				} else {
+					attachfile = fileService.fileUpload(item);
+				}
+			}
+		} catch (FileUploadException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		market.setAttSet(attachfile);
 		
 		dao.marketReg(market);
 	}

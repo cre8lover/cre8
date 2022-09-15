@@ -21,7 +21,7 @@
         <h4>광고상품등록</h4>
       </div>
       <div class='panel-body'>
-        <form method="post" class='form-horizontal' id="insert" role='form' action="<%= request.getContextPath() %>/master/marReg">
+        <form method="post" class='form-horizontal' enctype="multipart/form-data" id="insert" role='form' action="<%= request.getContextPath() %>/master/marReg">
           <div class='form-group'>
             <label class='control-label col-md-2 col-md-offset-2' for='id_accomodation'>카테고리</label>
             <div class='col-md-2'>
@@ -124,7 +124,7 @@
               	<div class="filebox">
 				    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
 				    <label for="file">파일찾기</label> 
-				    <input type="file" id="file">
+				    <input type="file" id="file" name="filename">
 				</div>
             </div>
           <div class='form-group'>
