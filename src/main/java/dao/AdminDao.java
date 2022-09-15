@@ -317,7 +317,6 @@ public class AdminDao {
 			cstmt.executeQuery();
 			
 			if(att != null) {
-				
 				sql = "call p_attinset(?,?)";
 			
 				StructDescriptor st_thumb = StructDescriptor.createDescriptor("OBJ_THUMB",conn);
