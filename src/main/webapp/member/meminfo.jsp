@@ -114,9 +114,20 @@
 			      <th>프로필변경</th>
 			      <td>
 					<div class="filebox">
+					<c:if test="${info.att.attName == null }">
 					    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
 					    <label for="file"></label> 
 					    <input type="file" name="filename" id="file">
+					</c:if>    
+					</div>
+					
+					<div id = "fileSector">
+		              	<c:if test="${info.att.attName != null }">
+						    <input class="upload-name" value="${info.att.attName}" placeholder="첨부파일">
+						    <img src="/upload/thumbnail/${info.att.attThumb.fileName}">
+							<input type="button"value="삭제" onclick="fileDel('${info.att.attSeqno}','${info.att.getSavefilename()}','${info.att.attPath}',
+							'${info.att.attThumb.fileName }')">
+						</c:if>
 					</div>
 				  </td>
 			    </tr>
@@ -151,4 +162,39 @@
       });
 
 
+</script>
+<script>
+function fileDel(attSeqNo,saveFileName,filePath,thumb_file){
+	
+	var ans = confirm("정말로 삭제하시겠습니까?");
+	
+	if (ans){
+		var x = new XMLHttpRequest();
+		x.onreadystatechange = function(){
+			if(x.readyState === 4 && x.status === 200){
+				
+				var tag = document.getElementById("fileSector");
+				
+				
+				if (x.responseText.trim() === "0"){
+					alert("파일 삭제에 실패 하였습니다.");
+				} else {
+					alert("파일 삭제에 완료 하였습니다.");
+					tag.innerHTML = "<input class='upload-name' value='첨부파일' placeholder='첨부파일'><label for='file'>파일찾기</label><input type='file' id='file' name='filename'>";
+				}
+				
+			}else{
+			console.log('에러코드는:' + x.status);
+				
+			}
+		
+		};
+	}
+	
+	//방식,매핑정보,동기방식
+	x.open("POST", "<%= request.getContextPath() %>/cre/fileDel", true);
+	x.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	x.send("attseqno="+attSeqNo+"&savefilename="+saveFileName+"&filepath="+filePath+"&thumb_filename="+thumb_file);
+
+}
 </script>
