@@ -299,7 +299,13 @@ public class AdminDao {
 	public void marketReg(Marketing market) {
 		String sql = "call p_marketReg(?,?,?,?,?,?,?,?,?,?)";
 		Att att = market.getAttSet();
-
+		
+		String mobile = null;
+		String phone = market.getMarPhone();
+		if(phone.length() == 11) {
+			mobile = phone.replaceFirst("(^[0-9]{3})([0-9]{4})([0-9]{4})$","$1-$2-$3");
+		}
+		
 		try {
 			cstmt = conn.prepareCall(sql);
 			
@@ -311,7 +317,7 @@ public class AdminDao {
 			cstmt.setString(6, market.getMarClosedate());
 			cstmt.setString(7, market.getMarDetail());
 			cstmt.setString(8, market.getMarCeo());
-			cstmt.setString(9, market.getMarPhone());
+			cstmt.setString(9, mobile);
 			cstmt.setString(10, market.getMarRegnum());
 			
 			cstmt.executeQuery();
