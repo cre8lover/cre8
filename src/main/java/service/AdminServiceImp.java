@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadException;
@@ -88,6 +89,9 @@ public class AdminServiceImp implements AdminService {
 		market.setMarCeo(ceo);
 		market.setMarRegnum(regnum);
 */		
+		HttpSession sess = req.getSession();
+		String id = (String)sess.getAttribute("sess_id");
+		
 		DiskFileItemFactory factory = new DiskFileItemFactory();
 		factory.setDefaultCharset(CHARSET);
 		ServletFileUpload upload = new ServletFileUpload(factory);
@@ -106,6 +110,7 @@ public class AdminServiceImp implements AdminService {
 					attachfile = fileService.fileUpload(item);
 				}
 			}
+			
 		} catch (FileUploadException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -115,15 +120,16 @@ public class AdminServiceImp implements AdminService {
 		}
 		
 		market.setAttSet(attachfile);
+		market.getAttSet().getMem().setMemId(id);
 		
 		dao.marketReg(market);
 	}
 
-	   @Override
-	   public List<Mem> memberlist(AdminKeyWord adkey) {
+	@Override
+	public List<Mem> memberlist(AdminKeyWord adkey) {
 
-	      return dao.memberlist(adkey);
-	   }
+	   return dao.memberlist(adkey);
+	}
 
 	@Override
 	public List<Marketing> purchase(AdminKeyWord adkey) {
