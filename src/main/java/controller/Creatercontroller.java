@@ -57,8 +57,10 @@ public class Creatercontroller extends HttpServlet {
 			}
 			else if(add.equals("C")) {
 				
-				List<Pro> prolist = cs.Prolist(id);
-				List<Auc> auclist = cs.Auclist(id);
+				String seqno = (String) req.getAttribute("seqno");
+				
+				List<Pro> prolist = cs.Prolist(seqno, id);
+				List<Auc> auclist = cs.Auclist(seqno, id);
 				
 				String total = cs.totalmoney(id);
 				
