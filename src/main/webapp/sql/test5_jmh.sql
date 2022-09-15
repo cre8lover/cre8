@@ -1,5 +1,5 @@
 
---ÇÁ·Î½ÃÀú AUC¸®½ºÆ® °Ë»ö¸ðµå(¶óµð¿À½º)
+--ï¿½ï¿½ï¿½Î½ï¿½ï¿½ï¿½ AUCï¿½ï¿½ï¿½ï¿½Æ® ï¿½Ë»ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½)
 CREATE OR REPLACE PROCEDURE aucList(
     p_search IN VARCHAR2,
     p_current_page IN INTEGER,
@@ -33,19 +33,19 @@ BEGIN
                 v_sql := v_sql || ' )
                 WHERE rn >' || v_rn ;
                 
-    --Ä¿¼­ ¿ÀÇÂ
+    --Ä¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     curid := DBMS_SQL.OPEN_CURSOR;
-    --SQL ÆÄ½Ì
+    --SQL ï¿½Ä½ï¿½
     DBMS_SQL.PARSE(curid, v_sql, DBMS_SQL.NATIVE);
     
-    --¹ÙÀÎµå º¯¼ö
+    --ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½
     
 --    IF p_search IS NOT NULL THEN DBMS_SQL.BIND_VARIABLE(curid, ':1', p_search); END IF;
 --    DBMS_OUTPUT.PUT_LINE(p_search);
-    --SQL¹®½ÇÇà
+    --SQLï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     ret := DBMS_SQL.EXECUTE(curid);
     
-    --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­ º¯¼ö¿¡ ÀúÀå
+    --Ä¿ï¿½ï¿½ idï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ø¼ï¿½ Ä¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     v_board_cur := DBMS_SQL.TO_REFCURSOR(curid);
     
     select count(*) into v_total from auc where auc_stat in 'AUC_ING';
@@ -61,7 +61,7 @@ END;
 
 
 DECLARE
-    v_rs_cur SYS_REFCURSOR; --OPEN, CLOSE »ý·«°¡´É ºôÆ®ÀÎÄ¿¼­
+    v_rs_cur SYS_REFCURSOR; --OPEN, CLOSE ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Æ®ï¿½ï¿½Ä¿ï¿½ï¿½
     
     TYPE v_board_rec IS RECORD(
         rn NUMBER,
@@ -94,7 +94,7 @@ END;
 /
 
 
---¿Á¼Ç µðÅ×ÀÏ
+--ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 create or replace procedure p_auc_detail(
     p_auc_seqno in auc.auc_seqno%TYPE,
     p_auc_cur out SYS_REFCURSOR,
@@ -167,7 +167,7 @@ end;
 /
 
 
---°Ô½Ã±Û ÀúÀå ÇÁ·Î½ÃÀú
+--ï¿½Ô½Ã±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Î½ï¿½ï¿½ï¿½
 
 CREATE OR REPLACE PROCEDURE p_pro_add(
     p_item_deatile   IN item.item_detail%TYPE,
@@ -220,10 +220,10 @@ END;
 DECLARE
     PRO_SEQNO PRO.PRO_SEQNO%TYPE;
 BEGIN
-    p_pro_add('°­È«¹¬','°­È«¹¬','ccc',200,1,200,'2022/08/31','2022/09/30','°­È«¹¬',
-    1,'PRO_ING','»çÁø.jpg','»çÁø-1.jpg',
+    p_pro_add('ï¿½ï¿½È«ï¿½ï¿½','ï¿½ï¿½È«ï¿½ï¿½','ccc',200,1,200,'2022/08/31','2022/09/30','ï¿½ï¿½È«ï¿½ï¿½',
+    1,'PRO_ING','ï¿½ï¿½ï¿½ï¿½.jpg','ï¿½ï¿½ï¿½ï¿½-1.jpg',
     500,'IMAGE','d:/jmh/upload/',
-    '»çÁø_thumb.jpg',200,'d:/jmh/upload/thumb/',PRO_SEQNO);
+    'ï¿½ï¿½ï¿½ï¿½_thumb.jpg',200,'d:/jmh/upload/thumb/',PRO_SEQNO);
     dbms_output.put_line(PRO_SEQNO);
 END;
 
@@ -237,7 +237,7 @@ END;
 
 
 
---Å×½ºÆ® ÇÁ·Î½ÃÀú
+--ï¿½×½ï¿½Æ® ï¿½ï¿½ï¿½Î½ï¿½ï¿½ï¿½
 desc ATT_THUMB;
 CREATE OR REPLACE TYPE obj_thumb IS OBJECT(
     p_attth_name     VARCHAR2(2000),
@@ -307,7 +307,7 @@ END;
 
 
 
---Å×½ºÆ® ÇÁ·Î½ÃÀú
+--ï¿½×½ï¿½Æ® ï¿½ï¿½ï¿½Î½ï¿½ï¿½ï¿½
 /
 desc item;
 CREATE OR REPLACE TYPE obj_promodify IS OBJECT(
@@ -376,12 +376,12 @@ END;
 /   
 
 begin
-    P_PRO_MODIFY('PRO_ING',200,1,20,'2022/08/31','2022/09/30','°­È«¹¬2',19,1,'°­È«¹¬','°­È«¹¬',30);
+    P_PRO_MODIFY('PRO_ING',200,1,20,'2022/08/31','2022/09/30','ï¿½ï¿½È«ï¿½ï¿½2',19,1,'ï¿½ï¿½È«ï¿½ï¿½','ï¿½ï¿½È«ï¿½ï¿½',30);
 end;
 
 /
 
---Àå¹Ù±¸´Ï
+--ï¿½ï¿½Ù±ï¿½ï¿½ï¿½
 
 create or replace NONEDITIONABLE TYPE mycart_proseqnolist is TABLE of number;
 
@@ -417,11 +417,11 @@ BEGIN
             END IF;
                 v_sql := v_sql || ') p  where c.pro_seqno = p.pro_seqno';
                 DBMS_OUTPUT.PUT_LINE(v_sql);
-    --Ä¿¼­ ¿ÀÇÂ
+    --Ä¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     curid := DBMS_SQL.OPEN_CURSOR;
-    --SQL ÆÄ½Ì
+    --SQL ï¿½Ä½ï¿½
         DBMS_SQL.PARSE(curid,v_sql,DBMS_SQL.NATIVE);
-        --¹ÙÀÎµå º¯¼ö
+        --ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½
         
         DBMS_SQL.BIND_VARIABLE(curid, ':a', p_id);
     IF p_proseqno(1) is not null then
@@ -432,16 +432,16 @@ BEGIN
                 END LOOP;
         
     END IF;
-    --SQL¹®½ÇÇà
+    --SQLï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         ret := DBMS_SQL.EXECUTE(curid);
 
-    --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­ º¯¼ö¿¡ ÀúÀå
+    --Ä¿ï¿½ï¿½ idï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ø¼ï¿½ Ä¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     p_cartlist := DBMS_SQL.TO_REFCURSOR(curid);
     
     exception when others then
     v_sql := v_sql || ') p  where c.pro_seqno = p.pro_seqno';
 --    DBMS_OUTPUT.PUT_LINE(v_sql);
-    --Ä¿¼­ ¿ÀÇÂ
+    --Ä¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     curid := DBMS_SQL.OPEN_CURSOR;
     DBMS_SQL.PARSE(curid,v_sql,DBMS_SQL.NATIVE);
     DBMS_SQL.BIND_VARIABLE(curid, ':a', p_id);
@@ -449,7 +449,7 @@ BEGIN
     ret := DBMS_SQL.EXECUTE(curid);
     
 
-    --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­ º¯¼ö¿¡ ÀúÀå
+    --Ä¿ï¿½ï¿½ idï¿½ï¿½ ï¿½Ì¿ï¿½ï¿½Ø¼ï¿½ Ä¿ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     p_cartlist := DBMS_SQL.TO_REFCURSOR(curid);
 --    DBMS_OUTPUT.PUT_LINE(SQLERRM);
 END;
@@ -480,7 +480,7 @@ BEGIN
     close v_cartlist;
 END;
 /
---±¸¸ÅÇÏ±â ÈÄ orderÅ×ÀÌºíÃß°¡
+--ï¿½ï¿½ï¿½ï¿½ï¿½Ï±ï¿½ ï¿½ï¿½ orderï¿½ï¿½ï¿½Ìºï¿½ï¿½ß°ï¿½
 
 CREATE OR REPLACE PROCEDURE p_orderadd(
     p_pay_method orderdetail.orderdetail_way%TYPE,
@@ -554,13 +554,13 @@ DECLARE
     p_cart_amount   t_orders_cartamount := t_orders_cartamount(2);
     v_seqno orders.order_seqno%TYPE;
 BEGIN
-    p_orderadd('point','°­È«¹¬','010','ORD20220912-121036183','100000','ccc',p_cart_seqno,p_cart_amount,v_seqno);
+    p_orderadd('point','ï¿½ï¿½È«ï¿½ï¿½','010','ORD20220912-121036183','100000','ccc',p_cart_seqno,p_cart_amount,v_seqno);
     DBMS_OUTPUT.PUT_LINE(v_seqno);
 END;
 
 /
 
---±¸¸Å ÈÄ ¸®½ºÆ®
+--ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®
 
 CREATE OR REPLACE PROCEDURE p_orders_list(
     p_order_seqno orders.order_seqno%TYPE,
@@ -599,7 +599,7 @@ BEGIN
     END LOOP;
 END;
 /
--- pro µðÅ×ÀÏ ÆäÀÌÁö
+-- pro ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 CREATE OR REPLACE PROCEDURE p_prodetail(
     p_proseqno pro.pro_seqno%TYPE,
     p_prodetail out SYS_REFCURSOR,
@@ -627,7 +627,7 @@ END;
 
 /
 
---°æ¸Å¾ÆÀÌÅÛ Ãß°¡ AUCADD
+--ï¿½ï¿½Å¾ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ AUCADD
 create or replace NONEDITIONABLE TYPE obj_auc IS OBJECT(
     p_item_name      VARCHAR2(500),
     p_mem_id         VARCHAR2(50),
@@ -670,7 +670,7 @@ BEGIN
     
 END;
 
---auc ¼öÁ¤ÆäÀÌÁöÀÇ µðµ¥ÀÏµ¥ÀÌÅÍ
+--auc ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ïµï¿½ï¿½ï¿½ï¿½ï¿½
 CREATE OR REPLACE PROCEDURE p_aucdetail(
     p_proseqno pro.pro_seqno%TYPE,
     p_prodetail out SYS_REFCURSOR,
@@ -754,7 +754,7 @@ BEGIN
     commit;
 END;
 /
---Å©¸®¿¡ÀÌÅÍ ÆÇ¸ÅÃÑ ±Ý¾×
+--Å©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ç¸ï¿½ï¿½ï¿½ ï¿½Ý¾ï¿½
 CREATE OR REPLACE PROCEDURE p_totalm(
     p_id mem.mem_id%TYPE,
     p_totalmn out INTEGER
@@ -809,11 +809,8 @@ BEGIN
     p_totalm('ccc',v_total);
     DBMS_OUTPUT.PUT_LINE(v_total);
 END;
-
 /
-
-
-
+/
 
 
 

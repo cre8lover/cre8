@@ -125,7 +125,10 @@
               	<div class="filebox">
               	
 				<c:if test="${pro.att_file.attName == null }">
-				    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
+					<div id="image_preview">
+                       <img src="/img.png" alt="사진영역"  style="width:126px; height:165px;">
+                   	</div>
+				    <input class="upload-name"id="filedummy" value="첨부파일" placeholder="첨부파일">
 				    <label for="file">파일찾기</label> 
 				    <input type="file" id="file" name="filename">
 				</c:if>
@@ -143,6 +146,42 @@
 				
 				</div>
 <script>
+
+
+
+
+
+$(document).ready(function(){
+	// 이미지 업로드
+
+	$('#file').on('change', function() {
+	ext = $(this).val().split('.').pop().toLowerCase(); //확장자
+	//배열에 추출한 확장자가 존재하는지 체크
+	if($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+	    resetFormElement($(this)); //폼 초기화
+	    window.alert('이미지 파일이 아닙니다! (gif, png, jpg, jpeg 만 업로드 가능)');
+	} else {
+	    file = $('#file').prop("files")[0];
+	    blobURL = window.URL.createObjectURL(file);
+	    $('#image_preview img').attr('src', blobURL);
+	    $('#image_preview').slideDown(); //업로드한 이미지 미리보기 
+	    $(this).slideUp(); //파일 양식 감춤
+	}
+	});
+
+	
+	
+	  $('input[type=file]').on('change',function(){
+	  	if(window.FileReader){
+		  var filename = $(this).val().split('/').pop().split('\\').pop();
+		 } else {
+		  var filename = $(this).val().split('/').pop().split('\\').pop();
+		 }
+	    $(this).siblings('#filedummy').val(filename);
+	  });
+	});
+
+
 function fileDel(attSeqNo,saveFileName,filePath,thumb_file){
 	
 	var ans = confirm("정말로 삭제하시겠습니까?");

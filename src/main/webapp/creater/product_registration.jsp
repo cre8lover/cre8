@@ -172,22 +172,59 @@
             <div class='col-md-6'>
               	<div class="filebox">
               	<c:if test="${pro.att_file.attName == null }">
-				    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
+              		<div id="image_preview">
+                       <img src="/img.png" alt="사진영역"  style="width:126px; height:165px;">
+                   	</div>
+				    <input class="upload-name"id="filedummy"value="첨부파일" placeholder="첨부파일" >
+				    <input type="file" id="file"name="filename" >
 				    <label for="file">파일찾기</label> 
-				    <input type="file" id="file" name="filename">
 				</c:if>
 				
 				<div id = "fileSector">
 				
               	<c:if test="${pro.att_file.attName != null }">
-				    <input class="upload-name" value="${pro.att_file.attName}" placeholder="첨부파일">
+				    <input type="file"class="upload-name" value="${pro.att_file.attName}" placeholder="첨부파일">
 				    <img src="/upload/thumbnail/${pro.thumb.fileName}">
 					<input type="button"value="삭제" onclick="fileDel('${pro.att_file.attSeqno}','${pro.att_file.getSavefilename()}','${pro.att_file.attPath}',
 					'${pro.thumb.fileName }')">
 				</c:if>
 				
 				</div>
-<script>
+
+
+<script type="text/javascript">
+
+$(document).ready(function(){
+	// 이미지 업로드
+
+	$('#file').on('change', function() {
+	ext = $(this).val().split('.').pop().toLowerCase(); //확장자
+	//배열에 추출한 확장자가 존재하는지 체크
+	if($.inArray(ext, ['gif', 'png', 'jpg', 'jpeg']) == -1) {
+	    resetFormElement($(this)); //폼 초기화
+	    window.alert('이미지 파일이 아닙니다! (gif, png, jpg, jpeg 만 업로드 가능)');
+	} else {
+	    file = $('#file').prop("files")[0];
+	    blobURL = window.URL.createObjectURL(file);
+	    $('#image_preview img').attr('src', blobURL);
+	    $('#image_preview').slideDown(); //업로드한 이미지 미리보기 
+	    $(this).slideUp(); //파일 양식 감춤
+	}
+	});
+
+	
+	
+	  $('input[type=file]').on('change',function(){
+	  	if(window.FileReader){
+		  var filename = $(this).val().split('/').pop().split('\\').pop();
+		 } else {
+		  var filename = $(this).val().split('/').pop().split('\\').pop();
+		 }
+	    $(this).siblings('#filedummy').val(filename);
+	  });
+	});
+
+
 function fileDel(attSeqNo,saveFileName,filePath,thumb_file){
 	
 	var ans = confirm("정말로 삭제하시겠습니까?");
@@ -204,7 +241,7 @@ function fileDel(attSeqNo,saveFileName,filePath,thumb_file){
 					alert("파일 삭제에 실패 하였습니다.");
 				} else {
 					alert("파일 삭제에 완료 하였습니다.");
-					tag.innerHTML = "<input class='upload-name' value='첨부파일' placeholder='첨부파일'><label for='file'>파일찾기</label><input type='file' id='file' name='filename'>";
+					tag.innerHTML = "<input class='upload-name' id='filedummy' value='첨부파일' placeholder='첨부파일'><label for='file'>파일찾기</label><input type='file' id='file' name='filename'>";
 				}
 				
 			}else{
