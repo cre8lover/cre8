@@ -23,6 +23,7 @@ import dto.Pro;
 
 public class AdminServiceImp implements AdminService {
 	AdminDao dao = new AdminDao();
+	Marketing market;
 	private static final String CHARSET = "utf-8";
 
 	@Override
@@ -62,7 +63,7 @@ public class AdminServiceImp implements AdminService {
 
 	@Override
 	public void reg(HttpServletRequest req) {
-		Marketing market = new Marketing();
+		market = new Marketing();
 /*		
 		String cate = req.getParameter("marcate");
 		String name = req.getParameter("name");
@@ -89,6 +90,7 @@ public class AdminServiceImp implements AdminService {
 		market.setMarCeo(ceo);
 		market.setMarRegnum(regnum);
 */		
+		Mem m = new Mem();
 		HttpSession sess = req.getSession();
 		String id = (String)sess.getAttribute("sess_id");
 		
@@ -100,6 +102,8 @@ public class AdminServiceImp implements AdminService {
 		Att attachfile = null;
 		FileServiceImp fileService = new FileServiceImp();
 		
+		
+		
 		try {
 			List<FileItem> items =  upload.parseRequest(req);
 			for(FileItem item : items) {
@@ -110,7 +114,7 @@ public class AdminServiceImp implements AdminService {
 					attachfile = fileService.fileUpload(item);
 				}
 			}
-			
+
 		} catch (FileUploadException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -118,10 +122,11 @@ public class AdminServiceImp implements AdminService {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
+		m.setMemId(id);
+		attachfile.setMem(m);
 		
 		market.setAttSet(attachfile);
-		market.getAttSet().getMem().setMemId(id);
-		
 		dao.marketReg(market);
 	}
 
@@ -147,7 +152,6 @@ public class AdminServiceImp implements AdminService {
 		Marketing market = new Marketing();
 		
 		String o = req.getParameter("seqno");
-		System.out.println(o);
 		int seqno = Integer.parseInt(o);
 		
 		String cate = req.getParameter("marcate");
