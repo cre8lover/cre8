@@ -26,6 +26,7 @@ import dto.Marketing;
 import dto.Mem;
 import dto.Pro;
 import dto.Thumbnail;
+import oracle.jdbc.OracleType;
 import oracle.jdbc.OracleTypes;
 import oracle.sql.ANYDATA;
 import oracle.sql.STRUCT;
@@ -270,45 +271,19 @@ public class CreatorDao {
 
 	
 	
-	
-	
-	////////////////////////sql문 수정
 	public List<Pro> salesHistory(String id){
 		List<Pro>cre = new ArrayList<Pro>();
-		Item item = null;
-		Pro pro = null;
 		
-	try {
-		String sql = "select distinct rownum,total,orderdetail_stat, item_name,item_img,pro_opendate,pro_stat "
-				+ " from"
-				+ " ( "
-				+ " select (select item_name from item i where i.item_seqno = p.item_seqno) as item_name, "
-				+ " (select item_img from item i where i.item_seqno = p.item_seqno) as item_img, "
-				+ " (select mem_id from item i where i.item_seqno = p.item_seqno) as mem_id, "
-				+ " pro_opendate,orderdetail_stat,(p.pro_price * amount) as total, pro_stat "
-				+ " from pro p , "
-				+ "    ( "
-				+ "    select pro_seqno, mo.amount, orderdetail_stat "
-				+ "    from  "
-				+ "        ( "
-				+ "        select od.orderdetail_stat,o.order_seqno "
-				+ "        from orderdetail od , orders o "
-				+ "        where od.order_seqno = o.order_seqno "
-				+ "        ) o, "
-				+ "        ( "
-				+ "        select pro_seqno,order_seqno,amount "
-				+ "        from mini_order "
-				+ "        ) mo "
-				+ "    where o.order_seqno = mo.order_seqno "
-				+ "    ) o "
-				+ " where p.pro_seqno = o.pro_seqno order by pro_opendate desc "
-				+ " ) "
-				+ " where mem_id = ? ";
- 	
-			   stmt = conn.prepareStatement(sql);
-			   stmt.setString(1, id);
-			   ResultSet rs = stmt.executeQuery();
-	
+		String sql = "call p_salesHistory(?,?)";
+			try {
+			   cstmt = conn.prepareCall(sql);
+			   cstmt.setString(1, id);
+			   cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			   ResultSet rs = (ResultSet)cstmt.getObject(2);
+			   
+			   Item item = null;
+			   Pro pro = null;
+
 			   while(rs.next()) {
 				   pro = new Pro();
 				   item = new Item();
@@ -323,8 +298,6 @@ public class CreatorDao {
 				   cre.add(pro);
 			   }
 			   
-			   
-			   
 	}catch (SQLException e) {
 		e.printStackTrace();
 	}
@@ -335,19 +308,22 @@ public class CreatorDao {
 
 	
 	//일반물품이랑 경매물품 작가페이지에서 띄우기
-	public List<Pro> Prolist(String id) {
+	public List<Pro> Prolist(String seqno,String id ) {
 		List<Pro> prolist = new ArrayList<>();
 		try {
-			String sql= "select i.item_seqno,i.item_img,i.item_detail,p.pro_amount,p.pro_saleprice, p.pro_seqno"
-					+ " from (select * from pro where pro_stat not in 'END') p, item i"
-					+ " where p.item_seqno = i.item_seqno and i.mem_id =?";
+			String sql= "call p_prolist(?,?,?)";
 			
-		stmt = conn.prepareStatement(sql);
-		stmt.setString(1, id);
-		ResultSet rs = stmt.executeQuery();
+		cstmt = conn.prepareCall(sql);
+		cstmt.setString(1, seqno);
+		cstmt.setString(2, id);
+		cstmt.registerOutParameter(3, OracleTypes.CURSOR);
+		cstmt.executeQuery();
+		ResultSet rs = (ResultSet)cstmt.getObject(3);
+		
+		Pro p = new Pro();
+		Item i = new Item();
+
 		while(rs.next()) {
-			Pro p = new Pro();
-			Item i = new Item();
 			int itemseqno = rs.getInt("item_seqno");
 			i.setItemImg(rs.getString("item_img"));
 			i.setItemDetail(rs.getString("item_detail"));
@@ -368,8 +344,8 @@ public class CreatorDao {
 				
 				i.setItemImg(rs2.getString("thumb_filename"));
 				
+				p.setItem(i);
 			}
-			p.setItem(i);
 			prolist.add(p);
 		}
 		stmt.close();
@@ -382,21 +358,24 @@ public class CreatorDao {
 
 	
 
-	public List<Auc> Auclist(String id) {
+	public List<Auc> Auclist(String seqno, String id) {
 	      List<Auc> auclist = new ArrayList<>();
 	      Auc a = null;
 	      Item i = null;
+	      
 	      try {
-	         String sql = "select i.item_seqno as item_seqno, a.auc_img, a.auc_detail, a.auc_price, a.auc_closeprice, a.auc_stat, a.auc_seqno"
-	               + " from (select * from auc where auc_stat not in 'END') a,item i"
-	               + " where a.item_seqno = i.item_seqno and i.mem_id =?";
-	      stmt = conn.prepareStatement(sql);
-	      stmt.setString(1, id);
-	      ResultSet rs = stmt.executeQuery();
+	         String sql = "call p_auclist(?,?,?)";
+	      
+	         cstmt = conn.prepareCall(sql);
+	      cstmt.setString(1, seqno);
+	      cstmt.setString(2, id);
+	      cstmt.registerOutParameter(3, OracleTypes.CURSOR);
+	      cstmt.executeQuery();
+		  ResultSet rs = (ResultSet)cstmt.getObject(3);
 	      
 	      while(rs.next()) {
-	         a = new Auc();
-	         i = new Item();
+	    	  a = new Auc();
+	    	  i = new Item();
 	         String itemseqno = rs.getString("item_seqno");
 	         a.setAucImg(rs.getString("auc_img"));
 	         a.setAucDetail(rs.getString("auc_detail"));
@@ -406,7 +385,6 @@ public class CreatorDao {
 	         a.setAucSeqno(rs.getInt("auc_seqno"));
 	         
 	         
-				
 				
 				sql = " select THUMB_FILENAME, THUMB_FILEPATH "
 						+ " from att_thumb"
@@ -439,47 +417,37 @@ public class CreatorDao {
 	      Mem mem = new Mem();
 	      Creator cre = new Creator();
 	      
-	      String sql = "select c.cre_company as cre_company, c.cre_phone as cre_phone, c.cre_name as cre_name,"
-	            + " c.cre_address as cre_address, c.cre_regnum as cre_regnum, c.cre_salenum as cre_salenum,"
-	            + " c.cre_pot as cre_pot, m.mem_pw as mem_pw, m.mem_tel as mem_tel, m.mem_email as mem_email, m.mem_snsinfo as mem_snsinfo"
-	            + " from creator c,"
-	            + "    ("
-	            + "    select mem_pw,mem_tel,mem_email,mem_snsinfo,mem_id"
-	            + "    from mem"
-	            + "    where mem_id = ?"
-	            + "    ) m"
-	            + " where c.mem_id = m.mem_id";
+	      String sql = "call p_infomodify (?,?,?,?,?,?,?,?,?,?,?)";
 	      
 	      try {
-	         
-	         stmt = conn.prepareStatement(sql);
-	         stmt.setString(1, id);
-	         ResultSet rs = stmt.executeQuery();
-	         while (rs.next()) {
-	            cre.setCreCompany(rs.getString("cre_company"));
-	            cre.setCrePhone(rs.getString("cre_phone"));
-	            cre.setCreName(rs.getString("cre_name"));
-	            cre.setCreAddress(rs.getString("cre_address"));
-	            cre.setCreRegnum(rs.getString("cre_regnum"));
-	            cre.setCreSalenum(rs.getString("cre_salenum"));
-	            cre.setCrePot((rs.getString("cre_pot").trim()));
-	            mem.setMemPw(rs.getString("mem_pw"));
-	            mem.setMemTel(rs.getString("mem_tel"));
-	            
-	            String email = rs.getString("mem_email");
-	            if(email != null) {
-	               String first = email.substring(0, email.indexOf("@"));
-	               String second = email.substring(email.indexOf("@")+1);
-	               email = first + second;
-	               mem.setMemEmail(first);
-	               mem.setMemId(second);
-	            }else {
-	               mem.setMemEmail(email);
-	            }
-	            mem.setMemSnsinfo(rs.getString("mem_snsinfo"));
+	    	  	cstmt = conn.prepareCall(sql);
+
+	    	  	cstmt.setString(1, cre.getCreCompany());
+				cstmt.setString(2, cre.getCrePhone());
+				cstmt.setString(3, cre.getCreName());
+				cstmt.setString(4, cre.getCreAddress());
+				cstmt.setString(5, cre.getCreRegnum());
+				cstmt.setString(6, cre.getCreSalenum());
+				cstmt.setString(7, cre.getCrePot());
+				cstmt.setString(8, cre.getMem().getMemPw());
+				cstmt.setString(9, cre.getMem().getMemTel());
+				cstmt.setString(10, cre.getMem().getMemEmail());
+					
+				String email = cre.getMem().getMemEmail();
+					if(email != null) {
+			               String first = email.substring(0, email.indexOf("@"));
+			               String second = email.substring(email.indexOf("@")+1);
+			               email = first + second;
+			               mem.setMemEmail(first);
+			               mem.setMemId(second);
+			            }else {
+			               mem.setMemEmail(email);
+			            }
+				cstmt.setString(11, cre.getMem().getMemSnsinfo());
+				cstmt.executeQuery();
+				
 	            cre.setMem(mem);
 	            
-	         }
 	         stmt.close();
 	      } catch (SQLException e) {
 	         e.printStackTrace();
@@ -488,70 +456,96 @@ public class CreatorDao {
 	      return cre;
 	   }
 
-
-	public String totalmoney(String id) {
+	
+public String totalmoney(String id) {
 		
-		String total = "";
+		String total = "0";
 		
-		String sql = "select sum(total) as total"
-				+ " from"
-				+ " ("
-				+ " select sum(o.amount * p.pro_price) total"
-				+ " from pro p,"
-				+ "    ("
-				+ "    select pro_seqno, mo.amount"
-				+ "    from orders o,"
-				+ "        ("
-				+ "        select pro_seqno,order_seqno,amount"
-				+ "        from mini_order"
-				+ "        ) mo"
-				+ "    where o.order_seqno = mo.order_seqno"
-				+ "    and o.order_seqno = (select od.order_seqno from orderdetail od where o.order_seqno = od.order_seqno and od.orderdetail_stat = 'END')"
-				+ "    ) o"
-				+ " where p.pro_seqno = o.pro_seqno"
-				+ " and mem_id = ?"
-				+ " union all"
-				+ " select sum(auc_closeprice) total"
-				+ " from "
-				+ "    ("
-				+ "    select auc_closeprice,(select mem_id from item i where i.item_seqno = a.item_seqno) as mem_id"
-				+ "    from auc a,"
-				+ "        ("
-				+ "        select auc_seqno"
-				+ "        from orders o,"
-				+ "            ("
-				+ "            select auc_seqno,order_seqno"
-				+ "            from mini_order"
-				+ "            ) mo"
-				+ "        where o.order_seqno = mo.order_seqno"
-				+ "        and o.order_seqno = (select od.order_seqno from orderdetail od where o.order_seqno = od.order_seqno and od.orderdetail_stat = 'END')"
-				+ "        ) o"
-				+ "    where a.auc_seqno = o.auc_seqno"
-				+ "    )"
-				+ " where mem_id = ?"
-				+ " )";
+		String sql = "call p_totalm(?,?)";
 		
 		try {
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, id);
-			stmt.setString(2, id);
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.INTEGER);
+			cstmt.executeQuery();
 			
-			ResultSet rs = stmt.executeQuery();
+			total = Integer.toString(cstmt.getInt(2));
 			
-			if (rs.next()) {
-				
-				total = rs.getString(1);
+			cstmt.close();
 			
-			}
-			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
+
 		return total;
 	}
+	
+	
+	
+
+//	public String totalmoney(String id) {
+//		
+//		String total = "";
+//		
+//		String sql = "select sum(total) as total"
+//				+ " from"
+//				+ " ("
+//				+ " select sum(o.amount * p.pro_price) total"
+//				+ " from pro p,"
+//				+ "    ("
+//				+ "    select pro_seqno, mo.amount"
+//				+ "    from orders o,"
+//				+ "        ("
+//				+ "        select pro_seqno,order_seqno,amount"
+//				+ "        from mini_order"
+//				+ "        ) mo"
+//				+ "    where o.order_seqno = mo.order_seqno"
+//				+ "    and o.order_seqno = (select od.order_seqno from orderdetail od where o.order_seqno = od.order_seqno and od.orderdetail_stat = 'END')"
+//				+ "    ) o"
+//				+ " where p.pro_seqno = o.pro_seqno"
+//				+ " and mem_id = ?"
+//				+ " union all"
+//				+ " select sum(auc_closeprice) total"
+//				+ " from "
+//				+ "    ("
+//				+ "    select auc_closeprice,(select mem_id from item i where i.item_seqno = a.item_seqno) as mem_id"
+//				+ "    from auc a,"
+//				+ "        ("
+//				+ "        select auc_seqno"
+//				+ "        from orders o,"
+//				+ "            ("
+//				+ "            select auc_seqno,order_seqno"
+//				+ "            from mini_order"
+//				+ "            ) mo"
+//				+ "        where o.order_seqno = mo.order_seqno"
+//				+ "        and o.order_seqno = (select od.order_seqno from orderdetail od where o.order_seqno = od.order_seqno and od.orderdetail_stat = 'END')"
+//				+ "        ) o"
+//				+ "    where a.auc_seqno = o.auc_seqno"
+//				+ "    )"
+//				+ " where mem_id = ?"
+//				+ " )";
+//		
+//		try {
+//			stmt = conn.prepareStatement(sql);
+//			stmt.setString(1, id);
+//			stmt.setString(2, id);
+//			
+//			ResultSet rs = stmt.executeQuery();
+//			
+//			if (rs.next()) {
+//				
+//				total = rs.getString(1);
+//			
+//			}
+//			stmt.close();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		
+//		
+//		return total;
+//	}
 
 
 //	public Pro productdetail(String seqno) {
@@ -927,14 +921,13 @@ public class CreatorDao {
 				STRUCT att_rec =null;
 				Object[] thumb_obj = null;
 				Object[] att_obj = null;
-				System.out.println(auc.getAtt_file().getAttName());
-				if(auc.getAtt_file() != null) {
+				if(auc.getAtt_file().getAttName() != null) {
 					
 		    	  thumb_obj = new Object[]{auc.getAtt_file().getAttThumb().getFileName(),
 						    			   auc.getAtt_file().getAttThumb().getFileSize(),
 						    			   auc.getAtt_file().getAttThumb().getFilePath()
 					    	  			   };
-		    	  
+		    	  thumb_rec = new STRUCT(st_thumb,conn,thumb_obj);
 		    	  att_obj = new Object[]{auc.getAtt_file().getAttName(),
 						    			  auc.getAtt_file().getSavefilename(),
 						    			  auc.getAtt_file().getAttSize(),
@@ -945,7 +938,6 @@ public class CreatorDao {
 			    	  
 		    	  
 				}
-					thumb_rec = new STRUCT(st_thumb,conn,thumb_obj);
 					att_rec = new STRUCT(st_att,conn,att_obj);
 				
 

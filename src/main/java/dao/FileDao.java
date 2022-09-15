@@ -15,7 +15,6 @@ public class FileDao {
 	public int deletfile(String no) {
 		
 		int seqno = Integer.parseInt(no);
-		System.out.println(seqno);
 		int rs = 0;
 		//첨부파일 레코드삭제, 섬네일 레코드삭제
 		String sql = "DELETE FROM att_thumb WHERE att_seqno = ?";

@@ -45,6 +45,18 @@ public class Att implements Serializable {
 	}
 
 
+	
+	public Mem getMem() {
+		return mem;
+	}
+
+
+
+	public void setMem(Mem mem) {
+		this.mem = mem;
+	}
+
+
 
 	public void setAttThumb(Thumbnail attThumb) {
 		this.attThumb = attThumb;

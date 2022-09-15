@@ -25,9 +25,9 @@ public interface CreatorService {
 	
 	public Marketing mkk(int seqno);
 	
-	List<Pro> Prolist(String id);
+	List<Pro> Prolist(String seqno, String id);
 	
-	List<Auc> Auclist(String id);
+	List<Auc> Auclist(String seqno, String id);
 	
 	public Creator infomodify(String id);
 

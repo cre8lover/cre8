@@ -15,6 +15,7 @@ import dto.Address;
 import dto.Att;
 import dto.Auc;
 import dto.Item;
+import dto.Marketing;
 import dto.Mem;
 import dto.Pro;
 import dto.Thumbnail;
@@ -221,5 +222,34 @@ public class FileServiceImp implements FileService {
 			rs=1;
 		}
 		return rs;
+	}
+
+	public Marketing getFormParameter_marketing(FileItem item, Marketing market, Address add) {
+		//System.out.printf("필드이름 : %s, 필드값: %s\n", item.getFieldName(), item.getString());
+
+		String get = item.getString();
+		if (item.getFieldName().equals("marcate")) {
+			market.setMarCategory(get);;
+		}else if (item.getFieldName().equals("name")) {
+			market.setMarProduct(get);
+		}else if (item.getFieldName().equals("price")) {
+			market.setMarPrice(get);
+		}else if (item.getFieldName().equals("company")) {
+			market.setMarCompany(get);
+		}else if (item.getFieldName().equals("ceo")) {
+			market.setMarCeo(get);
+		}else if (item.getFieldName().equals("phone")) {
+			market.setMarPhone(get);
+		}else if (item.getFieldName().equals("regnum")) {
+			market.setMarRegnum(get);
+		}else if (item.getFieldName().equals("start")) {
+			market.setMarOpendate(get);
+		}else if (item.getFieldName().equals("finish")) {
+			market.setMarClosedate(get);
+		}else if (item.getFieldName().equals("comment")) {
+			market.setMarDetail(get);
+		}
+		
+		return market;
 	}
 }

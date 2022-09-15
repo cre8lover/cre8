@@ -51,13 +51,13 @@ public class CreatorServiceImp implements CreatorService{
 	}
 
 	@Override
-	public List<Pro> Prolist(String id) {
-		return creatorDao.Prolist(id);
+	public List<Pro> Prolist(String seqno, String id) {
+		return creatorDao.Prolist(seqno,id);
 	}
 
 	@Override
-	public List<Auc> Auclist(String id) {
-		return creatorDao.Auclist(id);
+	public List<Auc> Auclist(String seqno, String id) {
+		return creatorDao.Auclist(seqno,id);
 	}
 
 	
@@ -79,6 +79,7 @@ public class CreatorServiceImp implements CreatorService{
 	
 	@Override
     public String aucadd(HttpServletRequest req) {
+		
 		DiskFileItemFactory factory = new DiskFileItemFactory(); 
 		factory.setDefaultCharset(CHARSET);//상수로 선언하는게 좋다.
 		//factory form의 데이터를 가져와서 저장 utf8로 저장하는게 좋음
