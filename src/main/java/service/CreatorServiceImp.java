@@ -76,12 +76,6 @@ public class CreatorServiceImp implements CreatorService{
 		return creatorDao.productdetail(seqno);
 	}
 	
-	@Override
-	public String productmodify(HttpServletRequest req) {
-	      
-		return creatorDao.productmodify(req);
-	   
-	}
 	
 	@Override
     public String aucadd(HttpServletRequest req) {
@@ -114,9 +108,12 @@ public class CreatorServiceImp implements CreatorService{
 		auc.setAtt_file(attachfile);
 	    String id = (String)req.getSession().getAttribute("sess_id");
 	    
-
+	    if (auc.getAucSeqno() != null) {
+	    	return creatorDao.aucmodify(auc);
+	    }else {
+	    	return creatorDao.aucadd(auc, id);
+	    }
 		
-		return creatorDao.aucadd(auc, id);
     }
 	
 	
@@ -124,10 +121,6 @@ public class CreatorServiceImp implements CreatorService{
     @Override
     public Auc aucdetail(String seqno) {
     	return creatorDao.aucdetail(seqno);
-    }
-    @Override
-    public void aucmodify(HttpServletRequest req) {
-    	creatorDao.aucmodify(req);
     }
 
 	@Override
@@ -169,9 +162,9 @@ public class CreatorServiceImp implements CreatorService{
 		
 		pro.setAtt_file(attachfile);
 	    String id = (String)req.getSession().getAttribute("sess_id");
-	    
-	    
-	      return creatorDao.productadd(pro,id);
+	    if(pro.getProSeqno() != null) return creatorDao.productmodify(pro);
+	    else return creatorDao.productadd(pro,id);
+	      
 	   }
 	
 	@Override

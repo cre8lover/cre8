@@ -227,11 +227,16 @@ public class BuyDao {
 			
 			ArrayDescriptor chk_desc = ArrayDescriptor.createDescriptor("MYCART_PROSEQNOLIST",conn);
 			ARRAY chk = new ARRAY(chk_desc, conn, chklist );
+			
+			
+			
+			
 			cstmt.setArray(2, chk);
 			
 			cstmt.registerOutParameter(3, OracleTypes.CURSOR);
 			
 			cstmt.executeQuery();
+			
 			ResultSet rs = (ResultSet)cstmt.getObject(3);
 			
 				while(rs.next()) {

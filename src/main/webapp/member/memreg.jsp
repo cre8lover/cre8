@@ -37,12 +37,12 @@
                 <!-- 비밀번호 -->
                 <div>
                     <h3>비밀번호</h3>
-                    <input type="text" name="pw" class="khm_pw" maxlength="20" placeholder="영문,숫자 포함 8자리">
+                    <input type="password" name="pw" class="khm_pw" maxlength="20" placeholder="영문,숫자 포함 8자리">
                 </div>
 
                 <div>
                     <h3>비밀번호 재확인</h3>
-                    <input type="text" name="pw2" class="khm_pw" maxlength="20" placeholder="영문,숫자 포함 8자리">
+                    <input type="password" name="pw2" class="khm_pw" maxlength="20" placeholder="영문,숫자 포함 8자리">
                 </div>
 
                 <!-- 이름 -->
@@ -66,7 +66,7 @@
                 <!-- 핸드폰 -->
                 <div>
                     <h3>휴대전화</h3>
-                    <input type="tel" name="mobile" class="khm_text" maxlength="16" placeholder="010-1234-5678">
+                    <input type="tel" name="mobile" class="khm_text" maxlength="16" placeholder="ex) 01012345678">
                 </div>
 
 				<!-- 개인정보 동의 -->

@@ -64,7 +64,10 @@ public class AdminServiceImp implements AdminService {
 		String phone = req.getParameter("phone");
 		String ceo = req.getParameter("ceo");
 		String regnum = req.getParameter("regnum");
-		
+		String mobile = phone;
+		if(phone.length() == 11) {
+			mobile = phone.replaceFirst("(^[0-9]{3})([0-9]{4})([0-9]{4})$","$1-$2-$3");
+			}
 		market.setMarCategory(cate);
 		market.setMarProduct(name);
 		market.setMarPrice(price);
@@ -72,7 +75,7 @@ public class AdminServiceImp implements AdminService {
 		market.setMarOpendate(start);
 		market.setMarClosedate(finish);
 		market.setMarDetail(comment);
-		market.setMarPhone(phone);
+		market.setMarPhone(mobile);
 		market.setMarCeo(ceo);
 		market.setMarRegnum(regnum);
 		
@@ -114,7 +117,10 @@ public class AdminServiceImp implements AdminService {
 		String phone = req.getParameter("phone");
 		String ceo = req.getParameter("ceo");
 		String regnum = req.getParameter("regnum");
-
+		String mobile = phone;
+		if(phone.length() == 11) {
+			mobile = phone.replaceFirst("(^[0-9]{3})([0-9]{4})([0-9]{4})$","$1-$2-$3");
+			}
 		market.setMarCategory(cate);
 		market.setMarProduct(name);
 		market.setMarPrice(price);
@@ -122,7 +128,7 @@ public class AdminServiceImp implements AdminService {
 		market.setMarOpendate(start);
 		market.setMarClosedate(finish);
 		market.setMarDetail(comment);
-		market.setMarPhone(phone);
+		market.setMarPhone(mobile);
 		market.setMarCeo(ceo);
 		market.setMarRegnum(regnum);
 		market.setMarSeqno(seqno);

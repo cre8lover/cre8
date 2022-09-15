@@ -1,5 +1,6 @@
 package dao;
 
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -25,23 +26,27 @@ import dto.Pro;
 import dto.Ship;
 import dto.Thumbnail;
 import dto.Waybill;
+import oracle.jdbc.internal.OracleTypes;
+import oracle.sql.STRUCT;
+import oracle.sql.StructDescriptor;
 
 public class MemberDao {
 	private final Connection conn = OracleConn.getInstance().getConn();
 	PreparedStatement stmt;
+	CallableStatement cstmt;
 	public Map<String, String> longinProc(String id, String pw) {
 
 		Map<String, String> map = new HashMap<String, String>();
 		
-		String sql = "select m.mem_id, m.mem_pw, m.mem_name, a.auth_name "
-				+ " from mem m , mem_auth a "
-				+ " where a.mem_id = m.mem_id and m.mem_id = ?";
+		String sql = "call p_login(?,?)";
 		
 		try {
-			stmt = conn.prepareStatement(sql);
+			cstmt = conn.prepareCall(sql);
 		
-			stmt.setString(1, id);
-			ResultSet rs = stmt.executeQuery();
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
 			
 			if(rs.next()) {
 				
@@ -59,7 +64,7 @@ public class MemberDao {
 			} else {
 				map.put("login", "no_member");
 			}
-			stmt.close();
+			cstmt.close();
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -71,34 +76,24 @@ public class MemberDao {
 
 	public String reginsert(Mem mem) {
 	
-		String sql = "insert into mem (mem_id, mem_pw, mem_tel, mem_email, mem_birth, mem_name, mem_check)";
-				sql+= " values (?, ?, ?, ?, ?, ?, ?)";
+		String sql = "call p_reginsert(?,?,?,?,?,?,?)";
 		
 		String in = "성공";
 		
 		try {
-			stmt = conn.prepareStatement(sql);
+			cstmt = conn.prepareCall(sql);
 			
+			cstmt.setString(1, mem.getMemId());
+			cstmt.setString(2, mem.getMemPw());
+			cstmt.setString(3, mem.getMemTel());
+			cstmt.setString(4, mem.getMemEmail());
+			cstmt.setString(5, mem.getMemBirth());
+			cstmt.setString(6, mem.getMemName());
+			cstmt.setString(7, mem.getCheck());
 			
-			stmt.setString(1, mem.getMemId());
-			stmt.setString(2, mem.getMemPw());
-			stmt.setString(3, mem.getMemTel());
-			stmt.setString(4, mem.getMemEmail());
-			stmt.setString(5, mem.getMemBirth());
-			stmt.setString(6, mem.getMemName());
-			stmt.setString(7, mem.getCheck());
+			cstmt.executeQuery();
 			
-			stmt.executeQuery();
-			
-			sql = "insert into mem_auth (auth_seqno, mem_id) values (auth_seqno.nextval, ?)";
-			stmt = conn.prepareStatement(sql);
-			
-			stmt.setString(1, mem.getMemId());
-
-			stmt.executeQuery();
-			
-			
-			stmt.close();
+			cstmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}		
@@ -111,19 +106,15 @@ public class MemberDao {
 		Mem member = new Mem();
 //		Address add = new Address();
 		
-		String sql = "select m.mem_id, m.mem_email, m.mem_tel, m.mem_name,"
-				+ "	 ";
-				sql += " nvl(a.add_address, '주소를 입력하세요') as add_address";
-				sql += " from mem m, address a";
-				sql += " where m.mem_id = a.mem_id(+)"; 
-				sql += " and m.mem_id = ?";
+		String sql = "call p_mypage(?,?)";
 		try {
-			stmt = conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_SENSITIVE,
-											  	  ResultSet.CONCUR_UPDATABLE);
+			cstmt = conn.prepareCall(sql);
 			
-			stmt.setString(1, id);
-
-			ResultSet rs = stmt.executeQuery();
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
 			
 			Address addr = null;
 			
@@ -187,18 +178,14 @@ public class MemberDao {
 	public Mem info(String id) {
 		Mem member = new Mem();
 		
-		String sql = "select a.add_detail, m.mem_name, m.mem_email, m.mem_tel,"
-				+ " m.mem_snsinfo, m.mem_img, a.add_category,"
-				+ " a.add_phone,a.add_person,a.add_address"
-				+ " from mem m, address a"
-				+ " where m.mem_id = a.mem_id(+) and m.mem_id = ?";
+		String sql = "call p_info(?,?)";
 
 		try {
-			stmt = conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_SENSITIVE,
-				  	  ResultSet.CONCUR_UPDATABLE);
-		
-			stmt.setString(1, id);
-			ResultSet rs = stmt.executeQuery();
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
 			
 			if(rs.next()) {
 				member.setMemName(rs.getString("mem_name"));
@@ -217,7 +204,7 @@ public class MemberDao {
 				
 			}
 			
-			stmt.close();
+			cstmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -228,25 +215,15 @@ public class MemberDao {
 	public List<Pro> membuylist(String id) {
 		List<Pro> pro = new ArrayList<Pro>();
 		
-		String sql = "select rownum, a.*"
-				+ " from("
-				+ " select (select item_img from item i where i.item_seqno = p.item_seqno) item_img,"
-				+ " (select item_name from item i where i.item_seqno = p.item_seqno) item_name,"
-				+ " o.order_date order_date, o.amount order_amount, o.order_totalprice order_totalprice"
-				+ " from pro p,"
-				+ " ("
-				+ " select order_totalprice, o.mem_id, pro_seqno, order_date, m.amount"
-				+ " from orders o, mini_order m"
-				+ " where o.order_seqno = m.order_seqno"
-				+ " ) o"
-				+ " where p.pro_seqno = o.pro_seqno and o.mem_id = ?"
-				+ " order by order_date desc) a";
+		String sql = "call p_membuylist(?,?)";
 		
 		try {
-			stmt = conn.prepareStatement(sql);
+			cstmt = conn.prepareCall(sql);
 			
-			stmt.setString(1, id);
-			ResultSet rs = stmt.executeQuery();
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
 			
 			while(rs.next()) {
 				Pro p = new Pro();
@@ -265,7 +242,7 @@ public class MemberDao {
 				p.setItem(i);
 				pro.add(p);
 			}
-			stmt.close();
+			cstmt.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -281,25 +258,14 @@ public class MemberDao {
 		List<Cart> cart = new ArrayList<Cart>();
 		List<Cart> cart2 = new ArrayList<Cart>();
 		
-		String sql = "select rownum, a.*"
-				+ " from("
-				+ " select (select item_img from item i where i.item_seqno = p.item_seqno) item_img,"
-				+ " (select item_name from item i where i.item_seqno = p.item_seqno) item_name,"
-				+ " o.order_date order_date, o.amount order_amount, o.order_totalprice oreder_totalprice, p.auc_stat"
-				+ " from auc p,"
-				+ " ("
-				+ " select order_totalprice, o.mem_id, auc_seqno, order_date, m.amount"
-				+ " from orders o, mini_order m"
-				+ " where o.order_seqno = m.order_seqno"
-				+ " ) o"
-				+ " where p.auc_seqno = o.auc_seqno and o.mem_id = ?"
-				+ " order by order_date desc) a";
+		String sql = "call p_memauclist_end(?,?)";
 		
 		try {
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, id);
-			
-			ResultSet rs = stmt.executeQuery();
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
 			
 			while(rs.next()) {
 				Cart c = new Cart();
@@ -325,22 +291,13 @@ public class MemberDao {
 				cart.add(c);
 			}
 			
-			sql = "select rownum, a.*"
-				+ " from("
-				+ " select a.auc_seqno, aucnow_date, (select item_name from item i where i.item_seqno = a.item_seqno) auc_name,"
-				+ " (select item_img from item i where i.item_seqno = a.item_seqno) auc_img,"
-				+ " a.auc_stat, a.auc_closeprice"
-				+ " from (select auc_seqno, Max(aucnow_date) as aucnow_date"
-				+ " from auc_nowing"
-				+ " where mem_id = ?"
-				+ " group by auc_seqno) an, auc a"
-				+ " where a.auc_seqno = an.auc_seqno"
-				+ " order by aucnow_date desc) a";
+			sql = "call p_memauclist_ing(?,?)";
 			
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, id);
-			
-			rs = stmt.executeQuery();
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			rs = (ResultSet)cstmt.getObject(2);
 			
 			while(rs.next()) {
 				Cart cc = new Cart();
@@ -367,7 +324,7 @@ public class MemberDao {
 			auc.put("END", cart);
 			auc.put("ING", cart2);
 			
-		stmt.close();	
+		cstmt.close();	
 		} catch (SQLException e) {
 
 			e.printStackTrace();
@@ -381,28 +338,14 @@ public class MemberDao {
 	public List<Pro> buystat(String id) {
 		List<Pro> pro = new ArrayList<Pro>();
 		
-		String sql = "select rownum, (select item_img from item i where i.item_seqno = p.item_seqno) item_img,"
-				+ " (select item_name from item i where i.item_seqno = p.item_seqno) item_name,"
-				+ " p.pro_price, a.order_date, a.orderdetail_stat, a.pro_seqno"
-				+ " from pro p,"
-				+ " ("
-				+ "select o.order_seqno, o.order_date, od.orderdetail_stat, o.pro_seqno"
-				+ " from (select o.order_seqno, o.order_date, m.pro_seqno from orders o, mini_order m "
-				+ " where m.order_seqno = o.order_seqno and o.mem_id = ?) o,"
-				+ " ("
-				+ " select order_seqno, orderdetail_stat"
-				+ " from orderdetail"
-				+ " where orderdetail_stat not in 'END'"
-				+ " ) od"
-				+ " where o.order_seqno = od.order_seqno"
-				+ " order by o.order_date desc"
-				+ " ) a"
-				+ " where p.pro_seqno = a.pro_seqno";
+		String sql = "call buystat(?,?)";
 
 		try {
-			PreparedStatement stmt = conn.prepareStatement(sql);
-			stmt.setString(1, id);
-			ResultSet rs = stmt.executeQuery();
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
 			
 			while(rs.next()) {
 				Pro p = new Pro();
@@ -428,7 +371,7 @@ public class MemberDao {
 			}
 			
 			
-			stmt.close();	
+			cstmt.close();	
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -442,24 +385,15 @@ public class MemberDao {
 		List<Ship> detail = new ArrayList<Ship>();
 		List<Ship> order = new ArrayList<Ship>();
 		
-		String sql = "SELECT *"
-				+ " FROM("
-				+ "    select o.order_seqno, d.orderdetail_way, o.order_date"
-				+ "    from orders o, orderdetail d"
-				+ "    where o.order_seqno=d.order_seqno"
-				+ "    and o.mem_id = ?"
-				+ "    order by o.order_date desc) a,"
-				+ "    (select s.order_seqno, s.ship_seqno, w.waybill_name, w.waybill_number, s.add_address"
-				+ "    from waybill w,"
-				+ "                (select s.order_seqno, s.ship_seqno, a.add_address, a.add_num"
-				+ "                 from ship s, address a"
-				+ "                 where s.add_seqno=a.add_seqno) s"
-				+ "    where w.ship_seqno=s.ship_seqno) s"
-				+ " where a.order_seqno = s.order_seqno";
+
+		String sql = "call ordercheck_order(?,?)";
+
 		try {
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, id);
-			ResultSet rs = stmt.executeQuery();
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
 			
 			while(rs.next()) {
 				Ship s = new Ship();
@@ -482,15 +416,14 @@ public class MemberDao {
 				detail.add(s);
 			}
 			
-			sql = "select rownum, o.order_seqno, o.order_date, o.order_totalprice, s.ship_status"
-				+ " from orders o, ship s"
-				+ " where o.order_seqno = s.order_seqno"
-				+ " and o.mem_id = ?"
-				+ " order by o.order_seqno desc";
 
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, id);
-			rs = stmt.executeQuery();
+			sql = "call ordercheck_detail(?,?)";
+
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			rs = (ResultSet)cstmt.getObject(2);
 
 			while(rs.next()) {
 				Ship s = new Ship();
@@ -508,7 +441,7 @@ public class MemberDao {
 			ship.put("order", order);
 			ship.put("detail", detail);
 			
-			stmt.close();	
+			cstmt.close();	
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -518,84 +451,137 @@ public class MemberDao {
 
 	}
 
+//	public void infoinsert(Mem mem) {
+//		Address add = mem.getAddressSet();
+//		Att att = mem.getAtt();
+//		String sql = "call p_infoupdate(?,?,?,?,?,?,?,?,?)";
+//		
+//		try {
+//			cstmt = conn.prepareCall(sql);
+//			
+//			
+//			if( mem.getMemSnsinfo() != null) { 
+//				cstmt.setString(1, mem.getMemSnsinfo());
+//			} else { 
+//				cstmt.setString(1, ""); 
+//			}
+//			
+//			cstmt.setString(2, mem.getMemEmail());
+//			cstmt.setString(3, mem.getMemTel());
+//			cstmt.setString(4, mem.getMemId());
+//			cstmt.setString(5, add.getAddCategory());
+//			cstmt.setString(6, add.getAddPerson());
+//			cstmt.setString(7, add.getAddPhone());
+//			cstmt.setString(8, add.getAddAddress());
+//			cstmt.setString(9, add.getAddetail());
+//			
+//			cstmt.executeQuery();
+//			
+//			//첨부파일
+//			if(att != null) {
+//				
+//				sql = "INSERT INTO att(att_seqno, att_name, att_savename, att_size, att_type, att_path, mem_id)"
+//						+ " VALUES (att_seqno.NEXTVAL, ?,?,?,?,?,?)";
+//				
+//				PreparedStatement stmt;
+//				String attach_no = null;
+//				stmt = conn.prepareStatement(sql);
+//				stmt.setString(1, att.getAttName());
+//				stmt.setString(2, att.getSavefilename());
+//				stmt.setString(3, att.getAttSize());
+//				stmt.setString(4, att.getAttType());
+//				stmt.setString(5, att.getAttPath());
+//				stmt.setString(6, mem.getMemId());
+//				stmt.executeQuery();
+//				
+//				sql = "SELECT max(att_seqno) FROM att";
+//				stmt = conn.prepareStatement(sql);
+//				ResultSet rs = stmt.executeQuery();
+//				rs.next();
+//				attach_no = rs.getString(1);
+//				
+//				
+//				String fileType = att.getAttType();
+//				
+//				//썸네일
+//				if(fileType.substring(0, fileType.indexOf("/")).equals("image")) {
+//					sql = "INSERT INTO att_thumb (thumb_seqno, thumb_filename, thumb_filesize, thumb_filepath, att_seqno) "
+//							+ " VALUES (thumb_seqno.nextval, ?, ?, ?, ?)";
+//					Thumbnail thumb = att.getAttThumb();
+//					stmt = conn.prepareStatement(sql);
+//					stmt.setString(1, thumb.getFileName());
+//					stmt.setString(2, thumb.getFileSize());
+//					stmt.setString(3, thumb.getFilePath());
+//					stmt.setString(4, attach_no);
+//					stmt.executeQuery();
+//				}
+//			}
+//			
+//			cstmt.close();	
+//			
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//	}
+	
 	public void infoinsert(Mem mem) {
 		Address add = mem.getAddressSet();
 		Att att = mem.getAtt();
-		String sql = "update mem set mem_email = ?, mem_tel = ?,";
-				sql += " mem_snsinfo = ? where mem_id = ?";
+		String sql = "call p_infoupdate(?,?,?,?,?,?,?,?,?)";
 		
 		try {
-			stmt = conn.prepareStatement(sql);
+			cstmt = conn.prepareCall(sql);
 		
-			stmt.setString(1, mem.getMemEmail());
-			stmt.setString(2, mem.getMemTel());
 			
 			if( mem.getMemSnsinfo() != null) { 
-				stmt.setString(3, mem.getMemSnsinfo());
+				cstmt.setString(1, mem.getMemSnsinfo());
 			} else { 
-				stmt.setString(3, ""); 
+				cstmt.setString(1, ""); 
 			}
 			
-			stmt.setString(4, mem.getMemId());
-		
-			stmt.executeQuery();
-
-			sql = "update address set add_category = ?, add_phone = ?,"
-					+ " add_person = ?, add_address = ?, ADD_DETAIL = ?"
-					+ " where mem_id = ?";
+			cstmt.setString(2, mem.getMemEmail());
+			cstmt.setString(3, mem.getMemTel());
+			cstmt.setString(4, mem.getMemId());
+			cstmt.setString(5, add.getAddCategory());
+			cstmt.setString(6, add.getAddPerson());
+			cstmt.setString(7, add.getAddPhone());
+			cstmt.setString(8, add.getAddAddress());
+			cstmt.setString(9, add.getAddetail());
 			
-			stmt = conn.prepareStatement(sql);
-			
-			stmt.setString(1, add.getAddCategory());
-			stmt.setString(2, add.getAddPhone());
-			stmt.setString(3, add.getAddPerson());
-			stmt.setString(4, add.getAddAddress());
-			stmt.setString(5, add.getAddetail());
-			stmt.setString(6, mem.getMemId());
-			
-			stmt.executeQuery();
+			cstmt.executeQuery();
 
 		 //첨부파일
 			if(att != null) {
 				
-				sql = "INSERT INTO att(att_seqno, att_name, att_savename, att_size, att_type, att_path, mem_id)"
-						+ " VALUES (att_seqno.NEXTVAL, ?,?,?,?,?,?)";
+				sql = "call p_attinset(?,?)";
 			
-			PreparedStatement stmt;
-			String attach_no = null;
-				stmt = conn.prepareStatement(sql);
-				stmt.setString(1, att.getAttName());
-				stmt.setString(2, att.getSavefilename());
-				stmt.setString(3, att.getAttSize());
-				stmt.setString(4, att.getAttType());
-				stmt.setString(5, att.getAttPath());
-				stmt.setString(6, mem.getMemId());
-				stmt.executeQuery();
+				StructDescriptor st_thumb = StructDescriptor.createDescriptor("OBJ_THUMB",conn);
+				Object[] thumb_obj = {mem.getAtt().getAttThumb().getFileName(),
+									  mem.getAtt().getAttThumb().getFileSize(),
+									  mem.getAtt().getAttThumb().getFilePath()
+									 };
+				STRUCT thumb_rec = new STRUCT(st_thumb, conn, thumb_obj);
 				
-				sql = "SELECT max(att_seqno) FROM att";
-				stmt = conn.prepareStatement(sql);
-				ResultSet rs = stmt.executeQuery();
-				rs.next();
-				attach_no = rs.getString(1);
+				StructDescriptor st_att = StructDescriptor.createDescriptor("OBJ_ATT",conn);
+				Object[] att_obj = {mem.getAtt().getAttName(),
+									mem.getAtt().getSavefilename(),
+									mem.getAtt().getAttSize(),
+									mem.getAtt().getAttType(),
+									mem.getAtt().getAttPath(),
+									thumb_rec
+								   };
+				STRUCT att_rec = new STRUCT(st_att, conn, att_obj);
 				
+				cstmt = conn.prepareCall(sql);
+				cstmt.setObject(1, att_rec);
+				cstmt.setString(2, mem.getMemId());
 				
-				String fileType = att.getAttType();
-				
-				//썸네일
-				if(fileType.substring(0, fileType.indexOf("/")).equals("image")) {
-					sql = "INSERT INTO att_thumb (thumb_seqno, thumb_filename, thumb_filesize, thumb_filepath, att_seqno) "
-							+ " VALUES (thumb_seqno.nextval, ?, ?, ?, ?)";
-					Thumbnail thumb = att.getAttThumb();
-						stmt = conn.prepareStatement(sql);
-						stmt.setString(1, thumb.getFileName());
-						stmt.setString(2, thumb.getFileSize());
-						stmt.setString(3, thumb.getFilePath());
-						stmt.setString(4, attach_no);
-						stmt.executeQuery();
-				}
+				cstmt.executeQuery();
 			}
 			
-			stmt.close();	
+			cstmt.close();	
 	
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

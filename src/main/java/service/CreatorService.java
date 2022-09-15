@@ -36,10 +36,6 @@ public interface CreatorService {
 	String aucadd(HttpServletRequest req);
 
 	   Auc aucdetail(String seqno);
-
-	   void aucmodify(HttpServletRequest req);
-	
-	public String productmodify(HttpServletRequest req);
 	
 	public Pro productdetail(String seqno);
 

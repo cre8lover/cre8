@@ -3,7 +3,6 @@ package service;
 import java.io.File;
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Map;
 
 import org.apache.commons.fileupload.FileItem;
 
@@ -22,4 +21,6 @@ public interface FileService {
 	public Pro getFormParameter(FileItem item, Pro pro, Item proitem) throws ParseException;
 	
 	public Auc getFormParameter2(FileItem item, Auc pro, Item proitem) throws ParseException;
+
+	int delete(String no, String savefilename, String filepath, String thumb_filename);
 }
