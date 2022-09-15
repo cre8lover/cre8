@@ -14,6 +14,7 @@ import java.util.Set;
 
 import common.OracleConn;
 import dto.AdminKeyWord;
+import dto.Att;
 import dto.Auc;
 import dto.Cat;
 import dto.Item;
@@ -297,7 +298,8 @@ public class AdminDao {
 
 	public void marketReg(Marketing market) {
 		String sql = "call p_marketReg(?,?,?,?,?,?,?,?,?,?)";
-		
+		Att att = market.getAttSet();
+
 		try {
 			cstmt = conn.prepareCall(sql);
 			
@@ -314,7 +316,7 @@ public class AdminDao {
 			
 			cstmt.executeQuery();
 			
-			if(market.getAttSet().getAttName() != null) {
+			if(att != null) {
 				
 				sql = "call p_attinset(?,?)";
 			
