@@ -17,6 +17,7 @@ import dto.Cat;
 import dto.Marketing;
 import dto.Mem;
 import dto.MemAuth;
+import dto.Thumbnail;
 import oracle.jdbc.OracleType;
 import oracle.jdbc.OracleTypes;
 import oracle.sql.STRUCT;
@@ -412,7 +413,45 @@ public class AdminDao {
 				
 			}
 			
-			
+			 sql = "select * from att where mar_seqno = ?";
+			 stmt = conn.prepareStatement(sql);
+			 stmt.setString(1, seqno);
+
+			 rs = stmt.executeQuery();
+			 
+			 Att att = new Att();
+			 if(rs.next()) {
+				 
+				 att.setAttSeqno(rs.getInt("att_seqno"));
+				 att.setAttName(rs.getString("att_name"));
+				 att.savefilename(rs.getString("att_savename"));
+				 att.setAttSize(rs.getString("att_size"));
+				 att.setAttType(rs.getString("att_type"));
+				 att.setAttPath(rs.getString("att_path"));
+
+				 if(rs.getString("att_type").contains("image")) {
+				 
+					 sql = "select * from att_thumb where att_seqno = ?";
+					 stmt = conn.prepareStatement(sql);
+					 stmt.setString(1, rs.getString("att_seqno"));
+					 ResultSet rs2 = stmt.executeQuery();
+				 
+					 while(rs2.next()) {
+						 
+						 Thumbnail th = new Thumbnail();
+						 th.setThumbSeqNo(rs2.getString("thumb_seqno"));
+						 th.setFileName(rs2.getString("thumb_filename"));
+						 th.setFileSize(rs2.getString("thumb_filesize"));
+						 th.setFilePath(rs2.getString("thumb_filepath"));
+						 att.setAttThumb(th);
+						 
+					 }
+					 
+				 }
+				 
+			 }
+		m.setAttSet(att);
+		stmt.close();
 		cstmt.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

@@ -123,11 +123,22 @@
           <div class='form-group'>
             <label class='control-label col-md-2 col-md-offset-2' for='id_comments'>사진첨부</label>
             <div class='col-md-6'>
-              	<div class="filebox">
-				    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
-				    <label for="file">파일찾기</label> 
-				    <input type="file" id="file">
-				</div>
+             		<div class="filebox">
+						<c:if test="${modify.att.attName == null }">
+						    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
+						    <label for="file"></label> 
+						    <input type="file" name="filename" id="file">
+						</c:if>    
+					</div>
+					
+					<div id = "fileSector">
+		              	<c:if test="${modify.att.attName != null }">
+						    <input class="upload-name" value="${modify.att.attName}" placeholder="첨부파일">
+						    <img src="/upload/thumbnail/${modify.att.attThumb.fileName}">
+							<input type="button"value="삭제" onclick="fileDel('${modify.att.attSeqno}','${modify.att.getSavefilename()}','${modify.att.attPath}',
+							'${modify.att.attThumb.fileName }')">
+						</c:if>
+					</div>
             </div>
           <div class='form-group'>
             <label class='control-label col-md-2 col-md-offset-2' for='id_comments'>제품 상세</label>
@@ -232,4 +243,39 @@ label.control-label {
       });
 
 
+</script>
+<script>
+function fileDel(attSeqNo,saveFileName,filePath,thumb_file){
+	
+	var ans = confirm("정말로 삭제하시겠습니까?");
+	
+	if (ans){
+		var x = new XMLHttpRequest();
+		x.onreadystatechange = function(){
+			if(x.readyState === 4 && x.status === 200){
+				
+				var tag = document.getElementById("fileSector");
+				
+				
+				if (x.responseText.trim() === "0"){
+					alert("파일 삭제에 실패 하였습니다.");
+				} else {
+					alert("파일 삭제에 완료 하였습니다.");
+					tag.innerHTML = "<input class='upload-name' value='첨부파일' placeholder='첨부파일'><label for='file'>파일찾기</label><input type='file' id='file' name='filename'>";
+				}
+				
+			}else{
+			console.log('에러코드는:' + x.status);
+				
+			}
+		
+		};
+	}
+	
+	//방식,매핑정보,동기방식
+	x.open("POST", "<%= request.getContextPath() %>/cre/fileDel", true);
+	x.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	x.send("attseqno="+attSeqNo+"&savefilename="+saveFileName+"&filepath="+filePath+"&thumb_filename="+thumb_file);
+
+}
 </script>
