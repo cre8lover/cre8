@@ -7,21 +7,16 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import common.OracleConn;
 import dto.AdminKeyWord;
 import dto.Att;
-import dto.Auc;
 import dto.Cat;
-import dto.Item;
 import dto.Marketing;
 import dto.Mem;
 import dto.MemAuth;
-import dto.Pro;
 import oracle.jdbc.OracleType;
 import oracle.jdbc.OracleTypes;
 import oracle.sql.STRUCT;
@@ -324,7 +319,6 @@ public class AdminDao {
 			
 			if(att != null) {
 				sql = "call p_attinset(?,?)";
-			
 				StructDescriptor st_thumb = StructDescriptor.createDescriptor("OBJ_THUMB",conn);
 				Object[] thumb_obj = {market.getAttSet().getAttThumb().getFileName(),
 									  market.getAttSet().getAttThumb().getFileSize(),
