@@ -169,10 +169,10 @@ public class Creatercontroller extends HttpServlet {
 				String savefilename = req.getParameter("savefilename");
 				String filepath = req.getParameter("filepath");
 				String thumb_filename = req.getParameter("thumb_filename");
-				System.out.println("시퀀스는?"+attseqno);
+//				System.out.println("시퀀스는?"+attseqno);
 				if(attseqno != "") {
 				rs = fileservice.delete(attseqno,savefilename,filepath,thumb_filename);
-				System.out.println("파일삭제결과"+rs);
+//				System.out.println("파일삭제결과"+rs);
 				}else {
 					rs = 1;
 				}

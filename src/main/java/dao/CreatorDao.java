@@ -456,70 +456,96 @@ public class CreatorDao {
 	      return cre;
 	   }
 
-
-	public String totalmoney(String id) {
+	
+public String totalmoney(String id) {
 		
-		String total = "";
+		String total = "0";
 		
-		String sql = "select sum(total) as total"
-				+ " from"
-				+ " ("
-				+ " select sum(o.amount * p.pro_price) total"
-				+ " from pro p,"
-				+ "    ("
-				+ "    select pro_seqno, mo.amount"
-				+ "    from orders o,"
-				+ "        ("
-				+ "        select pro_seqno,order_seqno,amount"
-				+ "        from mini_order"
-				+ "        ) mo"
-				+ "    where o.order_seqno = mo.order_seqno"
-				+ "    and o.order_seqno = (select od.order_seqno from orderdetail od where o.order_seqno = od.order_seqno and od.orderdetail_stat = 'END')"
-				+ "    ) o"
-				+ " where p.pro_seqno = o.pro_seqno"
-				+ " and mem_id = ?"
-				+ " union all"
-				+ " select sum(auc_closeprice) total"
-				+ " from "
-				+ "    ("
-				+ "    select auc_closeprice,(select mem_id from item i where i.item_seqno = a.item_seqno) as mem_id"
-				+ "    from auc a,"
-				+ "        ("
-				+ "        select auc_seqno"
-				+ "        from orders o,"
-				+ "            ("
-				+ "            select auc_seqno,order_seqno"
-				+ "            from mini_order"
-				+ "            ) mo"
-				+ "        where o.order_seqno = mo.order_seqno"
-				+ "        and o.order_seqno = (select od.order_seqno from orderdetail od where o.order_seqno = od.order_seqno and od.orderdetail_stat = 'END')"
-				+ "        ) o"
-				+ "    where a.auc_seqno = o.auc_seqno"
-				+ "    )"
-				+ " where mem_id = ?"
-				+ " )";
+		String sql = "call p_totalm(?,?)";
 		
 		try {
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, id);
-			stmt.setString(2, id);
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.INTEGER);
+			cstmt.executeQuery();
 			
-			ResultSet rs = stmt.executeQuery();
+			total = Integer.toString(cstmt.getInt(2));
 			
-			if (rs.next()) {
-				
-				total = rs.getString(1);
+			cstmt.close();
 			
-			}
-			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
+
 		return total;
 	}
+	
+	
+	
+
+//	public String totalmoney(String id) {
+//		
+//		String total = "";
+//		
+//		String sql = "select sum(total) as total"
+//				+ " from"
+//				+ " ("
+//				+ " select sum(o.amount * p.pro_price) total"
+//				+ " from pro p,"
+//				+ "    ("
+//				+ "    select pro_seqno, mo.amount"
+//				+ "    from orders o,"
+//				+ "        ("
+//				+ "        select pro_seqno,order_seqno,amount"
+//				+ "        from mini_order"
+//				+ "        ) mo"
+//				+ "    where o.order_seqno = mo.order_seqno"
+//				+ "    and o.order_seqno = (select od.order_seqno from orderdetail od where o.order_seqno = od.order_seqno and od.orderdetail_stat = 'END')"
+//				+ "    ) o"
+//				+ " where p.pro_seqno = o.pro_seqno"
+//				+ " and mem_id = ?"
+//				+ " union all"
+//				+ " select sum(auc_closeprice) total"
+//				+ " from "
+//				+ "    ("
+//				+ "    select auc_closeprice,(select mem_id from item i where i.item_seqno = a.item_seqno) as mem_id"
+//				+ "    from auc a,"
+//				+ "        ("
+//				+ "        select auc_seqno"
+//				+ "        from orders o,"
+//				+ "            ("
+//				+ "            select auc_seqno,order_seqno"
+//				+ "            from mini_order"
+//				+ "            ) mo"
+//				+ "        where o.order_seqno = mo.order_seqno"
+//				+ "        and o.order_seqno = (select od.order_seqno from orderdetail od where o.order_seqno = od.order_seqno and od.orderdetail_stat = 'END')"
+//				+ "        ) o"
+//				+ "    where a.auc_seqno = o.auc_seqno"
+//				+ "    )"
+//				+ " where mem_id = ?"
+//				+ " )";
+//		
+//		try {
+//			stmt = conn.prepareStatement(sql);
+//			stmt.setString(1, id);
+//			stmt.setString(2, id);
+//			
+//			ResultSet rs = stmt.executeQuery();
+//			
+//			if (rs.next()) {
+//				
+//				total = rs.getString(1);
+//			
+//			}
+//			stmt.close();
+//		} catch (SQLException e) {
+//			e.printStackTrace();
+//		}
+//		
+//		
+//		
+//		return total;
+//	}
 
 
 //	public Pro productdetail(String seqno) {
@@ -895,14 +921,13 @@ public class CreatorDao {
 				STRUCT att_rec =null;
 				Object[] thumb_obj = null;
 				Object[] att_obj = null;
-				System.out.println(auc.getAtt_file().getAttName());
-				if(auc.getAtt_file() != null) {
+				if(auc.getAtt_file().getAttName() != null) {
 					
 		    	  thumb_obj = new Object[]{auc.getAtt_file().getAttThumb().getFileName(),
 						    			   auc.getAtt_file().getAttThumb().getFileSize(),
 						    			   auc.getAtt_file().getAttThumb().getFilePath()
 					    	  			   };
-		    	  
+		    	  thumb_rec = new STRUCT(st_thumb,conn,thumb_obj);
 		    	  att_obj = new Object[]{auc.getAtt_file().getAttName(),
 						    			  auc.getAtt_file().getSavefilename(),
 						    			  auc.getAtt_file().getAttSize(),
@@ -913,7 +938,6 @@ public class CreatorDao {
 			    	  
 		    	  
 				}
-					thumb_rec = new STRUCT(st_thumb,conn,thumb_obj);
 					att_rec = new STRUCT(st_att,conn,att_obj);
 				
 

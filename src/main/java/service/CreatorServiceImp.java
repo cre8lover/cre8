@@ -79,6 +79,7 @@ public class CreatorServiceImp implements CreatorService{
 	
 	@Override
     public String aucadd(HttpServletRequest req) {
+		
 		DiskFileItemFactory factory = new DiskFileItemFactory(); 
 		factory.setDefaultCharset(CHARSET);//상수로 선언하는게 좋다.
 		//factory form의 데이터를 가져와서 저장 utf8로 저장하는게 좋음
