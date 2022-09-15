@@ -205,8 +205,6 @@ public class MemberDao {
 				
 			}
 			
-<<<<<<< HEAD
-=======
 			sql = "select * from att where mem_id = ?";
 			 stmt = conn.prepareStatement(sql);
 			 stmt.setString(1, id);
@@ -247,7 +245,6 @@ public class MemberDao {
 			 
 			 member.setAtt(att);
 			stmt.close();
->>>>>>> branch 'master' of https://github.com/cre8lover/cre8.git
 			cstmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();

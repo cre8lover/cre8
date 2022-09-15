@@ -14,6 +14,7 @@ import java.util.Set;
 
 import common.OracleConn;
 import dto.AdminKeyWord;
+import dto.Att;
 import dto.Auc;
 import dto.Cat;
 import dto.Item;
@@ -23,6 +24,8 @@ import dto.MemAuth;
 import dto.Pro;
 import oracle.jdbc.OracleType;
 import oracle.jdbc.OracleTypes;
+import oracle.sql.STRUCT;
+import oracle.sql.StructDescriptor;
 
 public class AdminDao {
 	private final Connection conn = OracleConn.getInstance().getConn();
@@ -295,7 +298,8 @@ public class AdminDao {
 
 	public void marketReg(Marketing market) {
 		String sql = "call p_marketReg(?,?,?,?,?,?,?,?,?,?)";
-		
+		Att att = market.getAttSet();
+
 		try {
 			cstmt = conn.prepareCall(sql);
 			
@@ -311,6 +315,34 @@ public class AdminDao {
 			cstmt.setString(10, market.getMarRegnum());
 			
 			cstmt.executeQuery();
+			
+			if(att != null) {
+				
+				sql = "call p_attinset(?,?)";
+			
+				StructDescriptor st_thumb = StructDescriptor.createDescriptor("OBJ_THUMB",conn);
+				Object[] thumb_obj = {market.getAttSet().getAttThumb().getFileName(),
+									  market.getAttSet().getAttThumb().getFileSize(),
+									  market.getAttSet().getAttThumb().getFilePath()
+									 };
+				STRUCT thumb_rec = new STRUCT(st_thumb, conn, thumb_obj);
+				
+				StructDescriptor st_att = StructDescriptor.createDescriptor("OBJ_ATT",conn);
+				Object[] att_obj = {market.getAttSet().getAttName(),
+									market.getAttSet().getSavefilename(),
+									market.getAttSet().getAttSize(),
+									market.getAttSet().getAttType(),
+									market.getAttSet().getAttPath(),
+									thumb_rec
+								   };
+				STRUCT att_rec = new STRUCT(st_att, conn, att_obj);
+				
+				cstmt = conn.prepareCall(sql);
+				cstmt.setObject(1, att_rec);
+				cstmt.setString(2, market.getAttSet().getMem().getMemId());
+				
+				cstmt.executeQuery();
+			}
 			
 			cstmt.close();
 		} catch (SQLException e) {
