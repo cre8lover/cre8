@@ -344,8 +344,8 @@ public class CreatorDao {
 				
 				i.setItemImg(rs2.getString("thumb_filename"));
 				
+				p.setItem(i);
 			}
-			p.setItem(i);
 			prolist.add(p);
 		}
 		stmt.close();
