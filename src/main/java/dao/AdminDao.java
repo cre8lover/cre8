@@ -294,10 +294,11 @@ public class AdminDao {
 
 	public void marketReg(Marketing market) {
 		String sql = null;
+		System.out.println(market.getMarSeqno());
 		if(market.getMarSeqno() != null) {			
-			sql = "call p_marketupdate(?,?,?,?,?,?,?,?,?,?)";
+			sql = "call p_marketModiy(?,?,?,?,?,?,?,?,?,?,?)";
 		} else {
-			sql = "call p_marketReg(?,?,?,?,?,?,?,?,?,?,?)";
+			sql = "call p_marketReg(?,?,?,?,?,?,?,?,?,?)";
 		}
 		Att att = market.getAttSet();
 		
@@ -329,7 +330,7 @@ public class AdminDao {
 			if(att != null) {
 				
 				if(market.getMarSeqno() != null) {
-					sql = "call p_attupdate(?,?)";
+					sql = "call p_attupdate(?,?,?)";
 				} else {
 					sql = "call p_attinset(?,?)";
 				}
