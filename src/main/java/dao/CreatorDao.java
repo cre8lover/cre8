@@ -417,11 +417,10 @@ public class CreatorDao {
 				cstmt.setString(5, cre.getCreRegnum());
 				cstmt.setString(6, cre.getCreSalenum());
 				cstmt.setString(7, cre.getCrePot());
-				cstmt.setString(8, cre.getMem().getMemPw());
-				cstmt.setString(9, cre.getMem().getMemTel());
-				cstmt.setString(10, cre.getMem().getMemEmail());
+				cstmt.setString(8, mem.getMemPw());
+				cstmt.setString(9, mem.getMemTel());
 					
-				String email = cre.getMem().getMemEmail();
+				String email = mem.getMemEmail();
 					if(email != null) {
 			               String first = email.substring(0, email.indexOf("@"));
 			               String second = email.substring(email.indexOf("@")+1);
@@ -431,7 +430,8 @@ public class CreatorDao {
 			            }else {
 			               mem.setMemEmail(email);
 			            }
-				cstmt.setString(11, cre.getMem().getMemSnsinfo());
+				cstmt.setString(10, email);
+				cstmt.setString(11, mem.getMemSnsinfo());
 				cstmt.executeQuery();
 				
 	            cre.setMem(mem);
