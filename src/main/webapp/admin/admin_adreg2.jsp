@@ -23,7 +23,7 @@
       </div>
 	  <c:set value="${market}" var="modify" />
       <div class='panel-body'>
-        <form method="post" class='form-horizontal' id="insert" role='form' action="<%= request.getContextPath() %>/master/adupdate">
+        <form method="post" class='form-horizontal' enctype="multipart/form-data" id="insert" role='form' action="<%= request.getContextPath() %>/master/adupdate">
           <div class='form-group'>
             <label class='control-label col-md-2 col-md-offset-2' for='id_accomodation'>카테고리</label>
             <div class='col-md-2'>
@@ -124,7 +124,7 @@
             <label class='control-label col-md-2 col-md-offset-2' for='id_comments'>사진첨부</label>
             <div class='col-md-6'>
              		<div class="filebox">
-						<c:if test="${modify.att.attName == null }">
+						<c:if test="${modify.attSet.attName == null }">
 						    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
 						    <label for="file"></label> 
 						    <input type="file" name="filename" id="file">
@@ -132,11 +132,11 @@
 					</div>
 					
 					<div id = "fileSector">
-		              	<c:if test="${modify.att.attName != null }">
-						    <input class="upload-name" value="${modify.att.attName}" placeholder="첨부파일">
-						    <img src="/upload/thumbnail/${modify.att.attThumb.fileName}">
-							<input type="button"value="삭제" onclick="fileDel('${modify.att.attSeqno}','${modify.att.getSavefilename()}','${modify.att.attPath}',
-							'${modify.att.attThumb.fileName }')">
+		              	<c:if test="${modify.attSet.attName != null }">
+						    <input class="upload-name" value="${modify.attSet.attName}" placeholder="첨부파일">
+						    <img src="/upload/thumbnail/${modify.attSet.attThumb.fileName}">
+							<input type="button"value="삭제" onclick="fileDel('${modify.attSet.attSeqno}','${modify.attSet.getSavefilename()}','${modify.attSet.attPath}',
+							'${modify.attSet.attThumb.fileName }')">
 						</c:if>
 					</div>
             </div>
