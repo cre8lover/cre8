@@ -225,35 +225,22 @@ public class CreatorDao {
 	         if(rs.next()) {
 	            if(MEM_PW.equals(rs.getString("mem_pw"))){
 	               
-	               sql = "update mem set mem_tel = ?, mem_email = ?, "
-	                     + " MEM_SNSINFO = ? where mem_id = ?";
+	            	sql = "call p_cremodifyreg (?,?,?,?,?,?,?,?,?,?,?,?)";
 	               
-	               stmt = conn.prepareStatement(sql);
-	               stmt.setString(1, MEM_TEL);
-	               stmt.setString(2, MEM_EMAIL);
-	               stmt.setString(3, MEM_SNSINFO);
-	               stmt.setString(4, MEM_ID);
-	               stmt.executeQuery();
+	               cstmt = conn.prepareCall(sql);
+	               stmt.setString(1, MEM_ID);
+	               stmt.setString(2, MEM_PW);
+	               stmt.setString(3, MEM_TEL);
+	               stmt.setString(4, MEM_EMAIL);
+	               stmt.setString(5, MEM_SNSINFO);
 	               
-	               
-	               sql = "update creator set CRE_COMPANY =?,"
-	                     + " CRE_PHONE = ?,"
-	                     + " CRE_NAME = ?,"
-	                     + " CRE_ADDRESS = ?,"
-	                     + " CRE_REGNUM = ?,"
-	                     + " CRE_SALENUM = ?,"
-	                     + " CRE_POT = ? "
-	                     + " where mem_id = ?";
-	               
-	               stmt = conn.prepareStatement(sql);
-	               stmt.setString(1, CRE_COMPANY);
-	               stmt.setString(2, CRE_PHONE);
-	               stmt.setString(3, CRE_NAME);
-	               stmt.setString(4, CRE_ADDRESS);
-	               stmt.setString(5, CRE_REGNUM);
-	               stmt.setString(6, CRE_SALENUM);
-	               stmt.setString(7, CRE_POT);
-	               stmt.setString(8, MEM_ID);
+	               stmt.setString(6, CRE_COMPANY);
+	               stmt.setString(7, CRE_PHONE);
+	               stmt.setString(8, CRE_NAME);
+	               stmt.setString(9, CRE_ADDRESS);
+	               stmt.setString(10, CRE_REGNUM);
+	               stmt.setString(11, CRE_SALENUM);
+	               stmt.setString(12, CRE_POT);
 	               stmt.executeQuery();
 	               
 	               cremodi.put("msg", "ok");
@@ -320,11 +307,12 @@ public class CreatorDao {
 		cstmt.executeQuery();
 		ResultSet rs = (ResultSet)cstmt.getObject(3);
 		
-		Pro p = new Pro();
-		Item i = new Item();
 
 		while(rs.next()) {
-			int itemseqno = rs.getInt("item_seqno");
+			Pro p = new Pro();
+			Item i = new Item();
+
+			String itemseqno = rs.getString("item_seqno");
 			i.setItemImg(rs.getString("item_img"));
 			i.setItemDetail(rs.getString("item_detail"));
 			p.setProAmount(rs.getInt("pro_amount"));
@@ -338,7 +326,7 @@ public class CreatorDao {
 					+ " where att_seqno = (select att_seqno from att where item_seqno = ?)";
 			
 			stmt = conn.prepareStatement(sql);
-			stmt.setInt(1, itemseqno);
+			stmt.setString(1, itemseqno);
 			ResultSet rs2 = stmt.executeQuery();
 			if(rs2.next()) {
 				
