@@ -293,7 +293,12 @@ public class AdminDao {
 	}
 
 	public void marketReg(Marketing market) {
-		String sql = "call p_marketReg(?,?,?,?,?,?,?,?,?,?)";
+		String sql = null;
+		if(market.getMarSeqno() != null) {			
+			sql = "call p_marketupdate(?,?,?,?,?,?,?,?,?,?)";
+		} else {
+			sql = "call p_marketReg(?,?,?,?,?,?,?,?,?,?,?)";
+		}
 		Att att = market.getAttSet();
 		
 		String mobile = null;
@@ -315,11 +320,20 @@ public class AdminDao {
 			cstmt.setString(8, market.getMarCeo());
 			cstmt.setString(9, mobile);
 			cstmt.setString(10, market.getMarRegnum());
+			if(market.getMarSeqno() != null) {
+				cstmt.setInt(11, market.getMarSeqno());
+			}
 			
 			cstmt.executeQuery();
 			
 			if(att != null) {
-				sql = "call p_attinset(?,?)";
+				
+				if(market.getMarSeqno() != null) {
+					sql = "call p_attupdate(?,?)";
+				} else {
+					sql = "call p_attinset(?,?)";
+				}
+				
 				StructDescriptor st_thumb = StructDescriptor.createDescriptor("OBJ_THUMB",conn);
 				Object[] thumb_obj = {market.getAttSet().getAttThumb().getFileName(),
 									  market.getAttSet().getAttThumb().getFileSize(),
@@ -339,8 +353,12 @@ public class AdminDao {
 				
 				cstmt = conn.prepareCall(sql);
 				cstmt.setObject(1, att_rec);
-				cstmt.setString(2, market.getAttSet().getMem().getMemId());
 				
+				if(market.getMarSeqno() != null) {
+					cstmt.setInt(2, market.getMarSeqno());
+				} else {
+					cstmt.setString(2, market.getAttSet().getMem().getMemId());
+				}
 				cstmt.executeQuery();
 			}
 			
