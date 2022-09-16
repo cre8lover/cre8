@@ -355,7 +355,8 @@ public class AdminDao {
 				cstmt.setObject(1, att_rec);
 				
 				if(market.getMarSeqno() != null) {
-					cstmt.setInt(2, market.getMarSeqno());
+					cstmt.setString(2, market.getAttSet().getMem().getMemId());
+					cstmt.setInt(3, market.getMarSeqno());
 				} else {
 					cstmt.setString(2, market.getAttSet().getMem().getMemId());
 				}
@@ -479,6 +480,7 @@ public class AdminDao {
 		return m;
 	}
 
+	/*
 	public void update(Marketing market) {
 //		System.out.println(market.getMarCategory());
 //		System.out.println(market.getMarProduct());
@@ -515,8 +517,8 @@ public class AdminDao {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 	}
+	 */	
 	
 
 }

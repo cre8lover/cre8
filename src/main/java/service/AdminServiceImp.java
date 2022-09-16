@@ -147,7 +147,7 @@ public class AdminServiceImp implements AdminService {
 		
 		return dao.modify(seqno);
 	}
-
+/*
 	public void update(HttpServletRequest req) {
 		Marketing market = new Marketing();
 		
@@ -181,5 +181,5 @@ public class AdminServiceImp implements AdminService {
 		market.setMarSeqno(seqno);
 		dao.update(market);
 	}
-
+*/
 }
