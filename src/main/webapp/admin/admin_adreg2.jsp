@@ -126,7 +126,7 @@
              		<div class="filebox">
 						<c:if test="${modify.attSet.attName == null }">
 						    <input class="upload-name" value="첨부파일" placeholder="첨부파일">
-						    <label for="file"></label> 
+						    <label for="file">파일 찾기</label> 
 						    <input type="file" name="filename" id="file">
 						</c:if>    
 					</div>
