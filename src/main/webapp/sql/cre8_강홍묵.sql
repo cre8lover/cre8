@@ -492,7 +492,6 @@ begin
 				where o.order_seqno = s.order_seqno
 				and o.mem_id = :1
 				order by o.order_seqno desc';    
-                
     --커서오픈
     curid := DBMS_SQL.open_cursor;
     --sql 파싱
@@ -652,7 +651,7 @@ begin
 end;
 /
 --멤버검색
-create or replace NONEDITIONABLE procedure p_memberlist(
+create or REPLACE procedure p_memberlist(
 --바인드 변수 선언
     p_category in varchar2,
     p_keyword in varchar2,
@@ -665,10 +664,10 @@ is
     v_rn integer := (p_current_page - 1 ) * p_row_per_page;
 */ 
     v_sql varchar2(1000);
-
+    
     curid number;
     ret number;
-
+    
 begin
     v_sql := 'select rownum, a.mem_id as mem_id, a.mem_name as mem_name, a.mem_tel as mem_tel, 
 		        a.mem_email as mem_email, a.auth_date as auth_date, auth_name
@@ -677,15 +676,15 @@ begin
 		        decode(a.auth_name,''A'',''관리자'',''C'',''작가'',''M'',''마스터'',''U'',''일반회원'') auth_name
 		        from mem m, mem_auth a
 		        where m.mem_id = a.mem_id';
-
+                
           case p_category
               when 'A' then v_sql := v_sql || ' and auth_name = ''A'' ';
               when 'U' then v_sql := v_sql || ' and auth_name = ''U'' ';
               when 'M' then v_sql := v_sql || ' and auth_name = ''M'' ';
               when 'C' then v_sql := v_sql || ' and auth_name = ''C'' ';
-              else v_sql := v_sql || ' and 1=1 ';
+              else v_sql := v_sql || ' where 1=1 ';
           end case; 
-
+          
              v_sql := v_sql || ' order by mem_name) a';
 
           case p_classification
@@ -694,14 +693,14 @@ begin
               when 'mem_name' then v_sql := v_sql || ' where mem_name like :2 ';
               when 'mem_tel' then v_sql := v_sql || ' where mem_tel like :2 ';
               when 'mem_email' then v_sql := v_sql || ' where mem_email like :2 ';
-              else v_sql := v_sql || ' where mem_id like :2 or mem_name like :2 or mem_tel like :2 or mem_email like :2 ';
+              else v_sql := v_sql || ' where 1=1 ';
           end case;            
-
+            
    --커서오픈
    curid := DBMS_SQL.open_cursor;
    --sql 파싱
    dbms_sql.parse(curid, v_sql, dbms_sql.native);
-
+   
    case p_classification
         when '998' then dbms_sql.bind_variable(curid, ':2', '%'||p_keyword||'%');
         when 'mem_id' then dbms_sql.bind_variable(curid, ':2', '%'||p_keyword||'%');
@@ -711,10 +710,10 @@ begin
         else dbms_sql.bind_variable(curid, ':2', '%%');
    end case;   
 
-
+   
    --sql문 실행
    ret := dbms_sql.execute(curid);
-
+   
    --커서 id를 이용해서 커서변수에 저장
    v_memberlist_cur := dbms_sql.to_refcursor(curid);
 end;
@@ -743,7 +742,7 @@ begin
 end;
 /
 --마케팅검색
-create or replace NONEDITIONABLE procedure p_marketinglist(
+create or REPLACE procedure p_marketinglist(
 --바인드 변수 선언
     p_keyword in varchar2,
     p_classification in varchar2,
@@ -755,17 +754,17 @@ is
     v_rn integer := (p_current_page - 1 ) * p_row_per_page;
 */ 
     v_sql varchar2(1000);
-
+    
     curid number;
     ret number;
-
+    
 begin
     v_sql := 'select rownum, a.*
 				 from(
 				 select m.mar_seqno, m.mar_product, m.mar_company, m.mar_ceo, m.mar_phone, m.mar_regnum, m.mar_opendate
 				 from marketing m
 				 order by m.mar_opendate desc) a';
-
+            
                 case p_classification
                     when '999' then v_sql := v_sql || ' where mar_product like :1 or mar_company like :1 or mar_ceo like :1 or mar_phone like :1 or mar_regnum like :1 ';
                     when 'mar_product' then v_sql := v_sql || ' where mar_product like :1 ';
@@ -773,14 +772,14 @@ begin
                     when 'mar_ceo' then v_sql := v_sql || ' where mar_ceo like :1 ';
                     when 'mar_phone' then v_sql := v_sql || ' where mar_phone like :1 ';
                     when 'mar_regnum' then v_sql := v_sql || ' where mar_regnum like :1 ';                    
-                    else v_sql := v_sql || ' where mar_product like :1 or mar_company like :1 or mar_ceo like :1 or mar_phone like :1 or mar_regnum like :1 ';
+                    else v_sql := v_sql || ' where 1=1 ';
                 end case;
-
+            
    --커서오픈
    curid := DBMS_SQL.open_cursor;
    --sql 파싱
    dbms_sql.parse(curid, v_sql, dbms_sql.native);
-
+   
    case p_classification
         when '999' then dbms_sql.bind_variable(curid, ':1', '%'||p_keyword||'%');
         when 'mar_product' then dbms_sql.bind_variable(curid, ':1', '%'||p_keyword||'%');
@@ -790,10 +789,10 @@ begin
         when 'mar_regnum' then dbms_sql.bind_variable(curid, ':1', '%'||p_keyword||'%');
         else dbms_sql.bind_variable(curid, ':1', '%%');
    end case;
-
+   
    --sql문 실행
    ret := dbms_sql.execute(curid);
-
+   
    --커서 id를 이용해서 커서변수에 저장
    v_marketinglist_cur := dbms_sql.to_refcursor(curid);
 end;
@@ -997,7 +996,7 @@ begin
                         when 'mem_name' then v_sql := v_sql || ' where mem_name like :1 ';
                         when 'mar_product' then v_sql := v_sql || ' where mar_product like :1 ';
                         when 'mar_stat' then v_sql := v_sql || ' where mar_stat like :1 ';
-                        else v_sql := v_sql || ' where mar_stat like :1 or mar_product like :1 or mem_name like :1';
+                        else v_sql := v_sql || ' where 1=1 ';
                     end case;
    --커서오픈
    curid := DBMS_SQL.open_cursor;
@@ -1104,7 +1103,7 @@ begin
     end loop;
 end;
 /
-create or replace procedure p_marketModiy(
+create or replace procedure p_marketReg(
     p_mar_seqno     in marketing.mar_seqno%type,
     p_mar_cate       in marketing.mar_cate%type,
     p_mar_product       in marketing.mar_product%type,
@@ -1126,5 +1125,22 @@ end;
 /
 declare
 begin
-    p_marketModiy('3','0','0','0','0','2022/01/01','2022/02/02','0','0','0','0');
+    p_marketReg('3','0','0','0','0','2022/01/01','2022/02/02','0','0','0','0');
 end;
+/
+create or replace NONEDITIONABLE procedure p_attinset(
+    p_att       obj_att,
+    p_id        mem.mem_id%type
+)
+is
+    v_att_seqno att.att_seqno%type;
+begin
+    v_att_seqno := att_seqno.nextval;
+
+    INSERT INTO att (att_seqno, att_name, att_savename, att_size, att_type, att_path, mem_id)
+            VALUES (v_att_seqno, p_att.p_att_name, p_att.p_att_savename, p_att.p_att_size, p_att.p_att_type, p_att.p_att_path, p_id);
+
+    insert INTO att_thumb (thumb_seqno, thumb_filename, thumb_filesize, thumb_filepath, att_seqno) 
+                VALUES (thumb_seqno.nextval, p_att.p_att_thumb.p_attth_name, p_att.p_att_thumb.p_attth_size, p_att.p_att_thumb.p_attth_path, v_att_seqno);
+
+end;         

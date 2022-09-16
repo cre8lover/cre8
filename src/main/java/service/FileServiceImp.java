@@ -248,8 +248,9 @@ public class FileServiceImp implements FileService {
 			market.setMarClosedate(get);
 		}else if (item.getFieldName().equals("comment")) {
 			market.setMarDetail(get);
+		}else if (item.getFieldName().equals("seqno")) {
+			market.setMarSeqno(Integer.parseInt(get));
 		}
-		
 		return market;
 	}
 }
