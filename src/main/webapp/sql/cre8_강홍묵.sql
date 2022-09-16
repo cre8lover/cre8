@@ -1,6 +1,6 @@
--------------·Î±×ÀÎ--------------
+-------------ë¡œê·¸ì¸--------------
 create or replace PROCEDURE p_login(
---º¯¼ö¼±¾ğ
+--ë³€ìˆ˜ì„ ì–¸
     p_id in mem.mem_id%type,
     v_member_cur out sys_refcursor
 )
@@ -13,24 +13,24 @@ begin
       v_sql := 'select m.mem_id, m.mem_pw, m.mem_name, a.auth_name
                 from mem m, mem_auth a 
                 where m.mem_id = a.mem_id and m.mem_id = :1';    
-    --Ä¿¼­¿ÀÇÂ
+    --ì»¤ì„œì˜¤í”ˆ
     curid := DBMS_SQL.open_cursor;
-    --sql ÆÄ½Ì
+    --sql íŒŒì‹±
     dbms_sql.parse(curid, v_sql, dbms_sql.native);
     
-    --¹ÙÀÎµåº¯¼ö
+    --ë°”ì¸ë“œë³€ìˆ˜
     dbms_sql.bind_variable(curid, ':1', p_id);
     
-    --sql¹® ½ÇÇà
+    --sqlë¬¸ ì‹¤í–‰
     ret := dbms_sql.execute(curid);
 
-    --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+    --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
     v_member_cur := dbms_sql.to_refcursor(curid);
 end;
 /
---ÇÁ·Î½ÃÀú Å×½ºÆ®
+--í”„ë¡œì‹œì € í…ŒìŠ¤íŠ¸
 declare
-   v_member_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_member_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_member_rec is record(
         mem_id mem.mem_id%type,
         mem_pw mem.mem_pw%type,
@@ -66,12 +66,12 @@ end;
 /
 declare
 begin
-    p_reginsert('joy999888899','1111','010-1111-1111','F','960309','¤·@¤·','Y');
+    p_reginsert('joy999888899','1111','010-1111-1111','F','960309','ã…‡@ã…‡','Y');
 end;
 /
 
 create or replace PROCEDURE p_mypage(
---º¯¼ö¼±¾ğ
+--ë³€ìˆ˜ì„ ì–¸
     p_id in mem.mem_id%type,
     v_mypage_cur out sys_refcursor
 )
@@ -82,28 +82,28 @@ is
     ret number;
 begin
       v_sql := 'select m.mem_id, m.mem_email, m.mem_tel, m.mem_name,
-                nvl(a.add_address, ''ÁÖ¼Ò¸¦ ÀÔ·ÂÇÏ¼¼¿ä'') as add_address
+                nvl(a.add_address, ''ì£¼ì†Œë¥¼ ì…ë ¥í•˜ì„¸ìš”'') as add_address
                 from mem m, address a
                 where m.mem_id = a.mem_id(+)
                 and m.mem_id = :1';    
-    --Ä¿¼­¿ÀÇÂ
+    --ì»¤ì„œì˜¤í”ˆ
     curid := DBMS_SQL.open_cursor;
-    --sql ÆÄ½Ì
+    --sql íŒŒì‹±
     dbms_sql.parse(curid, v_sql, dbms_sql.native);
     
-    --¹ÙÀÎµåº¯¼ö
+    --ë°”ì¸ë“œë³€ìˆ˜
     dbms_sql.bind_variable(curid, ':1', p_id);    
     
-    --sql¹® ½ÇÇà
+    --sqlë¬¸ ì‹¤í–‰
     ret := dbms_sql.execute(curid);
 
-    --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+    --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
     v_mypage_cur := dbms_sql.to_refcursor(curid);
 end;
 /
---ÇÁ·Î½ÃÀú Å×½ºÆ®
+--í”„ë¡œì‹œì € í…ŒìŠ¤íŠ¸
 declare
-   v_mypage_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_mypage_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_mypage_rec is record(
         mem_id mem.mem_id%type,
         mem_email mem.mem_email%type,
@@ -123,7 +123,7 @@ begin
 end;
 /
 create or replace PROCEDURE p_info(
---º¯¼ö¼±¾ğ
+--ë³€ìˆ˜ì„ ì–¸
     p_id in mem.mem_id%type,
     v_info_cur out sys_refcursor
 )
@@ -139,21 +139,21 @@ begin
                 from mem m, address a
                 where m.mem_id = a.mem_id(+)
                 and m.mem_id = :1 ';    
-    --Ä¿¼­¿ÀÇÂ
+    --ì»¤ì„œì˜¤í”ˆ
     curid := DBMS_SQL.open_cursor;
-    --sql ÆÄ½Ì
+    --sql íŒŒì‹±
     dbms_sql.parse(curid, v_sql, dbms_sql.native);
-    --¹ÙÀÎµåº¯¼ö
+    --ë°”ì¸ë“œë³€ìˆ˜
     dbms_sql.bind_variable(curid, ':1', p_id);  
-    --sql¹® ½ÇÇà
+    --sqlë¬¸ ì‹¤í–‰
     ret := dbms_sql.execute(curid);
 
-    --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+    --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
     v_info_cur := dbms_sql.to_refcursor(curid);
 end;
 /
 declare
-   v_info_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_info_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_info_rec is record(
         add_detail address.add_detail%type,
         mem_name mem.mem_name%type,
@@ -179,7 +179,7 @@ end;
 /
 
 create or replace PROCEDURE p_membuylist(
---º¯¼ö¼±¾ğ
+--ë³€ìˆ˜ì„ ì–¸
     p_id in mem.mem_id%type,
     v_membuylist_cur out sys_refcursor
 )
@@ -202,21 +202,21 @@ begin
                 ) o
                 where p.pro_seqno = o.pro_seqno and o.mem_id = :1
                 order by order_date desc) a';    
-    --Ä¿¼­¿ÀÇÂ
+    --ì»¤ì„œì˜¤í”ˆ
     curid := DBMS_SQL.open_cursor;
-    --sql ÆÄ½Ì
+    --sql íŒŒì‹±
     dbms_sql.parse(curid, v_sql, dbms_sql.native);
-    --¹ÙÀÎµåº¯¼ö
+    --ë°”ì¸ë“œë³€ìˆ˜
     dbms_sql.bind_variable(curid, ':1', p_id);  
-    --sql¹® ½ÇÇà
+    --sqlë¬¸ ì‹¤í–‰
     ret := dbms_sql.execute(curid);
 
-    --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+    --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
     v_membuylist_cur := dbms_sql.to_refcursor(curid);
 end;
 /
 declare
-   v_membuylist_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_membuylist_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_membuylist_rec is record(
         rownum integer,
         item_img item.item_img%type,
@@ -237,7 +237,7 @@ begin
 end;
 /
 create or replace PROCEDURE p_memauclist_end(
---º¯¼ö¼±¾ğ
+--ë³€ìˆ˜ì„ ì–¸
     p_id in mem.mem_id%type,
     v_memauclist_cur out sys_refcursor
 )
@@ -260,21 +260,21 @@ begin
 				  ) o
 				  where p.auc_seqno = o.auc_seqno and o.mem_id = :1
 				  order by order_date desc) a';    
-    --Ä¿¼­¿ÀÇÂ
+    --ì»¤ì„œì˜¤í”ˆ
     curid := DBMS_SQL.open_cursor;
-    --sql ÆÄ½Ì
+    --sql íŒŒì‹±
     dbms_sql.parse(curid, v_sql, dbms_sql.native);
-    --¹ÙÀÎµåº¯¼ö
+    --ë°”ì¸ë“œë³€ìˆ˜
     dbms_sql.bind_variable(curid, ':1', p_id);  
-    --sql¹® ½ÇÇà
+    --sqlë¬¸ ì‹¤í–‰
     ret := dbms_sql.execute(curid);
 
-    --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+    --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
     v_memauclist_cur := dbms_sql.to_refcursor(curid);
 end;
 /
 declare
-   v_memauclist_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_memauclist_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_memauclist_rec is record(
         rownum integer,
         item_img item.item_img%type,
@@ -296,7 +296,7 @@ begin
 end;
 /
 create or replace PROCEDURE p_memauclist_ing(
---º¯¼ö¼±¾ğ
+--ë³€ìˆ˜ì„ ì–¸
     p_id in mem.mem_id%type,
     v_memauclist_cur out sys_refcursor
 )
@@ -317,21 +317,21 @@ begin
 				   group by auc_seqno) an, auc a
 				   where a.auc_seqno = an.auc_seqno
 				   order by aucnow_date desc) a';    
-    --Ä¿¼­¿ÀÇÂ
+    --ì»¤ì„œì˜¤í”ˆ
     curid := DBMS_SQL.open_cursor;
-    --sql ÆÄ½Ì
+    --sql íŒŒì‹±
     dbms_sql.parse(curid, v_sql, dbms_sql.native);
-    --¹ÙÀÎµåº¯¼ö
+    --ë°”ì¸ë“œë³€ìˆ˜
     dbms_sql.bind_variable(curid, ':1', p_id);  
-    --sql¹® ½ÇÇà
+    --sqlë¬¸ ì‹¤í–‰
     ret := dbms_sql.execute(curid);
 
-    --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+    --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
     v_memauclist_cur := dbms_sql.to_refcursor(curid);
 end;
 /
 declare
-   v_memauclist_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_memauclist_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_memauclist_rec is record(
         rownum integer,
         auc_seqno auc.auc_seqno%type,
@@ -353,7 +353,7 @@ begin
 end;
 /
 create or replace PROCEDURE buystat(
---º¯¼ö¼±¾ğ
+--ë³€ìˆ˜ì„ ì–¸
     p_id in mem.mem_id%type,
     v_buystat_cur out sys_refcursor
 )
@@ -380,21 +380,21 @@ begin
 				    order by o.order_date desc
 				    ) a
 				    where p.pro_seqno = a.pro_seqno';    
-    --Ä¿¼­¿ÀÇÂ
+    --ì»¤ì„œì˜¤í”ˆ
     curid := DBMS_SQL.open_cursor;
-    --sql ÆÄ½Ì
+    --sql íŒŒì‹±
     dbms_sql.parse(curid, v_sql, dbms_sql.native);
-    --¹ÙÀÎµåº¯¼ö
+    --ë°”ì¸ë“œë³€ìˆ˜
     dbms_sql.bind_variable(curid, ':1', p_id);  
-    --sql¹® ½ÇÇà
+    --sqlë¬¸ ì‹¤í–‰
     ret := dbms_sql.execute(curid);
 
-    --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+    --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
     v_buystat_cur := dbms_sql.to_refcursor(curid);
 end;
 /
 declare
-   v_buystat_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_buystat_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_buystat_rec is record(
         rownum integer,
         item_img item.item_img%type,
@@ -416,7 +416,7 @@ begin
 end;
 /
 create or replace PROCEDURE ordercheck_order(
---º¯¼ö¼±¾ğ
+--ë³€ìˆ˜ì„ ì–¸
     p_id in mem.mem_id%type,
     v_ordercheck_order_cur out sys_refcursor
 )
@@ -440,21 +440,21 @@ begin
 				                  where s.add_seqno=a.add_seqno) s
 				     where w.ship_seqno=s.ship_seqno) s
 				  where a.order_seqno = s.order_seqno';    
-    --Ä¿¼­¿ÀÇÂ
+    --ì»¤ì„œì˜¤í”ˆ
     curid := DBMS_SQL.open_cursor;
-    --sql ÆÄ½Ì
+    --sql íŒŒì‹±
     dbms_sql.parse(curid, v_sql, dbms_sql.native);
-    --¹ÙÀÎµåº¯¼ö
+    --ë°”ì¸ë“œë³€ìˆ˜
     dbms_sql.bind_variable(curid, ':1', p_id);  
-    --sql¹® ½ÇÇà
+    --sqlë¬¸ ì‹¤í–‰
     ret := dbms_sql.execute(curid);
 
-    --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+    --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
     v_ordercheck_order_cur := dbms_sql.to_refcursor(curid);
 end;
 /
 declare
-   v_ordercheck_order_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_ordercheck_order_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_ordercheck_order_rec is record(
         order_seqno orders.order_seqno%type,
         orderdetail_way orderdetail.orderdetail_way%type,
@@ -477,7 +477,7 @@ begin
 end;
 /
 create or replace PROCEDURE ordercheck_detail(
---º¯¼ö¼±¾ğ
+--ë³€ìˆ˜ì„ ì–¸
     p_id in mem.mem_id%type,
     v_ordercheck_detail_cur out sys_refcursor
 )
@@ -492,21 +492,21 @@ begin
 				where o.order_seqno = s.order_seqno
 				and o.mem_id = :1
 				order by o.order_seqno desc';    
-    --Ä¿¼­¿ÀÇÂ
+    --ì»¤ì„œì˜¤í”ˆ
     curid := DBMS_SQL.open_cursor;
-    --sql ÆÄ½Ì
+    --sql íŒŒì‹±
     dbms_sql.parse(curid, v_sql, dbms_sql.native);
-    --¹ÙÀÎµåº¯¼ö
+    --ë°”ì¸ë“œë³€ìˆ˜
     dbms_sql.bind_variable(curid, ':1', p_id);  
-    --sql¹® ½ÇÇà
+    --sqlë¬¸ ì‹¤í–‰
     ret := dbms_sql.execute(curid);
 
-    --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+    --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
     v_ordercheck_detail_cur := dbms_sql.to_refcursor(curid);
 end;
 /
 declare
-   v_ordercheck_detail_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_ordercheck_detail_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_ordercheck_detail_rec is record(
         rownum integer, 
         order_seqno orders.order_seqno%type, 
@@ -554,7 +554,7 @@ end;
 /
 declare
 begin
-    p_infoupdate('¿À¶óÅ¬sns','ÀÌ¸ŞÀÏ@naver.com','010-3233-1222','ZZZ','È¸»ç','???','032-444-1111','¼­¿ï','°­³²');
+    p_infoupdate('ì˜¤ë¼í´sns','ì´ë©”ì¼@naver.com','010-3233-1222','ZZZ','íšŒì‚¬','???','032-444-1111','ì„œìš¸','ê°•ë‚¨');
 end;
 /
 ---------------------------------------------------------------------------------------------------------------------
@@ -573,10 +573,10 @@ begin
     and m.mem_id = p_id;
 exception
     when others then
-        DBMS_OUTPUT.PUT_line('È¸¿øÁ¤º¸°¡ ¾ø½À´Ï´Ù');
+        DBMS_OUTPUT.PUT_line('íšŒì›ì •ë³´ê°€ ì—†ìŠµë‹ˆë‹¤');
 end;
 /
---ÇÁ·Î½ÃÀú Å×½ºÆ®
+--í”„ë¡œì‹œì € í…ŒìŠ¤íŠ¸
 declare
     v_id mem.mem_id%type;
     v_pw mem.mem_pw%type;
@@ -588,15 +588,15 @@ end;
 /
 
 -------------
---¾îµå¹Î Ä«Å×°í¸® °Ë»öÀÔ´Ï´Ù!
+--ì–´ë“œë¯¼ ì¹´í…Œê³ ë¦¬ ê²€ìƒ‰ì…ë‹ˆë‹¤!
 create or REPLACE procedure p_categorylist(
---¹ÙÀÎµå º¯¼ö ¼±¾ğ
+--ë°”ì¸ë“œ ë³€ìˆ˜ ì„ ì–¸
     p_category in varchar2,
     p_keyword in varchar2,
     v_categorylist_cur out sys_refcursor
 )
 is
-/* Ãß°¡¿¹Á¤
+/* ì¶”ê°€ì˜ˆì •
     v_rownum integer := p_current_page * p_row_per_page;
     v_rn integer := (p_current_page - 1 ) * p_row_per_page;
 */ 
@@ -614,24 +614,24 @@ begin
     if p_category is not null and p_category <> '999' then v_sql := v_sql || ' and cat_seqno = :1 '; end if;
     if p_keyword is not null then v_sql := v_sql || ' and cat_name like :2'; end if;
 
-   --Ä¿¼­¿ÀÇÂ
+   --ì»¤ì„œì˜¤í”ˆ
    curid := DBMS_SQL.open_cursor;
-   --sql ÆÄ½Ì
+   --sql íŒŒì‹±
    dbms_sql.parse(curid, v_sql, dbms_sql.native);
    
    if p_category is not null and p_category <> '999' then dbms_sql.bind_variable(curid, ':1', p_category); end if;
    if p_keyword is not null then dbms_sql.bind_variable(curid, ':2', '%'||p_keyword||'%'); end if;
    
-   --sql¹® ½ÇÇà
+   --sqlë¬¸ ì‹¤í–‰
    ret := dbms_sql.execute(curid);
    
-   --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+   --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
    v_categorylist_cur := dbms_sql.to_refcursor(curid);
 end;
 /
---ÇÁ·Î½ÃÀú Å×½ºÆ®
+--í”„ë¡œì‹œì € í…ŒìŠ¤íŠ¸
 declare
-   v_categorylist_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_categorylist_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_categorylist_rec is record(
        rownum INTEGER, 
        cat_name cat.cat_name%type,
@@ -650,16 +650,16 @@ begin
     end loop;
 end;
 /
---¸â¹ö°Ë»ö
+--ë©¤ë²„ê²€ìƒ‰
 create or REPLACE procedure p_memberlist(
---¹ÙÀÎµå º¯¼ö ¼±¾ğ
+--ë°”ì¸ë“œ ë³€ìˆ˜ ì„ ì–¸
     p_category in varchar2,
     p_keyword in varchar2,
     p_classification in varchar2,
     v_memberlist_cur out sys_refcursor
 )
 is
-/* Ãß°¡¿¹Á¤
+/* ì¶”ê°€ì˜ˆì •
     v_rownum integer := p_current_page * p_row_per_page;
     v_rn integer := (p_current_page - 1 ) * p_row_per_page;
 */ 
@@ -673,7 +673,7 @@ begin
 		        a.mem_email as mem_email, a.auth_date as auth_date, auth_name
                  from(
                  select m.mem_id, m.mem_name, m.mem_tel, m.mem_email, a.auth_date, 
-		        decode(a.auth_name,''A'',''°ü¸®ÀÚ'',''C'',''ÀÛ°¡'',''M'',''¸¶½ºÅÍ'',''U'',''ÀÏ¹İÈ¸¿ø'') auth_name
+		        decode(a.auth_name,''A'',''ê´€ë¦¬ì'',''C'',''ì‘ê°€'',''M'',''ë§ˆìŠ¤í„°'',''U'',''ì¼ë°˜íšŒì›'') auth_name
 		        from mem m, mem_auth a
 		        where m.mem_id = a.mem_id';
                 
@@ -696,9 +696,9 @@ begin
               else v_sql := v_sql || ' where 1=1 ';
           end case;            
             
-   --Ä¿¼­¿ÀÇÂ
+   --ì»¤ì„œì˜¤í”ˆ
    curid := DBMS_SQL.open_cursor;
-   --sql ÆÄ½Ì
+   --sql íŒŒì‹±
    dbms_sql.parse(curid, v_sql, dbms_sql.native);
    
    case p_classification
@@ -711,16 +711,16 @@ begin
    end case;   
 
    
-   --sql¹® ½ÇÇà
+   --sqlë¬¸ ì‹¤í–‰
    ret := dbms_sql.execute(curid);
    
-   --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+   --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
    v_memberlist_cur := dbms_sql.to_refcursor(curid);
 end;
 /
---ÇÁ·Î½ÃÀú Å×½ºÆ®
+--í”„ë¡œì‹œì € í…ŒìŠ¤íŠ¸
 declare
-   v_memberlist_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_memberlist_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_memberlist_rec is record(
        rownum integer, 
        mem_id mem.mem_id%type,
@@ -732,7 +732,7 @@ declare
    );
    v_memberlist v_memberlist_rec;
 begin
-    p_memberlist('U', '¹«', 'mem_name', v_memberlist_cur);
+    p_memberlist('U', 'ë¬´', 'mem_name', v_memberlist_cur);
     
     loop
         fetch v_memberlist_cur into v_memberlist;
@@ -741,15 +741,15 @@ begin
     end loop;
 end;
 /
---¸¶ÄÉÆÃ°Ë»ö
+--ë§ˆì¼€íŒ…ê²€ìƒ‰
 create or REPLACE procedure p_marketinglist(
---¹ÙÀÎµå º¯¼ö ¼±¾ğ
+--ë°”ì¸ë“œ ë³€ìˆ˜ ì„ ì–¸
     p_keyword in varchar2,
     p_classification in varchar2,
     v_marketinglist_cur out sys_refcursor
 )
 is
-/* Ãß°¡¿¹Á¤
+/* ì¶”ê°€ì˜ˆì •
     v_rownum integer := p_current_page * p_row_per_page;
     v_rn integer := (p_current_page - 1 ) * p_row_per_page;
 */ 
@@ -775,9 +775,9 @@ begin
                     else v_sql := v_sql || ' where 1=1 ';
                 end case;
             
-   --Ä¿¼­¿ÀÇÂ
+   --ì»¤ì„œì˜¤í”ˆ
    curid := DBMS_SQL.open_cursor;
-   --sql ÆÄ½Ì
+   --sql íŒŒì‹±
    dbms_sql.parse(curid, v_sql, dbms_sql.native);
    
    case p_classification
@@ -790,16 +790,16 @@ begin
         else dbms_sql.bind_variable(curid, ':1', '%%');
    end case;
    
-   --sql¹® ½ÇÇà
+   --sqlë¬¸ ì‹¤í–‰
    ret := dbms_sql.execute(curid);
    
-   --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+   --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
    v_marketinglist_cur := dbms_sql.to_refcursor(curid);
 end;
 /
---ÇÁ·Î½ÃÀú Å×½ºÆ®
+--í”„ë¡œì‹œì € í…ŒìŠ¤íŠ¸
 declare
-   v_marketinglist_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_marketinglist_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_marketinglist_rec is record(
        rownum integer,
        mar_seqno marketing.mar_seqno%type,
@@ -821,13 +821,13 @@ begin
     end loop;
 end;
 /
---¿ùº°
+--ì›”ë³„
 create or REPLACE procedure p_monthlist(
---¹ÙÀÎµå º¯¼ö ¼±¾ğ
+--ë°”ì¸ë“œ ë³€ìˆ˜ ì„ ì–¸
     v_monthlist_cur out sys_refcursor
 )
 is
-/* Ãß°¡¿¹Á¤
+/* ì¶”ê°€ì˜ˆì •
     v_rownum integer := p_current_page * p_row_per_page;
     v_rn integer := (p_current_page - 1 ) * p_row_per_page;
 */ 
@@ -845,21 +845,21 @@ begin
 				group by to_char(mar_opendate,''YYYY-MM'')
 				order by month) a';
             
-   --Ä¿¼­¿ÀÇÂ
+   --ì»¤ì„œì˜¤í”ˆ
    curid := DBMS_SQL.open_cursor;
-   --sql ÆÄ½Ì
+   --sql íŒŒì‹±
    dbms_sql.parse(curid, v_sql, dbms_sql.native);
    
-   --sql¹® ½ÇÇà
+   --sqlë¬¸ ì‹¤í–‰
    ret := dbms_sql.execute(curid);
    
-   --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+   --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
    v_monthlist_cur := dbms_sql.to_refcursor(curid);
 end;
 /
---ÇÁ·Î½ÃÀú Å×½ºÆ®
+--í”„ë¡œì‹œì € í…ŒìŠ¤íŠ¸
 declare
-   v_monthlist_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_monthlist_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_monthlist_rec is record(
        rownum integer,
        month varchar2(50),
@@ -877,13 +877,13 @@ begin
     end loop;
 end;
 /
---¿¬°£
+--ì—°ê°„
 create or REPLACE procedure p_yearlist(
---¹ÙÀÎµå º¯¼ö ¼±¾ğ
+--ë°”ì¸ë“œ ë³€ìˆ˜ ì„ ì–¸
     v_yearlist_cur out sys_refcursor
 )
 is
-/* Ãß°¡¿¹Á¤
+/* ì¶”ê°€ì˜ˆì •
     v_rownum integer := p_current_page * p_row_per_page;
     v_rn integer := (p_current_page - 1 ) * p_row_per_page;
 */ 
@@ -901,21 +901,21 @@ begin
 				group by to_char(mar_opendate,''YYYY'')
 				order by year) a';
             
-   --Ä¿¼­¿ÀÇÂ
+   --ì»¤ì„œì˜¤í”ˆ
    curid := DBMS_SQL.open_cursor;
-   --sql ÆÄ½Ì
+   --sql íŒŒì‹±
    dbms_sql.parse(curid, v_sql, dbms_sql.native);
    
-   --sql¹® ½ÇÇà
+   --sqlë¬¸ ì‹¤í–‰
    ret := dbms_sql.execute(curid);
    
-   --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+   --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
    v_yearlist_cur := dbms_sql.to_refcursor(curid);
 end;
 /
---ÇÁ·Î½ÃÀú Å×½ºÆ®
+--í”„ë¡œì‹œì € í…ŒìŠ¤íŠ¸
 declare
-   v_yearlist_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_yearlist_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_yearlist_rec is record(
        rownum integer,
        year varchar2(50),
@@ -933,40 +933,20 @@ begin
     end loop;
 end;
 /
-create or replace procedure p_marketReg(
-    p_mar_cate       in marketing.mar_cate%type,
-    p_mar_product       in marketing.mar_product%type,
-    p_mar_price     in marketing.mar_price%type,
-    p_mar_company   in marketing.mar_company%type,
-    p_mar_opendate    in marketing.mar_opendate%type,
-    p_mar_closedate    in marketing.mar_closedate%type,
-    p_mar_detail    in marketing.mar_detail%type,
-    p_mar_ceo    in marketing.mar_ceo%type,
-    p_mar_phone    in marketing.mar_phone%type,
-    p_mar_regnum    in marketing.mar_regnum%type
-)
-is
-begin
-    insert into marketing (mar_seqno, mar_cate, mar_product, mar_price, mar_company, 
-				mar_opendate, mar_closedate, mar_detail, mar_ceo, mar_phone, mar_regnum)
-				values (mar_seqno.nextval, p_mar_cate, p_mar_product, p_mar_price, p_mar_company, p_mar_opendate,
-                        p_mar_closedate, p_mar_detail, p_mar_ceo, p_mar_phone, p_mar_regnum);
-end;
-/
 declare
 begin
     p_marketReg('0','0','0','0','2022/01/01','2022/02/02','0','0','0','0');
 end;
 /
---¸¶ÄÉÆÃ ±¸¸Å³»¿ª ¹× °Ë»ö
+--ë§ˆì¼€íŒ… êµ¬ë§¤ë‚´ì—­ ë° ê²€ìƒ‰
 create or replace NONEDITIONABLE procedure p_buylist(
---¹ÙÀÎµå º¯¼ö ¼±¾ğ
+--ë°”ì¸ë“œ ë³€ìˆ˜ ì„ ì–¸
     p_classification in varchar2,
     p_keyword in varchar2,
     v_buylist_cur out sys_refcursor
 )
 is
-/* Ãß°¡¿¹Á¤
+/* ì¶”ê°€ì˜ˆì •
     v_rownum integer := p_current_page * p_row_per_page;
     v_rn integer := (p_current_page - 1 ) * p_row_per_page;
 */ 
@@ -980,7 +960,7 @@ begin
 				FROM(
 				SELECT m.mar_opendate, a.mem_name, m.mar_price, count(*) over(partition by a.mem_name) count,
                     ((count(*) over(partition by a.mem_name)) * m.mar_price) total, m.mar_product, 
-                    decode(m.mar_stat, ''ING'', ''ÆÇ¸ÅÁß'', ''END'', ''ÆÇ¸ÅÁ¾·á'') as mar_stat
+                    decode(m.mar_stat, ''ING'', ''íŒë§¤ì¤‘'', ''END'', ''íŒë§¤ì¢…ë£Œ'') as mar_stat
 				FROM(
                     SELECT o.order_seqno, o.mem_id, o.order_date, o.mar_seqno, e.mem_name 
 				FROM(
@@ -998,9 +978,9 @@ begin
                         when 'mar_stat' then v_sql := v_sql || ' where mar_stat like :1 ';
                         else v_sql := v_sql || ' where 1=1 ';
                     end case;
-   --Ä¿¼­¿ÀÇÂ
+   --ì»¤ì„œì˜¤í”ˆ
    curid := DBMS_SQL.open_cursor;
-   --sql ÆÄ½Ì
+   --sql íŒŒì‹±
    dbms_sql.parse(curid, v_sql, dbms_sql.native);
 
    case p_classification
@@ -1013,16 +993,16 @@ begin
 
            DBMS_OUTPUT.PUT_LINE(v_sql);
 
-   --sql¹® ½ÇÇà
+   --sqlë¬¸ ì‹¤í–‰
    ret := dbms_sql.execute(curid);
 
-   --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+   --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
    v_buylist_cur := dbms_sql.to_refcursor(curid);
 end;
 /
---ÇÁ·Î½ÃÀú Å×½ºÆ®
+--í”„ë¡œì‹œì € í…ŒìŠ¤íŠ¸
 declare
-   v_buylist_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_buylist_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_buylist_rec is record(
        rownum integer,
        mar_opendate marketing.mar_opendate%type,
@@ -1035,7 +1015,7 @@ declare
    );
    v_buylist v_buylist_rec;
 begin
-    p_buylist('mem_name', '¿µ', v_buylist_cur);
+    p_buylist('mem_name', 'ì˜', v_buylist_cur);
     
     loop
         fetch v_buylist_cur into v_buylist;
@@ -1044,9 +1024,9 @@ begin
     end loop;
 end;
 /
---¸¶ÄÉÆÃ ¼öÁ¤
+--ë§ˆì¼€íŒ… ìˆ˜ì •
 create or REPLACE procedure p_modify(
---¹ÙÀÎµå º¯¼ö ¼±¾ğ
+--ë°”ì¸ë“œ ë³€ìˆ˜ ì„ ì–¸
     p_seqno in marketing.mar_seqno%type,
     v_modify_cur out sys_refcursor
 )
@@ -1062,23 +1042,23 @@ begin
 				 mar_opendate, mar_closedate, mar_detail, mar_ceo, mar_phone, mar_regnum 
 				 from marketing where mar_seqno = :1';
             
-   --Ä¿¼­¿ÀÇÂ
+   --ì»¤ì„œì˜¤í”ˆ
    curid := DBMS_SQL.open_cursor;
-   --sql ÆÄ½Ì
+   --sql íŒŒì‹±
    dbms_sql.parse(curid, v_sql, dbms_sql.native);
    
    dbms_sql.bind_variable(curid, ':1', p_seqno);
    
-   --sql¹® ½ÇÇà
+   --sqlë¬¸ ì‹¤í–‰
    ret := dbms_sql.execute(curid);
    
-   --Ä¿¼­ id¸¦ ÀÌ¿ëÇØ¼­ Ä¿¼­º¯¼ö¿¡ ÀúÀå
+   --ì»¤ì„œ idë¥¼ ì´ìš©í•´ì„œ ì»¤ì„œë³€ìˆ˜ì— ì €ì¥
    v_modify_cur := dbms_sql.to_refcursor(curid);
 end;
 /
---ÇÁ·Î½ÃÀú Å×½ºÆ®
+--í”„ë¡œì‹œì € í…ŒìŠ¤íŠ¸
 declare
-   v_modify_cur SYS_REFCURSOR; --³»ÀåÄ¿¼­ open, close »ı·«
+   v_modify_cur SYS_REFCURSOR; --ë‚´ì¥ì»¤ì„œ open, close ìƒëµ
    type v_modify_rec is record(
        mar_seqno marketing.mar_seqno%type,
        mar_cate marketing.mar_cate%type,
@@ -1128,14 +1108,22 @@ begin
     p_marketReg('3','0','0','0','0','2022/01/01','2022/02/02','0','0','0','0');
 end;
 /
-create or replace NONEDITIONABLE procedure p_attinset(
+create or replace NONEDITIONABLE procedure p_market_insert(
     p_att       obj_att,
+    p_market    obj_mar,
     p_id        mem.mem_id%type
 )
 is
     v_att_seqno att.att_seqno%type;
+    v_mar_seqno marketing.mar_seqno%type;
 begin
     v_att_seqno := att_seqno.nextval;
+    v_mar_seqno := mar_seqno.nextval;
+
+    insert into marketing (mar_seqno, mar_cate, mar_product, mar_price, mar_company, 
+				mar_opendate, mar_closedate, mar_detail, mar_ceo, mar_phone, mar_regnum)
+            values (v_mar_seqno, p_market.p_mar_cate, p_market.p_mar_product, p_market.p_mar_price, p_market.p_mar_company, p_market.p_mar_opendate,
+                    p_market.p_mar_closedate, p_market.p_mar_detail, p_market.p_mar_ceo, p_market.p_mar_phone, p_market.p_mar_regnum);
 
     INSERT INTO att (att_seqno, att_name, att_savename, att_size, att_type, att_path, mem_id)
             VALUES (v_att_seqno, p_att.p_att_name, p_att.p_att_savename, p_att.p_att_size, p_att.p_att_type, p_att.p_att_path, p_id);
@@ -1143,4 +1131,41 @@ begin
     insert INTO att_thumb (thumb_seqno, thumb_filename, thumb_filesize, thumb_filepath, att_seqno) 
                 VALUES (thumb_seqno.nextval, p_att.p_att_thumb.p_attth_name, p_att.p_att_thumb.p_attth_size, p_att.p_att_thumb.p_attth_path, v_att_seqno);
 
-end;         
+end;    
+/
+create or replace TYPE obj_mar IS OBJECT(
+    p_mar_cate       varchar2(50),
+    p_mar_product       varchar2(50),
+    p_mar_price     varchar2(50),
+    p_mar_company   varchar2(50),
+    p_mar_opendate    varchar2(50),
+    p_mar_closedate    varchar2(50),
+    p_mar_detail    varchar2(1000),
+    p_mar_ceo    varchar2(50),
+    p_mar_phone    varchar2(50),
+    p_mar_regnum    varchar2(50)
+);
+/
+create or replace NONEDITIONABLE procedure p_marketModiy(
+    p_att           obj_att,
+    p_market        obj_mar,
+    p_mar_seqno     in marketing.mar_seqno%type,
+    p_id            in mem.mem_id%type
+)
+is
+    v_att_seqno att.att_seqno%type;
+
+begin
+    v_att_seqno := att_seqno.nextval;
+
+    update marketing set mar_cate =p_market.p_mar_cate, mar_product=p_market.p_mar_product, mar_price=p_market.p_mar_price, mar_company=p_market.p_mar_company, 
+				mar_opendate=p_market.p_mar_opendate, mar_closedate=p_market.p_mar_closedate, mar_detail=p_market.p_mar_detail, mar_ceo=p_market.p_mar_ceo, mar_phone=p_market.p_mar_phone, mar_regnum=p_market.p_mar_regnum
+				where mar_seqno = p_mar_seqno;
+
+    INSERT INTO att (att_seqno, att_name, att_savename, att_size, att_type, att_path, mem_id, mar_seqno)
+            VALUES (v_att_seqno, p_att.p_att_name, p_att.p_att_savename, p_att.p_att_size, p_att.p_att_type, p_att.p_att_path, p_id, p_mar_seqno);
+
+    insert INTO att_thumb (thumb_seqno, thumb_filename, thumb_filesize, thumb_filepath, att_seqno) 
+                VALUES (thumb_seqno.nextval, p_att.p_att_thumb.p_attth_name, p_att.p_att_thumb.p_attth_size, p_att.p_att_thumb.p_attth_path, v_att_seqno);
+  
+end;

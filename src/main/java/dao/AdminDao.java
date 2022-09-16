@@ -294,11 +294,10 @@ public class AdminDao {
 
 	public void marketReg(Marketing market) {
 		String sql = null;
-		System.out.println(market.getMarSeqno());
 		if(market.getMarSeqno() != null) {			
-			sql = "call p_marketModiy(?,?,?,?,?,?,?,?,?,?,?)";
+			sql = "call p_marketModiy(?,?,?,?)";
 		} else {
-			sql = "call p_marketReg(?,?,?,?,?,?,?,?,?,?)";
+			sql = "call p_market_insert(?,?,?)";
 		}
 		Att att = market.getAttSet();
 		
@@ -311,29 +310,22 @@ public class AdminDao {
 		try {
 			cstmt = conn.prepareCall(sql);
 			
-			cstmt.setString(1, market.getMarCategory());
-			cstmt.setString(2, market.getMarProduct());
-			cstmt.setString(3, market.getMarPrice());
-			cstmt.setString(4, market.getMarCompany());
-			cstmt.setString(5, market.getMarOpendate());
-			cstmt.setString(6, market.getMarClosedate());
-			cstmt.setString(7, market.getMarDetail());
-			cstmt.setString(8, market.getMarCeo());
-			cstmt.setString(9, mobile);
-			cstmt.setString(10, market.getMarRegnum());
-			if(market.getMarSeqno() != null) {
-				cstmt.setInt(11, market.getMarSeqno());
-			}
+			StructDescriptor st_mar = StructDescriptor.createDescriptor("OBJ_MAR",conn);
+			Object[] mar_obj = {market.getMarCategory(),
+								market.getMarProduct(),
+								market.getMarPrice(),
+								market.getMarCompany(),
+								market.getMarOpendate(),
+								market.getMarClosedate(),
+								market.getMarDetail(),
+								market.getMarCeo(),
+								mobile,
+								market.getMarRegnum()
+							   };
+			STRUCT mar_rec = new STRUCT(st_mar, conn, mar_obj);
 			
-			cstmt.executeQuery();
 			
 			if(att != null) {
-				
-				if(market.getMarSeqno() != null) {
-					sql = "call p_attupdate(?,?,?)";
-				} else {
-					sql = "call p_attinset(?,?)";
-				}
 				
 				StructDescriptor st_thumb = StructDescriptor.createDescriptor("OBJ_THUMB",conn);
 				Object[] thumb_obj = {market.getAttSet().getAttThumb().getFileName(),
@@ -356,10 +348,12 @@ public class AdminDao {
 				cstmt.setObject(1, att_rec);
 				
 				if(market.getMarSeqno() != null) {
-					cstmt.setString(2, market.getAttSet().getMem().getMemId());
+					cstmt.setObject(2, mar_rec);
 					cstmt.setInt(3, market.getMarSeqno());
+					cstmt.setString(4, market.getAttSet().getMem().getMemId());
 				} else {
-					cstmt.setString(2, market.getAttSet().getMem().getMemId());
+					cstmt.setObject(2, mar_rec);
+					cstmt.setString(3, market.getAttSet().getMem().getMemId());
 				}
 				cstmt.executeQuery();
 			}
@@ -408,7 +402,7 @@ public class AdminDao {
 	public Marketing modify(String seqno) {
 
 		Marketing m = new Marketing();
-		
+		Att att = new Att();
 		String sql = "call p_modify(?,?)";
 		
 		try {
@@ -432,14 +426,13 @@ public class AdminDao {
 				m.setMarRegnum(rs.getString("mar_regnum"));
 				
 			}
-			
 			 sql = "select * from att where mar_seqno = ?";
 			 stmt = conn.prepareStatement(sql);
 			 stmt.setString(1, seqno);
 
 			 rs = stmt.executeQuery();
 			 
-			 Att att = new Att();
+			 
 			 if(rs.next()) {
 				 
 				 att.setAttSeqno(rs.getInt("att_seqno"));
@@ -470,7 +463,9 @@ public class AdminDao {
 				 }
 				 
 			 }
+			 System.out.println(att.getAttName());
 		m.setAttSet(att);
+		System.out.println(m.getAttSet().getAttName());
 		stmt.close();
 		cstmt.close();
 		} catch (SQLException e) {
