@@ -186,7 +186,7 @@ public class Admincontroller extends HttpServlet {
 			goView(req, resp, "/admin/admin_adreg2.jsp");
 
 		} else if(cmd.equals("adupdate")) {
-			admin.update(req);
+			admin.reg(req);
 			goView(req, resp, "/master/admofiy");
 
 		}
