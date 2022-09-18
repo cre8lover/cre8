@@ -73,7 +73,6 @@ public class AdminDao {
 	public List<Cat> categorylist(AdminKeyWord adkey) {
 		List<Cat> cate = new ArrayList<Cat>();
 		
-		
 		String sql = "call p_categorylist(?,?,?)";
 			   try {
 				cstmt = conn.prepareCall(sql);

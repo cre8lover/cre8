@@ -8,9 +8,29 @@ public class AdminKeyWord {
 	private int page;
 	private String sdate;
 	private String fdate;
+	private int currentPage;
+	private int rowPerPage;	
 	
 	
+	public AdminKeyWord() {
+		super();
+	}
 	
+	public AdminKeyWord(int currentPage, int rowPerPage) {
+		// TODO Auto-generated constructor stub
+	}
+	public int getCurrentPage() {
+		return currentPage;
+	}
+	public void setCurrentPage(int currentPage) {
+		this.currentPage = currentPage;
+	}
+	public int getRowPerPage() {
+		return rowPerPage;
+	}
+	public void setRowPerPage(int rowPerPage) {
+		this.rowPerPage = rowPerPage;
+	}
 	public String getCategory() {
 		return category;
 	}
