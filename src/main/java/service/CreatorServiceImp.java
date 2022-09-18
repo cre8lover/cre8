@@ -40,7 +40,14 @@ public class CreatorServiceImp implements CreatorService{
 	public List<Pro> salesHistory(String id) {
 		return creatorDao.salesHistory(id);
 	}
-
+	
+	@Override
+	public Map<String, List<Pro>> calculate(String id) {
+		// TODO Auto-generated method stub
+		return creatorDao.calculate(id);
+	}
+	
+	@Override
 	public void CreatorName(String id) {
 		creatorDao.CreatorName(id);
 	}
@@ -172,6 +179,14 @@ public class CreatorServiceImp implements CreatorService{
 	   public Map<String, String> cremodifyreg(HttpServletRequest req) {
 	      return creatorDao.cremodifyreg(req);
 	   }
+	@Override
+	public void prodel(String seqno) {
+		FileService fileservice = new FileServiceImp();
+		Att att = creatorDao.prodel(seqno);
+
+		fileservice.delete(null,att.getSavefilename(),att.getAttPath(),att.getAttThumb().getFileName());
+	}
+	
 
 }
 

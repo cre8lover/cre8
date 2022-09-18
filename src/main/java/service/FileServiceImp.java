@@ -206,7 +206,9 @@ public class FileServiceImp implements FileService {
 		FileDao filedao = new FileDao();
 		
 		int rs = 0;
+		if(no != null) {
 		rs = filedao.deletfile(no);
+		}
 		//attachfile 레코드 삭제
 		//파일삭제
 		File file = new File(filepath+savefilename);

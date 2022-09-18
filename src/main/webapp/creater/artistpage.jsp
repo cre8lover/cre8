@@ -44,7 +44,7 @@
                     </p>
                     <div style="text-align: center;">
                       <button class="custom-btn btn-1" onclick = "newwindow('<%= request.getContextPath() %>/cre/product_registration?seqno=${list.proSeqno}','modify');">수정</button>
-                  <button class="custom-btn btn-1" href = "#">삭제</button>
+                  <button class="custom-btn btn-1" onclick = "prodelete('${list.proSeqno}')">삭제</button>
                   </div>
                 </div>
             </c:forEach>
