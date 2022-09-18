@@ -13,7 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dto.AdminKeyWord;
+import dto.Auc_Criteria;
 import dto.Cat;
+import dto.Admin_page;
 import dto.Marketing;
 import dto.Mem;
 import dto.Pro;
@@ -97,14 +99,21 @@ public class Admincontroller extends HttpServlet {
 			resp.sendRedirect(req.getContextPath() + "/admin/adminlogin.jsp");
 			
 		} else if(cmd.equals("category")) {
+			String currentPage = req.getParameter("currentPage");
+			String rowPerPage = req.getParameter("rowPerPage");
 			
 			AdminKeyWord adkey = new AdminKeyWord();
+//			AdminKeyWord adkey = new AdminKeyWord(Integer.parseInt(currentPage), Integer.parseInt(rowPerPage));
 			
 			adkey.setCategory(req.getParameter("gory"));
 			adkey.setKeyword(req.getParameter("keysearch"));
 			adkey.setSdate(req.getParameter("sdate"));
 			adkey.setFdate(req.getParameter("fdate"));
 //			adkey.setClassification(req.getParameter("stype"));
+			
+			if(currentPage == null) currentPage = "1";
+			if(rowPerPage == null) rowPerPage = "10";
+			
 			
 			List<Cat> category = admin.catelist(adkey);
 			req.setAttribute("cate", category);

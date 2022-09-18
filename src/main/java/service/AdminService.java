@@ -33,5 +33,5 @@ public interface AdminService {
 	void reg(HttpServletRequest req);
 	
 	Marketing modify(String seqno);
-	
+
 }

@@ -15,7 +15,7 @@
 
 		<div class="khm_searchs">
 		<h2 class="khm_category">카테고리</h2>
-							<form method="post" name="catesearch" action="<%= request.getContextPath() %>/master/category">
+		<form method="post" name="catesearch" action="<%= request.getContextPath() %>/master/category">
 				<table>
 					<tbody>
 						<tr>
@@ -105,6 +105,21 @@
 	    
 		  </tbody>
 		</table>
+		
+		<div class="page">
+			<c:if test ="${pageMaker.prev}">
+			  <a href="<%= request.getContextPath() %>/master/category?currentPage=${pageMaker.startPage-1}&tap_item=${cate}">&laquo;</a>
+			</c:if>
+			  <c:forEach var="num" begin="${pageMaker.startPage}" end="${pageMaker.endPage}">
+			  	<a href="<%= request.getContextPath() %>/master/category?currentPage=${num }&tab_item=${cate}"
+			  	class="${pageMaker.cri.currentPage == num ? "active" : "" }">${num}</a>
+			   </c:forEach>
+			  
+			  <!-- <a class="active" href="#">2</a> -->
+			<c:if test="${pageMaker.next}">
+			  <a href="<%= request.getContextPath() %>/master/category?currentPage=${pageMaker.endPage+1}&tap_item=${cate}">&raquo;</a>
+			</c:if>
+		</div>
 	</div>
 <script>
 function goSearch(){ 
