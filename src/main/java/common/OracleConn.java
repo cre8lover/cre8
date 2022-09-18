@@ -23,6 +23,7 @@ public class OracleConn {
 //		final String url="jdbc:oracle:thin:@192.168.219.109:1521:xe";
 //		final String url="jdbc:oracle:thin:@localhost:1521:xe";
 		
+		
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			conn = DriverManager.getConnection(url,"jmh","jmh");

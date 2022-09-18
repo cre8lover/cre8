@@ -3,6 +3,7 @@ package controller;
 import javax.servlet.http.HttpServlet;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -98,8 +99,8 @@ public class Creatercontroller extends HttpServlet {
 		}//광고 하나를 클릭했을때 나오는 페이지 
 			else if(cmd.equals("marketingDetail")) {	
 			int seqno = Integer.parseInt(req.getParameter("seqno"));
-//				System.out.println(seqno);
-			//List<Marketing> marketing2 = cs.mkk(seqno); 
+//			System.out.println(seqno);
+//			List<Marketing> marketing2 = cs.mkk(seqno); 
 			
 			req.setAttribute("marketing", cs.mkk(seqno));
 			
@@ -110,10 +111,14 @@ public class Creatercontroller extends HttpServlet {
 		else if(cmd.equals("salesHistory")) {
 			String id = (String)req.getSession().getAttribute("sess_id");
 			List<Pro> salesHistory = cs.salesHistory(id);
+			
+			Map<String, List<Pro>> calculate = cs.calculate(id);
+			
+			
 			req.setAttribute("cre", salesHistory);
-			
+			req.setAttribute("month", calculate.get("month"));
+			req.setAttribute("year", calculate.get("year"));
 			goView(req, resp, "/creater/jmh_salesHistory.jsp");
-			
 			
 		} else if(cmd.equals("auction_reg")) {
 		
@@ -180,6 +185,10 @@ public class Creatercontroller extends HttpServlet {
 				
 				out.print(rs);
 			   
+		   }else if (cmd.equals("prodel")) {
+			   String seqno = req.getParameter("proseqno");
+			   cs.prodel(seqno);
+			   goView(req, resp, "/cre/creReg");
 		   }
 		  
 		  

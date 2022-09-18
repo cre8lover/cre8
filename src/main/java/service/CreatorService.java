@@ -19,6 +19,8 @@ public interface CreatorService {
 	
 	public List<Pro> salesHistory(String id);
 	
+	Map<String, List<Pro>> calculate(String id);
+	
 	void CreatorName(String id);
 	
 	List<Marketing> mk();
@@ -43,5 +45,5 @@ public interface CreatorService {
 
 	Map<String, String> cremodifyreg(HttpServletRequest req);
 
-
+	public void prodel(String seqno);
 }

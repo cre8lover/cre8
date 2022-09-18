@@ -3,3 +3,11 @@ function newwindow(url, name){
 		window.open(url,name,options);
 		
 	}
+
+function prodelete(seqno){
+	var rs = confirm('정말로 삭제하시겠습니까?');
+	if (rs){
+		location.href="prodel?proseqno="+seqno;
+	}
+
+}

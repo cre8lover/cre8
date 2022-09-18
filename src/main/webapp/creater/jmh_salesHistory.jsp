@@ -88,150 +88,6 @@
 					<td class="jmh_saleshistoryboard">999
 					</td>
 				</tr>
-				<tr>
-					<td class="jmh_saleshistoryboard">2
-					</td>
-					<td class="jmh_saleshistoryboard .jmh_saleboardimgwidth2"><img class="jmh_saleimgboard" src="<%= request.getContextPath() %>/img/우투리.png">
-					</td>
-					<td class="jmh_saleshistoryboard">판매물품명
-					</td>
-					<td class="jmh_saleshistoryboard">판매등록일
-					</td>
-					<td class="jmh_saleshistoryboard">판매현황
-					</td>
-					<td class="jmh_saleshistoryboard">판매금액
-					</td>
-					<td class="jmh_saleshistoryboard">999
-					</td>
-				</tr>
-				<tr>
-					<td class="jmh_saleshistoryboard">3
-					</td>
-					<td class="jmh_saleshistoryboard .jmh_saleboardimgwidth2"><img class="jmh_saleimgboard" src="<%= request.getContextPath() %>/img/우투리.png">
-					</td>
-					<td class="jmh_saleshistoryboard">판매물품명
-					</td>
-					<td class="jmh_saleshistoryboard">판매등록일
-					</td>
-					<td class="jmh_saleshistoryboard">판매현황
-					</td>
-					<td class="jmh_saleshistoryboard">판매금액
-					</td>
-					<td class="jmh_saleshistoryboard">999
-					</td>
-				</tr>
-				<tr>
-					<td class="jmh_saleshistoryboard">4
-					</td>
-					<td class="jmh_saleshistoryboard .jmh_saleboardimgwidth2"><img class="jmh_saleimgboard" src="<%= request.getContextPath() %>/img/우투리.png">
-					</td>
-					<td class="jmh_saleshistoryboard">판매물품명
-					</td>
-					<td class="jmh_saleshistoryboard">판매등록일
-					</td>
-					<td class="jmh_saleshistoryboard">판매현황
-					</td>
-					<td class="jmh_saleshistoryboard">판매금액
-					</td>
-					<td class="jmh_saleshistoryboard">999
-					</td>
-				</tr>
-				<tr>
-					<td class="jmh_saleshistoryboard">5
-					</td>
-					<td class="jmh_saleshistoryboard .jmh_saleboardimgwidth2"><img class="jmh_saleimgboard" src="<%= request.getContextPath() %>/img/우투리.png">
-					</td>
-					<td class="jmh_saleshistoryboard">판매물품명
-					</td>
-					<td class="jmh_saleshistoryboard">판매등록일
-					</td>
-					<td class="jmh_saleshistoryboard">판매현황
-					</td>
-					<td class="jmh_saleshistoryboard">판매금액
-					</td>
-					<td class="jmh_saleshistoryboard">999
-					</td>
-				</tr>
-				<tr>
-					<td class="jmh_saleshistoryboard">6
-					</td>
-					<td class="jmh_saleshistoryboard .jmh_saleboardimgwidth2"><img class="jmh_saleimgboard" src="<%= request.getContextPath() %>/img/우투리.png">
-					</td>
-					<td class="jmh_saleshistoryboard">판매물품명
-					</td>
-					<td class="jmh_saleshistoryboard">판매등록일
-					</td>
-					<td class="jmh_saleshistoryboard">판매현황
-					</td>
-					<td class="jmh_saleshistoryboard">판매금액
-					</td>
-					<td class="jmh_saleshistoryboard">999
-					</td>
-				</tr>
-				<tr>
-					<td class="jmh_saleshistoryboard">7
-					</td>
-					<td class="jmh_saleshistoryboard .jmh_saleboardimgwidth2"><img class="jmh_saleimgboard" src="<%= request.getContextPath() %>/img/우투리.png">
-					</td>
-					<td class="jmh_saleshistoryboard">판매물품명
-					</td>
-					<td class="jmh_saleshistoryboard">판매등록일
-					</td>
-					<td class="jmh_saleshistoryboard">판매현황
-					</td>
-					<td class="jmh_saleshistoryboard">판매금액
-					</td>
-					<td class="jmh_saleshistoryboard">999
-					</td>
-				</tr>
-				<tr>
-					<td class="jmh_saleshistoryboard">8
-					</td>
-					<td class="jmh_saleshistoryboard .jmh_saleboardimgwidth2"><img class="jmh_saleimgboard" src="<%= request.getContextPath() %>/img/우투리.png">
-					</td>
-					<td class="jmh_saleshistoryboard">판매물품명
-					</td>
-					<td class="jmh_saleshistoryboard">판매등록일
-					</td>
-					<td class="jmh_saleshistoryboard">판매현황
-					</td>
-					<td class="jmh_saleshistoryboard">판매금액
-					</td>
-					<td class="jmh_saleshistoryboard">999
-					</td>
-				</tr>
-				<tr>
-					<td class="jmh_saleshistoryboard">9
-					</td>
-					<td class="jmh_saleshistoryboard .jmh_saleboardimgwidth2"><img class="jmh_saleimgboard" src="<%= request.getContextPath() %>/img/우투리.png">
-					</td>
-					<td class="jmh_saleshistoryboard">판매물품명
-					</td>
-					<td class="jmh_saleshistoryboard">판매등록일
-					</td>
-					<td class="jmh_saleshistoryboard">판매현황
-					</td>
-					<td class="jmh_saleshistoryboard">판매금액
-					</td>
-					<td class="jmh_saleshistoryboard">999
-					</td>
-				</tr>
-				<tr>
-					<td class="jmh_saleshistoryboard">10
-					</td>
-					<td class="jmh_saleshistoryboard .jmh_saleboardimgwidth2"><img class="jmh_saleimgboard" src="<%= request.getContextPath() %>/img/우투리.png">
-					</td>
-					<td class="jmh_saleshistoryboard">판매물품명
-					</td>
-					<td class="jmh_saleshistoryboard">판매등록일
-					</td>
-					<td class="jmh_saleshistoryboard">판매현황
-					</td>
-					<td class="jmh_saleshistoryboard">판매금
-					</td>
-					<td class="jmh_saleshistoryboard">999
-					</td>
-				</tr>
 			</table>
 			</div>
 			<div class="tab_content" id="monthsales_content">
@@ -244,25 +100,17 @@
 					<th class="jmh_saleshistoryboard jmh_saleboardwidth3">총 판매금액
 					</th>
 				</tr>
-				
+				<c:forEach items="${month}" var="pro">
 				<tr>
-					<th class="jmh_saleshistoryboard jmh_saleboardwidth1">7월
+					<th class="jmh_saleshistoryboard jmh_saleboardwidth1">${pro.proDetail }
 					</th>
-					<th class="jmh_saleshistoryboard jmh_saleboardwidth2">102건
+					<th class="jmh_saleshistoryboard jmh_saleboardwidth2">${pro.proClosedate }
 					</th>
-					<th class="jmh_saleshistoryboard jmh_saleboardwidth3">3,000,000 원
+					<th class="jmh_saleshistoryboard jmh_saleboardwidth3">${pro.proOpendate }원
 					</th>
 				</tr>
-				
-				<tr>
-					<th class="jmh_saleshistoryboard jmh_saleboardwidth1">8월
-					</th>
-					<th class="jmh_saleshistoryboard jmh_saleboardwidth2">500건
-					</th>
-					<th class="jmh_saleshistoryboard jmh_saleboardwidth3">10,252,000원
-					</th>
-				</tr>
-				
+				</c:forEach>
+
 				</table>
 			</div>
 			<div class="tab_content" id="quarterlysales_content">
@@ -276,14 +124,16 @@
 					</th>
 				</tr>
 				
+				<c:forEach items="${year}" var="pro">
 				<tr>
-					<th class="jmh_saleshistoryboard jmh_saleboardwidth1">2022년
+					<th class="jmh_saleshistoryboard jmh_saleboardwidth1">${pro.proDetail }
 					</th>
-					<th class="jmh_saleshistoryboard jmh_saleboardwidth2">1002건
+					<th class="jmh_saleshistoryboard jmh_saleboardwidth2">${pro.proClosedate }
 					</th>
-					<th class="jmh_saleshistoryboard jmh_saleboardwidth3">103,000,000 원
+					<th class="jmh_saleshistoryboard jmh_saleboardwidth3">${pro.proOpendate }원
 					</th>
 				</tr>
+				</c:forEach>
 				
 				
 				</table>

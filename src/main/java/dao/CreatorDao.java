@@ -266,6 +266,7 @@ public class CreatorDao {
 			   cstmt = conn.prepareCall(sql);
 			   cstmt.setString(1, id);
 			   cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			   cstmt.executeQuery();
 			   ResultSet rs = (ResultSet)cstmt.getObject(2);
 			   
 			   Item item = null;
@@ -284,65 +285,96 @@ public class CreatorDao {
 				   pro.setItem(item);
 				   cre.add(pro);
 			   }
+
 			   
-	}catch (SQLException e) {
-		e.printStackTrace();
+			   
+		}catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return cre;
+		
+		}
+	
+	
+	public Map<String, List<Pro>> calculate(String id) {
+		
+		
+		Map<String, List<Pro>> calculate = new HashMap<>();
+		List<Pro> mcal = new ArrayList<>();
+		List<Pro> ycal = new ArrayList<>();
+		
+		String sql = "call p_calculate(?,?,?)";
+		
+		try {
+			cstmt = conn.prepareCall(sql);
+			cstmt.setString(1, id);
+			cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+			cstmt.registerOutParameter(3, OracleTypes.CURSOR);
+			cstmt.executeQuery();
+			ResultSet rs = (ResultSet)cstmt.getObject(2);
+			ResultSet rs2 = (ResultSet)cstmt.getObject(3);
+			
+			while(rs.next()) {
+				Pro pro = new Pro();
+				pro.setProDetail(rs.getString("salemonth"));
+				pro.setProOpendate(rs.getString("total"));
+				pro.setProClosedate(rs.getString("count"));
+				mcal.add(pro);
+			}
+			
+			while(rs2.next()) {
+				Pro pro = new Pro();
+				pro.setProDetail(rs2.getString("salemonth"));
+				pro.setProOpendate(rs2.getString("total"));
+				pro.setProClosedate(rs2.getString("count"));
+				ycal.add(pro);
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		calculate.put("month", mcal);
+		calculate.put("year", ycal);
+		
+		return calculate;
 	}
 	
-	return cre;
 	
-	}
 
 	
 	//일반물품이랑 경매물품 작가페이지에서 띄우기
 	public List<Pro> Prolist(String seqno,String id ) {
 		List<Pro> prolist = new ArrayList<>();
 		try {
-			String sql= "call p_prolist(?,?,?)";
+			String sql= "call p_prolist(?,?)";
 			
 		cstmt = conn.prepareCall(sql);
-		cstmt.setString(1, seqno);
-		cstmt.setString(2, id);
-		cstmt.registerOutParameter(3, OracleTypes.CURSOR);
+		cstmt.setString(1, id);
+		cstmt.registerOutParameter(2, OracleTypes.CURSOR);
 		cstmt.executeQuery();
-		ResultSet rs = (ResultSet)cstmt.getObject(3);
+		ResultSet rs = (ResultSet)cstmt.getObject(2);
 		
 
 		while(rs.next()) {
 			Pro p = new Pro();
 			Item i = new Item();
 
-			String itemseqno = rs.getString("item_seqno");
-			i.setItemImg(rs.getString("item_img"));
 			i.setItemDetail(rs.getString("item_detail"));
 			p.setProAmount(rs.getInt("pro_amount"));
 			p.setProSaleprice(rs.getInt("pro_saleprice"));
 			p.setProSeqno(rs.getInt("pro_seqno"));
-			
-			
-			
-			sql = " select THUMB_FILENAME, THUMB_FILEPATH "
-					+ " from att_thumb"
-					+ " where att_seqno = (select att_seqno from att where item_seqno = ?)";
-			
-			stmt = conn.prepareStatement(sql);
-			stmt.setString(1, itemseqno);
-			ResultSet rs2 = stmt.executeQuery();
-			if(rs2.next()) {
-				
-				i.setItemImg(rs2.getString("thumb_filename"));
-				
-				p.setItem(i);
-			}
+			i.setItemImg(rs.getString("thumb_filename"));
+			p.setItem(i);
 			prolist.add(p);
 		}
-		stmt.close();
+		cstmt.close();
 		}catch (SQLException e) {
 			e.printStackTrace();
 		}
-		
 		return prolist;
-		}
+	}
 
 	
 
@@ -352,47 +384,28 @@ public class CreatorDao {
 	      Item i = null;
 	      
 	      try {
-	         String sql = "call p_auclist(?,?,?)";
+	         String sql = "call p_auclist(?,?)";
 	      
-	         cstmt = conn.prepareCall(sql);
-	      cstmt.setString(1, seqno);
-	      cstmt.setString(2, id);
-	      cstmt.registerOutParameter(3, OracleTypes.CURSOR);
+	      cstmt = conn.prepareCall(sql);
+	      cstmt.setString(1, id);
+	      cstmt.registerOutParameter(2, OracleTypes.CURSOR);
 	      cstmt.executeQuery();
-		  ResultSet rs = (ResultSet)cstmt.getObject(3);
+		  ResultSet rs = (ResultSet)cstmt.getObject(2);
 	      
 	      while(rs.next()) {
 	    	  a = new Auc();
 	    	  i = new Item();
-	         String itemseqno = rs.getString("item_seqno");
-	         a.setAucImg(rs.getString("auc_img"));
 	         a.setAucDetail(rs.getString("auc_detail"));
 	         a.setAucPrice(rs.getInt("auc_price"));
 	         a.setAucCloseprice(rs.getInt("auc_closeprice"));
 	         a.setAucStat(rs.getString("auc_stat"));
 	         a.setAucSeqno(rs.getInt("auc_seqno"));
-	         
-	         
-				
-				sql = " select THUMB_FILENAME, THUMB_FILEPATH "
-						+ " from att_thumb"
-						+ " where att_seqno = (select att_seqno from att where item_seqno = ?)";
-				
-				stmt = conn.prepareStatement(sql);
-				stmt.setString(1, itemseqno);
-				ResultSet rs2 = stmt.executeQuery();
-				if(rs2.next()) {
-					
-					i.setItemImg(rs2.getString("thumb_filename"));
-					
-					a.setItem(i);
-				}
-	         
-	         
+			 i.setItemImg(rs.getString("thumb_filename"));
+			 a.setItem(i);
 	         auclist.add(a);
 	      }
 	      
-	      stmt.close();
+	      cstmt.close();
 	      }catch (SQLException e) {
 	         e.printStackTrace();
 	      }
@@ -1198,6 +1211,35 @@ public String totalmoney(String id) {
 	      
 	      return seqno;
 	   }
+
+
+		public Att prodel(String seqno) {
+			
+			Att att = new Att();
+			Thumbnail att_at = new Thumbnail();
+			
+			String sql = "call p_prodelete(?,?)";
+			try {
+				cstmt = conn.prepareCall(sql);
+				cstmt.setString(1, seqno);
+				cstmt.registerOutParameter(2, OracleTypes.CURSOR);
+				cstmt.executeQuery();
+				ResultSet rs = (ResultSet)cstmt.getObject(2);
+				if (rs.next()) {
+					att.setSavefilename(rs.getString("att_savename"));
+					att.setAttPath(rs.getString("att_path"));
+					att_at.setFileName(rs.getString("thumb_savename"));
+					att_at.setFilePath(rs.getString("thumb_path"));
+					att.setAttThumb(att_at);
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			return att;
+		}
+
+
+
 		   
 //		   public String productadd(Pro pro, String id) {
 //			   DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
