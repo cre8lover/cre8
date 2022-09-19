@@ -1,6 +1,6 @@
-                -----5¹ø------ 
+                -----5ï¿½ï¿½------ 
                 
---creatoradd [Å©¸®¿¡ÀÌÅÍ °¡ÀÔ]
+--creatoradd [Å©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½]
 create or replace PROCEDURE p_creatoradd(
     p_cre_company in creator.cre_company%type,
     p_cre_phone   in creator.cre_phone%type,
@@ -19,17 +19,17 @@ begin
     p_rs := sql%rowcount;
 end;
 /
---Å×½ºÆ®
+--ï¿½×½ï¿½Æ®
 declare 
     v_rs    integer;    
 begin
-p_creatoradd('¼ö´ÞÄÄÆÛ´Ï', '01055556666', '±è¶Ê¶Ê', '¼ö¿ø½Ã¿µÅë±¸', '163-170-1233', '123-123-1234', 'Àú´Â ±è¼ö´ÞÀÔ´Ï´Ù', 'ddd', v_rs );
- DBMS_OUTPUT.PUT_LINE('ÀúÀå½ÇÇà°á°ú :' || v_rs);
+p_creatoradd('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Û´ï¿½', '01055556666', 'ï¿½ï¿½Ê¶ï¿½', 'ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ë±¸', '163-170-1233', '123-123-1234', 'ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ï´ï¿½', 'ddd', v_rs );
+ DBMS_OUTPUT.PUT_LINE('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ :' || v_rs);
 end;
 commit;
 
 
---Å©¸®¿¡ÀÌÆ® ¼öÁ¤
+--Å©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½
 create or replace PROCEDURE p_cremodify(
     p_memid         in mem.mem_id%TYPE,   
     p_memtel        in mem.mem_tel%TYPE,
@@ -53,13 +53,13 @@ begin
 
 end;
 /
---Å×½ºÆ®
-exec p_cremodify('ddd','01066666666','cmcm@naver,com','df@instargram','¼ö´ÞÄÄÆÛ´Ï','01099999999','±è¶Ê¶Ê','¼ö¿ø½Ã¿µÅë¼ö','11-23232-423','123-124-4233','thankyou');
---memÅ×ÀÌºí¿¡¼­ È®ÀÎ ok
+--ï¿½×½ï¿½Æ®
+exec p_cremodify('ddd','01066666666','cmcm@naver,com','df@instargram','ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Û´ï¿½','01099999999','ï¿½ï¿½Ê¶ï¿½','ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½','11-23232-423','123-124-4233','thankyou');
+--memï¿½ï¿½ï¿½Ìºï¿½ï¿½ï¿½ È®ï¿½ï¿½ ok
 
 
 
---mk [±¤°í¸®½ºÆ® º¸¿©ÁÖ´Â°Í]
+--mk [ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½Ö´Â°ï¿½]
 create or replace PROCEDURE p_mk_list(
     p_cur           out sys_refcursor
 )
@@ -69,7 +69,7 @@ begin
         select mar_seqno, mar_product, mar_img, mar_price from Marketing;
 end;
 /
---Å×½ºÆ®
+--ï¿½×½ï¿½Æ®
 declare
     type p_list  is record(
         mar_seqno       marketing.mar_seqno%type,  
@@ -94,7 +94,7 @@ end;
 
 
 
---mmk[¸¶ÄÉÆÃ¸®½ºÆ®Áß ÇÏ³ª Å¬¸¯ÇßÀ»¶§ ³ª¿À´Â Á¤º¸]
+--mmk[ï¿½ï¿½ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½Ï³ï¿½ Å¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½]
 create or replace procedure p_mmk_list(
     p_mar_seqno  marketing.mar_seqno%type,   
     p_cur    out sys_refcursor
@@ -105,7 +105,7 @@ begin
     select mar_img,mar_price,mar_company,mar_detail from Marketing where mar_seqno=p_mar_seqno;
 end;
 /
---Å×½ºÆ®
+--ï¿½×½ï¿½Æ®
 declare
      type p_list  is record(
         mar_img         marketing.mar_img%type,
@@ -130,66 +130,28 @@ end;
 
 
 
---Å©·¹ÀÌÅÍ°¡ ÆÇ¸ÅÇÑ ÀÏ¹Ý¹°Ç° ¶ç¿ì±â 
-create or replace PROCEDURE p_prolist(
-    p_item_seqno     IN item.item_seqno%type,  
+--Å©ï¿½ï¿½ï¿½ï¿½ï¿½Í°ï¿½ ï¿½Ç¸ï¿½ï¿½ï¿½ ï¿½Ï¹Ý¹ï¿½Ç° ï¿½ï¿½ï¿½ï¿½ 
+create or replace NONEDITIONABLE PROCEDURE p_prolist(
     p_item_mem_id    in item.mem_id%type,
      p_cur    out sys_refcursor
     
 )
 IS         
 BEGIN
-        open p_cur for
-        select a.*, THUMB_FILENAME, THUMB_FILEPATH
-         from
-         (
-         select i.item_seqno,i.item_img,i.item_detail,p.pro_amount,p.pro_saleprice, p.pro_seqno,
-             (select THUMB_FILENAME
-					from att_thumb
-					where att_seqno = (select att_seqno from att where item_seqno = p_item_seqno)) tf,
-                    (select THUMB_FILEPATH  from att_thumb
-					where att_seqno = (select att_seqno from att where item_seqno = p_item_seqno)) tp
-         from (select * from pro where pro_stat not in 'END') p, item i
-         where p.item_seqno = i.item_seqno and i.mem_id = 'ddd'
-         ) a, att_thumb 
-         where att_seqno = (select att_seqno from att where item_seqno = p_item_mem_id);                   
+    open p_cur for
+                select (select item_name from item i where i.item_seqno = p.item_seqno) item_naem,
+                (select item_detail from item i where i.item_seqno = p.item_seqno) item_detail,
+                (select (select thumb_filename from att_thumb at where at.att_seqno = a.att_seqno) from att a where a.item_seqno = p.item_seqno) thumb_filename,
+                p.pro_amount,p.pro_saleprice, p.pro_seqno
+                from pro p
+                where mem_id = p_item_mem_id
+                and pro_stat not in 'PRO_END';                 
 END;
-/
-
---Å×½ºÆ®
-declare
-     type p_list  is record(
-        p_item_seqno      item.item_seqno%type,
-        p_item_img        item.item_img%type,
-        p_item_detail     item.item_detail%type,
-        p_pro_amount      pro.pro_amount%type,
-        p_pro_saleprice   pro.pro_saleprice%type,
-        p_pro_seqno       pro.pro_seqno%type,
-        p_item_mem_id     item.mem_id%type,
-        p_thumb_filename  att_thumb.thumb_filename%type,
-        p_thumb_filepath  att_thumb.thumb_filepath%type
-        );
-   
-    p_m_list    p_list;
-    v_cur sys_refcursor;
-    
-begin
-    p_prolist(item_seqno.nextval,'','',3,1000,2,'ddd','asdf',v_cur);
-    
-    LOOP
-        fetch v_cur into p_m_list;
-        exit when v_cur%notfound;
-        dbms_output.put_line(p_m_list.p_item_detail);
-        dbms_output.put_line(p_m_list.p_pro_saleprice);
-        dbms_output.put_line(p_m_list.p_pro_seqno);
-    END LOOP;
-end;
 
 
 
 
-
--- productmodify »óÇ° ¼öÁ¤
+-- productmodify ï¿½ï¿½Ç° ï¿½ï¿½ï¿½ï¿½
 create or replace procedure p_productmodify(
     p_itemName          in item.item_name%type,
     p_itemDetail        in item.item_detail%type,
@@ -227,7 +189,7 @@ end;
 
 
 
---°æ¸ÅÃß°¡  aucadd
+--ï¿½ï¿½ï¿½ï¿½ß°ï¿½  aucadd
 create or replace procedure p_aucadd(
     p_item_name     in item.item_name%type,
     p_id            in mem.mem_id%TYPE,
@@ -259,17 +221,17 @@ begin
     p_rs := sql%rowcount;
 end;
 
---Å×½ºÆ®
+--ï¿½×½ï¿½Æ®
 declare 
     v_rs    integer;    
 begin
-p_aucadd('¶±ººÀÌ','ddd', 'wait', '10000', '22-08-07', '22-08-19', '¾È³ç', '¿¬³ç', '1', v_rs );
+p_aucadd('ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½','ddd', 'wait', '10000', '22-08-07', '22-08-19', 'ï¿½È³ï¿½', 'ï¿½ï¿½ï¿½ï¿½', '1', v_rs );
  DBMS_OUTPUT.PUT_LINE(v_rs);
 end;
 commit;
 
 
---¿Á¼ÇµðÅ×ÀÏ aucdetail
+--ï¿½ï¿½ï¿½Çµï¿½ï¿½ï¿½ï¿½ï¿½ aucdetail
 create or replace PROCEDURE p_aucdetail(
     p_auc_seqno  in auc.auc_seqno%type,
     p_auc_cur    out SYS_REFCURSOR
@@ -315,7 +277,7 @@ end;
 
 
 
---salesHistory ÆÇ¸ÅÇÑ ³»¿ª
+--salesHistory ï¿½Ç¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 
 create or replace PROCEDURE p_salesHistory(
     p_mem_id in mem.mem_id%type,
@@ -338,7 +300,7 @@ begin
             where p.pro_seqno = o.pro_seqno order by pro_opendate desc) where mem_id = p_mem_id;
 end;
 /
---Å×½ºÆ®
+--ï¿½×½ï¿½Æ®
         
 declare    
     type sale_t is record(
