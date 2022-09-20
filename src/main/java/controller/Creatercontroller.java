@@ -184,7 +184,7 @@ public class Creatercontroller extends HttpServlet {
 				PrintWriter out = resp.getWriter();
 				
 				out.print(rs);
-			   
+			  //게시물 삭제 
 		   }else if (cmd.equals("prodel")) {
 			   String seqno = req.getParameter("proseqno");
 			   cs.prodel(seqno);
