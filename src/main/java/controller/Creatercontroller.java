@@ -108,6 +108,7 @@ public class Creatercontroller extends HttpServlet {
 				
 		}
 			//아직 sql문 미완성!
+		/////////////////////////////////////NOt Yet
 		else if(cmd.equals("salesHistory")) {
 			String id = (String)req.getSession().getAttribute("sess_id");
 			List<Pro> salesHistory = cs.salesHistory(id);
@@ -133,11 +134,7 @@ public class Creatercontroller extends HttpServlet {
 		 
 		 //옥션 수정등록
 		  } else if(cmd.equals("auction_modify")) {
-			  
-
 		 String seqno = cs.aucadd(req);
-		 
-		 
 		 goView(req, resp, "/cre/auction_reg?seqno="+seqno);
 		 
 		 
@@ -155,18 +152,16 @@ public class Creatercontroller extends HttpServlet {
 		
 		//일반 수정 등록
 		   } else if(cmd.equals("promodify")) {
-			   
-		   String seqno = cs.productadd(req);
-		   
-		  goView(req,resp,"/cre/product_registration?seqno="+seqno);
+		     String seqno = cs.productadd(req);
+		    goView(req,resp,"/cre/product_registration?seqno="+seqno);
 		   
 		   
 		   } else if(cmd.equals("cremodifyreg")) { 
-		          //크리에이터 정보수정
-		            Map<String, String> cremo = cs.cremodifyreg(req);
-		            req.setAttribute("modi", cremo);
-		           goView(req, resp, "/cre/cremodify");
-		            
+		 //크리에이터 정보수정
+            Map<String, String> cremo = cs.cremodifyreg(req);
+            req.setAttribute("modi", cremo);
+             goView(req, resp, "/cre/cremodify");
+            
 		   }else if (cmd.equals("fileDel")) {
 			   FileService fileservice = new FileServiceImp();
 			   int rs=0;
@@ -201,3 +196,11 @@ public class Creatercontroller extends HttpServlet {
 	}
 
 }
+
+
+
+
+
+
+
+
